@@ -48,6 +48,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ExecutionContextSpecs.cs" />
     <Compile Include="OptionSpecs.cs" />
     <Compile Include="ObjectFactorySpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
