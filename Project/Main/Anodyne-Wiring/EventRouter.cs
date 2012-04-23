@@ -1,5 +1,4 @@
-﻿using System;
-using Kostassoid.Anodyne.Wiring.Internal;
+﻿using Kostassoid.Anodyne.Wiring.Internal;
 using Kostassoid.Anodyne.Wiring.Syntax;
 
 namespace Kostassoid.Anodyne.Wiring
@@ -13,35 +12,14 @@ namespace Kostassoid.Anodyne.Wiring
             EventAggregator.Publish(@event);
         }
 
-        public static ISingleSourceTargetScope<TEvent> ReactOn<TEvent>() where TEvent : class, IEvent
+        public static IPredicateSourceSyntax<TEvent> ReactOn<TEvent>() where TEvent : class, IEvent
         {
-            return new SingleSourceTargetScope<TEvent>(EventAggregator);
+            return new PredicateSourceSyntax<TEvent>(EventAggregator);
         }
 
-        public static ISubscriptionScope ReactOn()
+        public static IConventionSourceSyntax ReactOn()
         {
-            throw new NotImplementedException();
+            return new ConventionSourceSyntax(EventAggregator);
         }
-    }
-
-    public interface ISingleSourceTargetScope<out TEvent> where TEvent : IEvent
-    {
-        Action With(IHandlerOf<TEvent> handler, int priority = 0);
-        Action With(Action<TEvent> action, int priority = 0);
-        ISingleSourceTargetScope<TEvent> When(Predicate<TEvent> predicate);
-    }
-
-    public interface IMultiSourceTargetScope<out TEvent> where TEvent : IEvent
-    {
-        Action With(IHandlerOf<TEvent> handler, int priority = 0);
-    }
-
-    public interface ISubscriptionScope
-    {
-        ISubscriptionScopePredicate<TEvent> AllOf<TEvent>() where TEvent : IEvent;
-    }
-
-    public interface ISubscriptionScopePredicate<out TEvent> where TEvent : IEvent
-    {
     }
 }

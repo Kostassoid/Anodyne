@@ -13,23 +13,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Kostassoid.Anodyne.Wiring.Internal
 {
     public class MultiThreadAggregator : SingleThreadAggregator
     {
         private readonly object _sync = new object();
-
-        protected override void CachePotentialSubscribers(Type type, IEnumerable<Type> potentialSubscribers)
-        {
-            Task.Factory.StartNew(() =>
-                                      {
-                                          var newTargets = new Dictionary<Type, IEnumerable<Type>>(Targets);
-                                          newTargets[type] = potentialSubscribers;
-                                          Targets = newTargets;
-                                      });
-        }
 
         public override Action Subscribe(IInternalEventHandler handler)
         {

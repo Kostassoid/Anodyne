@@ -32,12 +32,16 @@ namespace Kostassoid.Anodyne.Wiring.Internal
         private readonly Predicate<TEvent> _predicate;
         private readonly int _priority;
 
-        public InternalEventHandler(Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority)
+        public InternalEventHandler(Type eventType, Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority)
         {
-            _eventType = typeof (TEvent);
+            _eventType = eventType;
             _handlerAction = handlerAction;
             _predicate = predicate;
             _priority = priority;
+        }
+
+        public InternalEventHandler(Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority) : this(typeof(TEvent), handlerAction, predicate, priority)
+        {
         }
 
         #region IInternalEventHandler Members
@@ -60,7 +64,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
                 return e =>
                            {
                                var ev = e as TEvent;
-                               if (ev != null)
+                               if (ev != null && _predicate(ev))
                                {
                                    _handlerAction(ev);
                                }

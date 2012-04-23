@@ -22,7 +22,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
         protected IDictionary<Type, IList<IInternalEventHandler>> HandlersDictionary =
             new Dictionary<Type, IList<IInternalEventHandler>>();
 
-        protected IDictionary<Type, IEnumerable<Type>> Targets = new Dictionary<Type, IEnumerable<Type>>();
+        //protected IDictionary<Type, IEnumerable<Type>> Targets = new Dictionary<Type, IEnumerable<Type>>();
 
         #region IDisposable Members
 
@@ -43,16 +43,9 @@ namespace Kostassoid.Anodyne.Wiring.Internal
 
         public virtual void Publish<TEvent>(TEvent ev) where TEvent : IEvent
         {
-            var eventHandlers = new List<IInternalEventHandler>();
-
-            foreach (var targetType in PotentialSubscribers(ev.GetType()))
-            {
-                IList<IInternalEventHandler> localHandlers;
-                if (HandlersDictionary.TryGetValue(targetType, out localHandlers))
-                {
-                    eventHandlers.AddRange(localHandlers);
-                }
-            }
+            IList<IInternalEventHandler> eventHandlers;
+            if (!HandlersDictionary.TryGetValue(ev.GetType(), out eventHandlers))
+                return;
 
             foreach (var handler in eventHandlers.OrderByDescending(h => h.Priority))
             {
@@ -76,37 +69,6 @@ namespace Kostassoid.Anodyne.Wiring.Internal
         }
 
         #endregion
-
-        protected virtual IEnumerable<Type> PotentialSubscribers(Type type)
-        {
-            //possible covariance interface generating should be also added
-            IEnumerable<Type> targetsForType;
-            if (!Targets.TryGetValue(type, out targetsForType))
-            {
-                targetsForType =
-                    type.GetInterfaces().Where(i => typeof (IEvent).IsAssignableFrom(i)).Union(
-                        EventTypeHierarchy(type).Reverse()).ToArray();
-                CachePotentialSubscribers(type, targetsForType);
-            }
-            return targetsForType;
-        }
-
-        protected virtual IEnumerable<Type> EventTypeHierarchy(Type type)
-        {
-            if (typeof (IEvent).IsAssignableFrom(type))
-            {
-                yield return type;
-                foreach (var subtype in EventTypeHierarchy(type.BaseType))
-                {
-                    yield return subtype;
-                }
-            }
-        }
-
-        protected virtual void CachePotentialSubscribers(Type type, IEnumerable<Type> potentialSubscribers)
-        {
-            Targets[type] = potentialSubscribers;
-        }
 
         protected virtual Action GenerateUnsubscriptionAction(IInternalEventHandler handler)
         {

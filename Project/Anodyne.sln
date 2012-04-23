@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Common", "Main\Anod
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EB57F770-FD3A-401A-AD78-B27BC3A20119}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{EB57F770-FD3A-401A-AD78-B27BC3A20119}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Common-Specs", "Specs\Anodyne-Common-Specs\Anodyne-Common-Specs.csproj", "{799BD16B-9695-48DB-99D8-059FDB742F75}"
 EndProject
@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Specs-Shared", "Spe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Domain", "Main\Anodyne-DomainModel\Anodyne-Domain.csproj", "{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Wiring-Specs", "Tests\Anodyne-Wiring-Specs\Anodyne-Wiring-Specs.csproj", "{6EEB637B-2B57-4F0F-BDC4-C816CA71834E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Wiring-Specs", "Specs\Anodyne-Wiring-Specs\Anodyne-Wiring-Specs.csproj", "{6EEB637B-2B57-4F0F-BDC4-C816CA71834E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
