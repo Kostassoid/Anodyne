@@ -44,7 +44,7 @@ namespace Kostassoid.Anodyne.Common.Specs
             public void should_throw()
             {
                 var option = Option<string>.None;
-                Assert.Throws<NotSupportedException>(() => { var x = option.Value; });
+                Assert.That(() => { var x = option.Value; }, Throws.TypeOf<NotSupportedException>());
             }
         }
 
@@ -112,7 +112,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_converting_some_to_object_implicitly
+        public class when_converting_some_to_object_explicitly
         {
             [Test]
             public void should_assign_the_value()
@@ -129,7 +129,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_converting_none_to_object_implicitly
+        public class when_converting_none_to_object_explicitly
         {
             [Test]
             public void should_throw()
@@ -138,7 +138,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 Option<string> option = someObject;
 
-                Assert.Throws<NotSupportedException>(() => { var anotherObject = (string) option; });
+                Assert.That(() => { var anotherObject = (string) option; }, Throws.TypeOf<NotSupportedException>());
             }
         }
 
