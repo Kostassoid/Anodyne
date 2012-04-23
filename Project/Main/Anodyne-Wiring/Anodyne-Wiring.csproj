@@ -45,10 +45,10 @@
     </Compile>
     <Compile Include="Subscription\AssemblySpecification.cs" />
     <Compile Include="Subscription\SubscriptionPerformer.cs" />
-    <Compile Include="Syntax\AssemblySourceSyntax.cs" />
+    <Compile Include="Syntax\Concrete\AssemblySourceSyntax.cs" />
     <Compile Include="Syntax\IConventionSourceSyntax.cs" />
     <Compile Include="Syntax\IPredicateSourceSyntax.cs" />
-    <Compile Include="Syntax\ConventionSourceSyntax.cs" />
+    <Compile Include="Syntax\Concrete\ConventionSourceSyntax.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IEventRouter.cs" />
     <Compile Include="IHandlerOf.cs" />
@@ -61,10 +61,10 @@
     <Compile Include="Syntax\IAssemblySourceSyntax.cs" />
     <Compile Include="Syntax\ISourceTypeFilterSyntax.cs" />
     <Compile Include="Syntax\ITargetSyntax.cs" />
-    <Compile Include="Syntax\PredicateSourceSyntax.cs" />
+    <Compile Include="Syntax\Concrete\PredicateSourceSyntax.cs" />
     <Compile Include="Subscription\SubscriptionSpecification.cs" />
-    <Compile Include="Syntax\SourceTypeFilterSyntax.cs" />
-    <Compile Include="Syntax\TargetSyntax.cs" />
+    <Compile Include="Syntax\Concrete\SourceTypeFilterSyntax.cs" />
+    <Compile Include="Syntax\Concrete\TargetSyntax.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

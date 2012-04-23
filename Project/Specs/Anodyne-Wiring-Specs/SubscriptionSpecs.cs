@@ -69,7 +69,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_firing_derived_event_with_event_from_this_assembly
+        public class when_firing_derived_event_subscribed_using_this_assembly
         {
             [Test]
             public void should_call_base_event_handler()
@@ -78,15 +78,33 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
                 EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
                 EventRouter.Fire(new DerivedTestEvent());
+                EventRouter.Fire(new TestEvent());
 
-                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened();
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
 
             }
         }
 
         [TestFixture]
         [Category("Unit")]
-        public class when_firing_derived_event_with_event_from_named_assembly
+        public class when_firing_derived_event_subscribed_using_this_assembly_with_predicate
+        {
+            [Test]
+            public void should_call_handler_only_for_allowed_event()
+            {
+                var handler = A.Fake<IHandlerOf<TestEvent>>();
+
+                EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().Where(t => t.Name.Contains("Derived")).With(handler);
+                EventRouter.Fire(new DerivedTestEvent());
+                EventRouter.Fire(new TestEvent());
+
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_derived_event_when_subscribed_using_named_assembly
         {
             [Test]
             public void should_call_base_event_handler()
@@ -94,16 +112,18 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
                 EventRouter.ReactOn().AllBasedOn<TestEvent>().From(p => p.Contains("Wiring-Specs")).With(handler);
-                EventRouter.Fire(new DerivedTestEvent());
 
-                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened();
+                EventRouter.Fire(new DerivedTestEvent());
+                EventRouter.Fire(new TestEvent());
+
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
 
             }
         }
 
         [TestFixture]
         [Category("Unit")]
-        public class when_firing_event_with_unsubscribing_handler
+        public class when_firing_event_with_unsubscribed_handler
         {
             [Test]
             public void should_not_call_handler()
@@ -154,6 +174,26 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
             }
         }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_unsubscribing_from_subscription_made_by_convention
+        {
+            [Test]
+            public void should_unsubscribe_from_all_sources()
+            {
+                var handler = A.Fake<IHandlerOf<TestEvent>>();
+
+                var unsubscribe = EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                unsubscribe();
+
+                EventRouter.Fire(new TestEvent());
+                EventRouter.Fire(new DerivedTestEvent());
+
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
+            }
+        }
+
 
 
     }

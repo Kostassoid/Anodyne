@@ -2,9 +2,9 @@ using System;
 using System.Reflection;
 using Kostassoid.Anodyne.Wiring.Subscription;
 
-namespace Kostassoid.Anodyne.Wiring.Syntax
+namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
-    class AssemblySourceSyntax<TEvent> : IAssemblySourceSyntax<TEvent> where TEvent : class, IEvent
+    internal class AssemblySourceSyntax<TEvent> : IAssemblySourceSyntax<TEvent> where TEvent : class, IEvent
     {
         private readonly SubscriptionSpecification<TEvent> _specification;
 

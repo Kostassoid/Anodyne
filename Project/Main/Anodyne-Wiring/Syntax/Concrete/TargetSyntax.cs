@@ -1,7 +1,7 @@
 using System;
 using Kostassoid.Anodyne.Wiring.Subscription;
 
-namespace Kostassoid.Anodyne.Wiring.Syntax
+namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
     internal class TargetSyntax<TEvent> : ITargetSyntax<TEvent> where TEvent : class, IEvent
     {

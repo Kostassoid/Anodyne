@@ -2,9 +2,9 @@ using System;
 using Kostassoid.Anodyne.Wiring.Internal;
 using Kostassoid.Anodyne.Wiring.Subscription;
 
-namespace Kostassoid.Anodyne.Wiring.Syntax
+namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
-    class PredicateSourceSyntax<TEvent> : IPredicateSourceSyntax<TEvent> where TEvent : class, IEvent
+    internal class PredicateSourceSyntax<TEvent> : IPredicateSourceSyntax<TEvent> where TEvent : class, IEvent
     {
         private readonly SubscriptionSpecification<TEvent> _specification;
 

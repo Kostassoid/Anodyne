@@ -1,5 +1,6 @@
 ﻿using Kostassoid.Anodyne.Wiring.Internal;
 using Kostassoid.Anodyne.Wiring.Syntax;
+using Kostassoid.Anodyne.Wiring.Syntax.Concrete;
 
 namespace Kostassoid.Anodyne.Wiring
 {

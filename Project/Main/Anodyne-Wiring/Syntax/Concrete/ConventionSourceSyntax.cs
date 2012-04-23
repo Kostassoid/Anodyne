@@ -1,10 +1,9 @@
-using System;
 using Kostassoid.Anodyne.Wiring.Internal;
 using Kostassoid.Anodyne.Wiring.Subscription;
 
-namespace Kostassoid.Anodyne.Wiring.Syntax
+namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
-    class ConventionSourceSyntax : IConventionSourceSyntax
+    internal class ConventionSourceSyntax : IConventionSourceSyntax
     {
         private readonly IEventAggregator _eventAggregator;
 

@@ -1,9 +1,9 @@
 using System;
 using Kostassoid.Anodyne.Wiring.Subscription;
 
-namespace Kostassoid.Anodyne.Wiring.Syntax
+namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
-    class SourceTypeFilterSyntax<TEvent> : ISourceTypeFilterSyntax<TEvent> where TEvent : class, IEvent
+    internal class SourceTypeFilterSyntax<TEvent> : ISourceTypeFilterSyntax<TEvent> where TEvent : class, IEvent
     {
         private readonly SubscriptionSpecification<TEvent> _specification;
 
