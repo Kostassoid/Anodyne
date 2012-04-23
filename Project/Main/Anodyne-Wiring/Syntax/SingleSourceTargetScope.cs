@@ -12,14 +12,14 @@ namespace Kostassoid.Anodyne.Wiring.Syntax
             _eventAggregator = eventAggregator;
         }
 
-        public void With(IHandlerOf<TEvent> handler, int priority = 0)
+        public Action With(IHandlerOf<TEvent> handler, int priority = 0)
         {
-            _eventAggregator.Subscribe(new InternalEventHandler<TEvent>(handler.Handle, _ => true, priority));
+            return _eventAggregator.Subscribe(new InternalEventHandler<TEvent>(handler.Handle, _ => true, priority));
         }
 
-        public void With(Action<TEvent> action, int priority = 0)
+        public Action With(Action<TEvent> action, int priority = 0)
         {
-            _eventAggregator.Subscribe(new InternalEventHandler<TEvent>(action, _ => true, priority));
+            return _eventAggregator.Subscribe(new InternalEventHandler<TEvent>(action, _ => true, priority));
         }
 
         public ISingleSourceTargetScope<TEvent> When(Predicate<TEvent> predicate)

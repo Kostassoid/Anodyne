@@ -11,6 +11,10 @@ namespace Kostassoid.Anodyne.Wiring.Specs
         {
         }
 
+        public class DerivedTestEvent : TestEvent
+        {
+        }
+
         [TestFixture]
         [Category("Unit")]
         public class when_subscribing_one_on_one_with_handler_object
@@ -27,6 +31,42 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
             }
         }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_derived_event_with_base_event_subscribed
+        {
+            [Test]
+            public void should_call_base_event_handler()
+            {
+                var handler = A.Fake<IHandlerOf<TestEvent>>();
+
+                EventRouter.ReactOn<TestEvent>().With(handler);
+                EventRouter.Fire(new DerivedTestEvent());
+
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened();
+
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_event_with_unsubscribing_handler
+        {
+            [Test]
+            public void should_not_call_handler()
+            {
+                var handler = A.Fake<IHandlerOf<TestEvent>>();
+
+                var unsubscribe = EventRouter.ReactOn<TestEvent>().With(handler);
+                unsubscribe();
+
+                EventRouter.Fire(new TestEvent());
+
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
+            }
+        }
+
 
         [TestFixture]
         [Category("Unit")]

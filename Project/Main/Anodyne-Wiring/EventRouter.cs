@@ -26,14 +26,14 @@ namespace Kostassoid.Anodyne.Wiring
 
     public interface ISingleSourceTargetScope<out TEvent> where TEvent : IEvent
     {
-        void With(IHandlerOf<TEvent> handler, int priority = 0);
-        void With(Action<TEvent> action, int priority = 0);
+        Action With(IHandlerOf<TEvent> handler, int priority = 0);
+        Action With(Action<TEvent> action, int priority = 0);
         ISingleSourceTargetScope<TEvent> When(Predicate<TEvent> predicate);
     }
 
     public interface IMultiSourceTargetScope<out TEvent> where TEvent : IEvent
     {
-        void With(IHandlerOf<TEvent> handler, int priority = 0);
+        Action With(IHandlerOf<TEvent> handler, int priority = 0);
     }
 
     public interface ISubscriptionScope

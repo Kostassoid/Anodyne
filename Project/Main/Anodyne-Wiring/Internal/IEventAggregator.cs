@@ -15,7 +15,7 @@ using System;
 
 namespace Kostassoid.Anodyne.Wiring.Internal
 {
-    public interface IEventAggregator
+    internal interface IEventAggregator
     {
         void Publish<TEvent>(TEvent ev) where TEvent : IEvent;
         Action Subscribe(IInternalEventHandler handler);
