@@ -33,3 +33,4 @@ log.txt*
 *.suo
 TestResults
 *.rdl.data
+packages
