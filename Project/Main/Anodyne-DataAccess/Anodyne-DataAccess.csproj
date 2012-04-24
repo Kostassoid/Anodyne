@@ -51,6 +51,7 @@
     <Compile Include="IDataSession.cs" />
     <Compile Include="IDataSessionEx.cs" />
     <Compile Include="IDataSessionFactory.cs" />
+    <Compile Include="IOperationResolver.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
