@@ -1,10 +1,23 @@
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+// Copyright 2011-2012 Anodyne.
+//   
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0 
+//  
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 
 namespace Kostassoid.Anodyne.Common
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+
     public class Ticket
     {
         private const string DateTimeEncodingFormat = "yyyyMMddHHmm";
@@ -50,15 +63,15 @@ namespace Kostassoid.Anodyne.Common
         private static byte[] HexStringToByteArray(String hexString)
         {
             var numberChars = hexString.Length;
-            var bytes = new byte[numberChars / 2];
+            var bytes = new byte[numberChars/2];
             for (var i = 0; i < numberChars; i += 2)
-                bytes[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
+                bytes[i/2] = Convert.ToByte(hexString.Substring(i, 2), 16);
             return bytes;
         }
 
         private static string ByteArrayToHexString(byte[] bytes)
         {
-            var hex = new StringBuilder(bytes.Length * 2);
+            var hex = new StringBuilder(bytes.Length*2);
             foreach (var b in bytes)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
@@ -73,7 +86,7 @@ namespace Kostassoid.Anodyne.Common
         private static byte[] UrlStringToByteArray(string input)
         {
             var str = input.Replace('-', '+').Replace('_', '/');
-            str = str.PadRight(str.Length + (4 - str.Length % 4) % 4, '=');
+            str = str.PadRight(str.Length + (4 - str.Length%4)%4, '=');
             return Convert.FromBase64String(str);
         }
     }

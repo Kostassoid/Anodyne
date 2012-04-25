@@ -1,15 +1,33 @@
-using System;
-using Kostassoid.Anodyne.Common;
-using Kostassoid.Anodyne.Domain.Base;
+// Copyright 2011-2012 Anodyne.
+//   
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0 
+//  
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 
 namespace Kostassoid.Anodyne.Domain.Events
 {
+    using System;
+    using Common;
+    using Base;
+
     [Serializable]
     public abstract class PersistentDomainEvent : AggregateRoot<Guid>, IDomainEvent
     {
         public DateTime Happened { get; protected set; }
         public EventData Data { get; protected set; }
-        public override int Version { get { return 0; } } // we don't want version-tracking events
+
+        // we don't want version-tracking events
+        public override int Version
+        {
+            get { return 0; }
+        }
 
         public bool IsReplaying { get; set; }
 
@@ -28,6 +46,5 @@ namespace Kostassoid.Anodyne.Domain.Events
             : this(SystemTime.Now, new EmptyEventData())
         {
         }
-
     }
 }

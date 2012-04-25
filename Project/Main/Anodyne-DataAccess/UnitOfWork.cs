@@ -1,14 +1,27 @@
-using System;
-using Kostassoid.Anodyne.Common;
-using Kostassoid.Anodyne.Common.CodeContracts;
-using Kostassoid.Anodyne.Common.ExecutionContext;
-using Kostassoid.Anodyne.DataAccess.Events;
-using Kostassoid.Anodyne.Domain.Base;
-using Kostassoid.Anodyne.Wiring;
+// Copyright 2011-2012 Anodyne.
+//   
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0 
+//  
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 
 namespace Kostassoid.Anodyne.DataAccess
 {
-    public class UnitOfWork: IDisposable
+    using System;
+    using Common;
+    using Common.CodeContracts;
+    using Common.ExecutionContext;
+    using Events;
+    using Domain.Base;
+    using Wiring;
+
+    public class UnitOfWork : IDisposable
     {
         private static IDataSessionFactory _dataSessionFactory;
 
@@ -26,9 +39,17 @@ namespace Kostassoid.Anodyne.DataAccess
             protected set { Context.Set(HeadContextKey, value); }
         }
 
-        public bool IsRoot { get { return _parent == null; } }
+        public bool IsRoot
+        {
+            get { return _parent == null; }
+        }
+
         public bool IsFinished { get; protected set; }
-        public bool IsDisposed { get { return Context.Find(_contextKey).IsNone; } }
+
+        public bool IsDisposed
+        {
+            get { return Context.Find(_contextKey).IsNone; }
+        }
 
         public static void SetFactory(IDataSessionFactory dataSessionFactory)
         {
@@ -125,7 +146,7 @@ namespace Kostassoid.Anodyne.DataAccess
             return DataSession.GetOperation<TOp>();
         }
 
-        public TEntity MarkAsCreated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot 
+        public TEntity MarkAsCreated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
         {
             AssertIfFinished();
 
@@ -146,6 +167,5 @@ namespace Kostassoid.Anodyne.DataAccess
 
             DataSession.MarkAsUpdated(entity);
         }
-
     }
 }

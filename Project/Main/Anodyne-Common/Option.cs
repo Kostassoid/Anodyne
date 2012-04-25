@@ -1,9 +1,29 @@
-﻿namespace Kostassoid.Anodyne.Common
+﻿// Copyright 2011-2012 Anodyne.
+//   
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0 
+//  
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
+
+namespace Kostassoid.Anodyne.Common
 {
     public abstract class Option<T> where T : class
     {
-        public static Option<T> None { get { return new None<T>(); }}
-        public static Option<T> Some(T value) { return new Some<T>(value); }
+        public static Option<T> None
+        {
+            get { return new None<T>(); }
+        }
+
+        public static Option<T> Some(T value)
+        {
+            return new Some<T>(value);
+        }
 
         public abstract T Value { get; }
         public abstract bool IsSome { get; }
@@ -23,12 +43,12 @@
         {
             return option.Value;
         }
-
     }
 
     public sealed class Some<T> : Option<T> where T : class
     {
         private readonly T _value;
+
         public Some(T value)
         {
             if (value == null)
@@ -39,9 +59,20 @@
             _value = value;
         }
 
-        public override T Value { get { return _value; } }
-        public override bool IsSome { get { return true; } }
-        public override bool IsNone { get { return false; } }
+        public override T Value
+        {
+            get { return _value; }
+        }
+
+        public override bool IsSome
+        {
+            get { return true; }
+        }
+
+        public override bool IsNone
+        {
+            get { return false; }
+        }
     }
 
     public sealed class None<T> : Option<T> where T : class
@@ -51,8 +82,15 @@
             get { throw new System.NotSupportedException("There is no value"); }
         }
 
-        public override bool IsSome { get { return false; } }
-        public override bool IsNone { get { return true; } }
+        public override bool IsSome
+        {
+            get { return false; }
+        }
+
+        public override bool IsNone
+        {
+            get { return true; }
+        }
     }
 
     public static class OptionEx

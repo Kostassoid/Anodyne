@@ -1,4 +1,4 @@
-﻿// Copyright 2009-2011 Taijutsu.
+﻿// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,12 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Kostassoid.Anodyne.Wiring.Internal
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class SingleThreadAggregator : IEventAggregator, IDisposable
     {
         protected IDictionary<Type, IList<IInternalEventHandler>> HandlersDictionary =
@@ -32,7 +32,6 @@ namespace Kostassoid.Anodyne.Wiring.Internal
         }
 
         #endregion
-
 
         protected virtual void Dispose()
         {
@@ -58,7 +57,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
             IList<IInternalEventHandler> handlers;
             if (!HandlersDictionary.TryGetValue(handler.EventType, out handlers))
             {
-                HandlersDictionary.Add(handler.EventType, new List<IInternalEventHandler> { handler });
+                HandlersDictionary.Add(handler.EventType, new List<IInternalEventHandler> {handler});
             }
             else
             {
