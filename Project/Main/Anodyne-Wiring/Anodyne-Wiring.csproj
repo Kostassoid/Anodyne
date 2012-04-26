@@ -43,6 +43,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="EventRouterExtentions.cs" />
     <Compile Include="Subscription\AssemblySpecification.cs" />
     <Compile Include="Subscription\SubscriptionPerformer.cs" />
     <Compile Include="Syntax\Concrete\AssemblySourceSyntax.cs" />
@@ -60,11 +61,13 @@
     <Compile Include="EventRouter.cs" />
     <Compile Include="Syntax\IAssemblySourceSyntax.cs" />
     <Compile Include="Syntax\ISourceTypeFilterSyntax.cs" />
+    <Compile Include="Syntax\ITargetDiscoverySyntax.cs" />
     <Compile Include="Syntax\ITargetSyntax.cs" />
     <Compile Include="Syntax\Concrete\PredicateSourceSyntax.cs" />
     <Compile Include="Subscription\SubscriptionSpecification.cs" />
     <Compile Include="Syntax\Concrete\SourceTypeFilterSyntax.cs" />
     <Compile Include="Syntax\Concrete\TargetSyntax.cs" />
+    <Compile Include="Syntax\Concrete\TargetDiscoverySyntax.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

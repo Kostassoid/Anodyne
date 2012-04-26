@@ -14,36 +14,35 @@
 namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
     using System;
+    using Common;
     using Subscription;
 
-    internal class TargetSyntax<TEvent> : ITargetSyntax<TEvent> where TEvent : class, IEvent
+    internal class TargetDiscoverySyntax<TEvent, THandler> : ITargetDiscoverySyntax<TEvent, THandler>
+        where TEvent : class, IEvent
+        where THandler : class
     {
         private readonly SubscriptionSpecification<TEvent> _specification;
 
-        public TargetSyntax(SubscriptionSpecification<TEvent> specification)
+        public TargetDiscoverySyntax(SubscriptionSpecification<TEvent> specification)
         {
             _specification = specification;
+
+            _specification.TargetType = typeof (THandler);
         }
 
-        public Action With(IHandlerOf<TEvent> handler, int priority = 0)
+        public Action As(Func<TEvent, Option<THandler>> discoveryFunc)
         {
-            _specification.HandlerAction = handler.Handle;
-            _specification.Priority = priority;
+            _specification.TargetDiscoveryFunction =
+                e =>
+                {
+                    var discoveredTarget = discoveryFunc(e);
+                    if (discoveredTarget.IsNone)
+                        throw new InvalidOperationException(string.Format("Unable to discover the target of type {0}", typeof (THandler).Name));
+
+                    return discoveredTarget.Value;
+                };
 
             return SubscriptionPerformer.Perform(_specification);
-        }
-
-        public Action With(Action<TEvent> action, int priority = 0)
-        {
-            _specification.HandlerAction = action;
-            _specification.Priority = priority;
-
-            return SubscriptionPerformer.Perform(_specification);
-        }
-
-        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>() where THandler : class
-        {
-            return new TargetDiscoverySyntax<TEvent, THandler>(_specification);
         }
     }
 }

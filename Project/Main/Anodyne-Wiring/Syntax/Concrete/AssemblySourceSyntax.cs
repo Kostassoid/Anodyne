@@ -28,14 +28,14 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 
         public ISourceTypeFilterSyntax<TEvent> FromThisAssembly()
         {
-            _specification.Assembly = new AssemblySpecification(Assembly.GetCallingAssembly());
+            _specification.SourceAssembly = new AssemblySpecification(Assembly.GetCallingAssembly());
 
             return new SourceTypeFilterSyntax<TEvent>(_specification);
         }
 
         public ISourceTypeFilterSyntax<TEvent> From(Predicate<string> assemblyNameFilter)
         {
-            _specification.Assembly = new AssemblySpecification(assemblyNameFilter);
+            _specification.SourceAssembly = new AssemblySpecification(assemblyNameFilter);
 
             return new SourceTypeFilterSyntax<TEvent>(_specification);
         }

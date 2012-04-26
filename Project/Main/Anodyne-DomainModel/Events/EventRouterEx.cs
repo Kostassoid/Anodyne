@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Anodyne.
+﻿// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,15 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Wiring.Syntax
+namespace Kostassoid.Anodyne.Domain.Events
 {
     using System;
-    using Common;
+    using Wiring;
 
-    public interface ITargetSyntax<out TEvent> : ISyntax where TEvent : class, IEvent
+    public static class EventRouterEx
     {
-        Action With(IHandlerOf<TEvent> handler, int priority = 0);
-        Action With(Action<TEvent> action, int priority = 0);
-        ITargetDiscoverySyntax<TEvent, THandler> With<THandler>() where THandler : class;
+        public static Action BindDomainEvents<T>(this EventRouterExtentions eventRouter) where T : class
+        {
+            return EventRouter
+                .ReactOn()
+                .AllBasedOn<IAggregateEvent>()
+                .From(_ => true) //TODO: pass some filter perhaps
+                .With<T>()
+                .As(e => e.AggregateObject as T);
+        }
+         
     }
 }

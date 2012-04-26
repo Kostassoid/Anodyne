@@ -16,10 +16,8 @@ namespace Kostassoid.Anodyne.Wiring.Syntax
     using System;
     using Common;
 
-    public interface ITargetSyntax<out TEvent> : ISyntax where TEvent : class, IEvent
+    public interface ITargetDiscoverySyntax<out TEvent, THandler> where TEvent : class, IEvent where THandler : class
     {
-        Action With(IHandlerOf<TEvent> handler, int priority = 0);
-        Action With(Action<TEvent> action, int priority = 0);
-        ITargetDiscoverySyntax<TEvent, THandler> With<THandler>() where THandler : class;
+        Action As(Func<TEvent, Option<THandler>> discoveryFunc);
     }
 }

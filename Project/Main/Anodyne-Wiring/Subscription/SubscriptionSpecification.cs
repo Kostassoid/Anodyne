@@ -14,28 +14,36 @@
 namespace Kostassoid.Anodyne.Wiring.Subscription
 {
     using System;
+    using Common;
     using Common.CodeContracts;
     using Internal;
 
     internal class SubscriptionSpecification<TEvent> where TEvent : class, IEvent
     {
+        public delegate Option<object> TargetDiscoveryFunc(TEvent @event);
+
         public IEventAggregator EventAggregator { get; protected set; }
         public Type BaseEventType { get; set; }
-        public AssemblySpecification Assembly { get; set; }
+        public AssemblySpecification SourceAssembly { get; set; }
         public Predicate<Type> TypePredicate { get; set; }
         public Predicate<TEvent> EventPredicate { get; set; }
+
+        public Type TargetType { get; set; }
+        //public AssemblySpecification TargetAssembly { get; set; }
+        public TargetDiscoveryFunc TargetDiscoveryFunction { get; set; }
         public Action<TEvent> HandlerAction { get; set; }
         public int Priority { get; set; }
 
         public bool IsValid
         {
-            get { return HandlerAction != null; }
+            get { return HandlerAction != null || TargetDiscoveryFunction != null; }
         }
 
         public bool IsPolimorphic
         {
-            get { return Assembly != null; }
+            get { return SourceAssembly != null; }
         }
+
 
         public SubscriptionSpecification(IEventAggregator eventAggregator)
         {

@@ -15,7 +15,12 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Reflection.Emit;
+    using Common;
     using Common.CodeContracts;
     using Internal;
 
@@ -26,21 +31,67 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             Requires.NotNull(specification, "specification");
             Requires.True(specification.IsValid, "specification", "Invalid specification");
 
-            var sources = FindSources(specification.BaseEventType, specification.Assembly, specification.TypePredicate);
+            var sources = FindTypes(specification.BaseEventType, specification.SourceAssembly, specification.TypePredicate);
 
             Action unsubscribeAction = () => { };
 
             foreach (var source in sources)
             {
-                unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, specification.HandlerAction,
-                                                                                                              specification.EventPredicate,
-                                                                                                              specification.Priority));
+                if (specification.TargetDiscoveryFunction == null)
+                {
+                    unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, specification.HandlerAction,
+                                                                                                                  specification.EventPredicate,
+                                                                                                                  specification.Priority));
+                }
+                else
+                {
+                    var posibleTarget = FindHandler(specification.TargetType, source, specification.TargetDiscoveryFunction);
+
+                    if (posibleTarget.IsSome)
+                    {
+                        unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, posibleTarget.Value,
+                                                                                                                      specification.EventPredicate,
+                                                                                                                      specification.Priority));
+                    }
+                }
             }
 
             return unsubscribeAction;
         }
 
-        private static IEnumerable<Type> FindSources(Type baseEventType, AssemblySpecification assembly, Predicate<Type> typePredicate)
+        private static Option<Action<TEvent>> FindHandler<TEvent>(Type targetType, Type eventType, SubscriptionSpecification<TEvent>.TargetDiscoveryFunc targetDiscoveryFunction) where TEvent : class, IEvent
+        {
+            var method = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).FirstOrDefault(mi => IsTargetCompatibleWithSource(mi, eventType));
+            if (method == null) return new None<Action<TEvent>>();
+
+            var methodParam = Expression.Parameter(method.GetParameters()[0].ParameterType);
+            var targetParam = Expression.Parameter(targetType);
+            var methodCall = Expression.Call(targetParam, method, methodParam);
+            var handlerDelegate = Expression.Lambda(methodCall, targetParam, methodParam).Compile();
+
+            Action<TEvent> handler = ev =>
+                                         {
+                                             var targetObject = targetDiscoveryFunction(ev);
+                                             if (targetObject.IsNone) return;
+
+                                             //TODO: use typed lambra instead of using DynamicInvoke()!
+                                             handlerDelegate.DynamicInvoke(targetObject.Value, ev);
+                                         };
+
+            return handler;
+        }
+
+        private static bool IsTargetCompatibleWithSource(MethodInfo methodInfo, Type eventType)
+        {
+            if (methodInfo.ReturnType != typeof(void)) return false;
+
+            var parameters = methodInfo.GetParameters();
+            if (parameters.Length != 1) return false;
+
+            return parameters[0].ParameterType.IsAssignableFrom(eventType);
+        }
+
+        private static IEnumerable<Type> FindTypes(Type baseEventType, AssemblySpecification assembly, Predicate<Type> typePredicate)
         {
             if (assembly == null)
             {

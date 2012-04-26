@@ -34,7 +34,6 @@ namespace Kostassoid.Anodyne.Domain.Events
         }
 
         // should not be stored!
-
         public TKey AggregateId { get; protected set; }
 
         public object AggregateIdObject
@@ -44,7 +43,7 @@ namespace Kostassoid.Anodyne.Domain.Events
 
         public int AggregateVersion { get; protected set; }
 
-        protected AggregateEvent()
+        private AggregateEvent()
         {
         }
 

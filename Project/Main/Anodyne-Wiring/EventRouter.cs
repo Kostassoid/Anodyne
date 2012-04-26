@@ -19,21 +19,33 @@ namespace Kostassoid.Anodyne.Wiring
 
     public static class EventRouter
     {
-        private static readonly IEventAggregator EventAggregator = new MultiThreadAggregator();
+        private static IEventAggregator _eventAggregator = new MultiThreadAggregator();
+
+        public static EventRouterExtentions Extentions { get; private set; }
+
+        static EventRouter()
+        {
+            Extentions = new EventRouterExtentions();
+        }
 
         public static void Fire(IEvent @event)
         {
-            EventAggregator.Publish(@event);
+            _eventAggregator.Publish(@event);
         }
 
         public static IPredicateSourceSyntax<TEvent> ReactOn<TEvent>() where TEvent : class, IEvent
         {
-            return new PredicateSourceSyntax<TEvent>(EventAggregator);
+            return new PredicateSourceSyntax<TEvent>(_eventAggregator);
         }
 
         public static IConventionSourceSyntax ReactOn()
         {
-            return new ConventionSourceSyntax(EventAggregator);
+            return new ConventionSourceSyntax(_eventAggregator);
+        }
+
+        public static void Reset()
+        {
+            _eventAggregator = new MultiThreadAggregator(); //TODO: smells?
         }
     }
 }

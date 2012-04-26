@@ -36,6 +36,11 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             return new TargetSyntax<TEvent>(_specification).With(action, priority);
         }
 
+        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>() where THandler : class
+        {
+            return new TargetDiscoverySyntax<TEvent, THandler>(_specification);
+        }
+
         public ITargetSyntax<TEvent> When(Predicate<TEvent> predicate)
         {
             _specification.EventPredicate = predicate;

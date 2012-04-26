@@ -207,8 +207,6 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             }
         }
 
-
-
     }
     // ReSharper restore InconsistentNaming
 
