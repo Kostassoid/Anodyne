@@ -60,7 +60,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
                        };
         }
 
-        protected override void Dispose()
+        public override void Reset()
         {
             lock (_sync)
             {

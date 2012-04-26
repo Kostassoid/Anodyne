@@ -14,7 +14,10 @@
 namespace Kostassoid.Anodyne.Domain.Specs
 {
     using System;
+    using System.Diagnostics;
+    using System.Linq;
     using Base;
+    using Common.Extentions;
     using Events;
     using NUnit.Framework;
     using Wiring;
@@ -53,32 +56,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
             }
         }
 
-
-        [TestFixture]
-        [Category("Unit")]
-        public class when_firing_root_event_using_subscription_with_target_convention
-        {
-            [Test]
-            public void should_call_valid_handler()
-            {
-                EventRouter.Reset();
-                EventRouter
-                    .ReactOn()
-                    .AllBasedOn<IAggregateEvent>()
-                    .FromThisAssembly()
-                    .With<TestRoot>()
-                    .As(e => e.AggregateObject as TestRoot);
-
-                var root = new TestRoot();
-
-                EventRouter.Fire(new Change1Event(root));
-                EventRouter.Fire(new Change2Event(root));
-
-                Assert.That(root.Fired1, Is.EqualTo(1));
-                Assert.That(root.Fired2, Is.EqualTo(1));
-            }
-        }
-
         [TestFixture]
         [Category("Unit")]
         public class when_firing_root_event_using_extentions
@@ -96,6 +73,37 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 Assert.That(root.Fired1, Is.EqualTo(1));
                 Assert.That(root.Fired2, Is.EqualTo(1));
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_measuring_speed_of_handler_invocations
+        {
+            [Test]
+            [Explicit("For performance experiments")]
+            public void should_be_fast()
+            {
+                EventRouter.Reset();
+                EventRouter.Extentions.BindDomainEvents<TestRoot>();
+
+                var root = new TestRoot();
+
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                Enumerable.Range(0, 1000000).ForEach(_ =>
+                                                         {
+                                                             EventRouter.Fire(new Change1Event(root));
+                                                             EventRouter.Fire(new Change2Event(root));
+                                                         });
+                stopwatch.Stop();
+
+                Console.WriteLine("Elapsed: {0}", stopwatch.ElapsedMilliseconds);
+
+                Assert.That(root.Fired1, Is.EqualTo(1000000));
+                Assert.That(root.Fired2, Is.EqualTo(1000000));
+
+                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1000));
             }
         }
 

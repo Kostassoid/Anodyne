@@ -19,5 +19,6 @@ namespace Kostassoid.Anodyne.Wiring.Internal
     {
         void Publish<TEvent>(TEvent ev) where TEvent : IEvent;
         Action Subscribe(IInternalEventHandler handler);
+        void Reset();
     }
 }

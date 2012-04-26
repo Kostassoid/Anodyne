@@ -23,8 +23,8 @@ namespace Kostassoid.Anodyne.Domain.Events
             return EventRouter
                 .ReactOn()
                 .AllBasedOn<IAggregateEvent>()
-                .From(_ => true) //TODO: pass some filter perhaps
-                .With<T>()
+                .From(a => typeof(T).Assembly.FullName == a) //assuming our domain is one assembly with its events
+                .With<T>(EventMatching.Strict)
                 .As(e => e.AggregateObject as T);
         }
          

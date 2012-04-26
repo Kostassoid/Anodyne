@@ -45,7 +45,7 @@ namespace Kostassoid.Anodyne.Wiring
 
         public static void Reset()
         {
-            _eventAggregator = new MultiThreadAggregator(); //TODO: smells?
+            _eventAggregator.Reset();
         }
     }
 }

@@ -15,11 +15,10 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
+    using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Reflection.Emit;
     using Common;
     using Common.CodeContracts;
     using Internal;
@@ -45,11 +44,9 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
                 }
                 else
                 {
-                    var posibleTarget = FindHandler(specification.TargetType, source, specification.TargetDiscoveryFunction);
-
-                    if (posibleTarget.IsSome)
-                    {
-                        unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, posibleTarget.Value,
+                    foreach (var target in FindHandlers(specification.TargetType, source, specification.TargetDiscoveryFunction, specification.EventMatching))
+                    { 
+                        unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, target,
                                                                                                                       specification.EventPredicate,
                                                                                                                       specification.Priority));
                     }
@@ -59,36 +56,63 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             return unsubscribeAction;
         }
 
-        private static Option<Action<TEvent>> FindHandler<TEvent>(Type targetType, Type eventType, SubscriptionSpecification<TEvent>.TargetDiscoveryFunc targetDiscoveryFunction) where TEvent : class, IEvent
+        private static IEnumerable<Action<TEvent>> FindHandlers<TEvent>(Type targetType, Type eventType, SubscriptionSpecification<TEvent>.TargetDiscoveryFunc targetDiscoveryFunction, EventMatching eventMatching) where TEvent : class, IEvent
         {
-            var method = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).FirstOrDefault(mi => IsTargetCompatibleWithSource(mi, eventType));
-            if (method == null) return new None<Action<TEvent>>();
+            var methods = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(mi => IsTargetCompatibleWithSource(mi, eventType, eventMatching)).ToList();
+            if (methods.Count == 0) yield break;
 
-            var methodParam = Expression.Parameter(method.GetParameters()[0].ParameterType);
-            var targetParam = Expression.Parameter(targetType);
-            var methodCall = Expression.Call(targetParam, method, methodParam);
-            var handlerDelegate = Expression.Lambda(methodCall, targetParam, methodParam).Compile();
+            foreach (var method in methods)
+            {
+                var handlerDelegate = CreateHandlerDelegate(method, eventType);
 
-            Action<TEvent> handler = ev =>
-                                         {
-                                             var targetObject = targetDiscoveryFunction(ev);
-                                             if (targetObject.IsNone) return;
+                Action<TEvent> handler = ev =>
+                {
+                    var targetObject = targetDiscoveryFunction(ev);
+                    if (targetObject.IsNone) return;
 
-                                             //TODO: use typed lambra instead of using DynamicInvoke()!
-                                             handlerDelegate.DynamicInvoke(targetObject.Value, ev);
-                                         };
+                    handlerDelegate(targetObject.Value, ev);
+                };
 
-            return handler;
+                yield return handler;
+            }
         }
 
-        private static bool IsTargetCompatibleWithSource(MethodInfo methodInfo, Type eventType)
+        delegate void HandlerMethodDelegate(object instance, IEvent @event);
+
+        private static HandlerMethodDelegate CreateHandlerDelegate(MethodInfo methodInfo, Type eventType)
+        {
+            var instance = Expression.Parameter(typeof(object), "instance");
+            var ev = Expression.Parameter(typeof(IEvent), "event");
+
+            var lambda = Expression.Lambda<HandlerMethodDelegate>(
+                Expression.Call(
+                    Expression.Convert(instance, methodInfo.DeclaringType),
+                    methodInfo,
+                    Expression.Convert(ev, eventType)
+                    ),
+                instance,
+                ev
+                );
+
+            return lambda.Compile();
+        }
+
+        private static bool IsTargetCompatibleWithSource(MethodInfo methodInfo, Type eventType, EventMatching eventMatching)
         {
             if (methodInfo.ReturnType != typeof(void)) return false;
 
             var parameters = methodInfo.GetParameters();
             if (parameters.Length != 1) return false;
 
-            return parameters[0].ParameterType.IsAssignableFrom(eventType);
+            switch (eventMatching)
+            {
+                case EventMatching.Strict:
+                    return parameters[0].ParameterType == eventType;
+                case EventMatching.All:
+                    return parameters[0].ParameterType.IsAssignableFrom(eventType);
+                default:
+                    throw new NotSupportedException(string.Format("EventMatching.{0} is not supported", eventMatching));
+            }
         }
 
         private static IEnumerable<Type> FindTypes(Type baseEventType, AssemblySpecification assembly, Predicate<Type> typePredicate)

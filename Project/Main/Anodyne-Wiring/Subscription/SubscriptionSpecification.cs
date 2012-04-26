@@ -29,8 +29,8 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
         public Predicate<TEvent> EventPredicate { get; set; }
 
         public Type TargetType { get; set; }
-        //public AssemblySpecification TargetAssembly { get; set; }
         public TargetDiscoveryFunc TargetDiscoveryFunction { get; set; }
+        public EventMatching EventMatching { get; set; }
         public Action<TEvent> HandlerAction { get; set; }
         public int Priority { get; set; }
 
@@ -43,7 +43,6 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
         {
             get { return SourceAssembly != null; }
         }
-
 
         public SubscriptionSpecification(IEventAggregator eventAggregator)
         {

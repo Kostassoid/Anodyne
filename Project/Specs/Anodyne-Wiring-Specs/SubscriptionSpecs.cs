@@ -28,6 +28,23 @@ namespace Kostassoid.Anodyne.Wiring.Specs
         {
         }
 
+        public class TestHandler
+        {
+
+            public int Fired1 { get; set; }
+            public int Fired2 { get; set; }
+
+            public void SomeMethod(TestEvent ev)
+            {
+                Fired1++;
+            }
+
+            protected void Handle(DerivedTestEvent ev)
+            {
+                Fired2++;
+            }
+        }
+
         [TestFixture]
         [Category("Unit")]
         public class when_subscribing_one_on_one_with_handler_object
@@ -206,6 +223,78 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
             }
         }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_event_after_resetting_event_router
+        {
+            [Test]
+            public void should_not_call_handlers()
+            {
+                var handler = A.Fake<IHandlerOf<TestEvent>>();
+
+                EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+
+                EventRouter.Reset();
+
+                EventRouter.Fire(new TestEvent());
+                EventRouter.Fire(new DerivedTestEvent());
+
+                A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_events_using_strict_matching_subscription
+        {
+            [Test]
+            public void should_call_handlers_once()
+            {
+                var handler = new TestHandler();
+
+                EventRouter.Reset();
+                EventRouter
+                    .ReactOn()
+                    .AllBasedOn<TestEvent>()
+                    .FromThisAssembly()
+                    .With<TestHandler>(EventMatching.Strict)
+                    .As(_ => handler);
+
+                EventRouter.Fire(new TestEvent());
+                EventRouter.Fire(new DerivedTestEvent());
+
+                Assert.That(handler.Fired1, Is.EqualTo(1));
+                Assert.That(handler.Fired2, Is.EqualTo(1));
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_events_using_all_matching_subscription
+        {
+            [Test]
+            public void should_call_base_event_handler_each_time()
+            {
+                var handler = new TestHandler();
+
+                EventRouter.Reset();
+                EventRouter
+                    .ReactOn()
+                    .AllBasedOn<TestEvent>()
+                    .FromThisAssembly()
+                    .With<TestHandler>(EventMatching.All)
+                    .As(_ => handler);
+
+                EventRouter.Fire(new TestEvent());
+                EventRouter.Fire(new DerivedTestEvent());
+
+                Assert.That(handler.Fired1, Is.EqualTo(2));
+                Assert.That(handler.Fired2, Is.EqualTo(1));
+            }
+        }
+
+
 
     }
     // ReSharper restore InconsistentNaming

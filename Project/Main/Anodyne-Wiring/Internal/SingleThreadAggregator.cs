@@ -35,7 +35,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
 
         protected virtual void Dispose()
         {
-            HandlersDictionary.Clear();
+            Reset();
         }
 
         #region IEventAggregator Members
@@ -65,6 +65,11 @@ namespace Kostassoid.Anodyne.Wiring.Internal
             }
 
             return GenerateUnsubscriptionAction(handler);
+        }
+
+        public virtual void Reset()
+        {
+            HandlersDictionary.Clear();
         }
 
         #endregion

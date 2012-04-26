@@ -41,7 +41,7 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             return SubscriptionPerformer.Perform(_specification);
         }
 
-        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>() where THandler : class
+        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching strict) where THandler : class
         {
             return new TargetDiscoverySyntax<TEvent, THandler>(_specification);
         }
