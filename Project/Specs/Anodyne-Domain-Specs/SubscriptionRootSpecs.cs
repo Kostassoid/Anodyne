@@ -76,38 +76,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
             }
         }
 
-        [TestFixture]
-        [Category("Unit")]
-        public class when_measuring_speed_of_handler_invocations
-        {
-            [Test]
-            [Explicit("For performance experiments")]
-            public void should_be_fast()
-            {
-                EventRouter.Reset();
-                EventRouter.Extentions.BindDomainEvents<TestRoot>();
-
-                var root = new TestRoot();
-
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                Enumerable.Range(0, 1000000).ForEach(_ =>
-                                                         {
-                                                             EventRouter.Fire(new Change1Event(root));
-                                                             EventRouter.Fire(new Change2Event(root));
-                                                         });
-                stopwatch.Stop();
-
-                Console.WriteLine("Elapsed: {0}", stopwatch.ElapsedMilliseconds);
-
-                Assert.That(root.Fired1, Is.EqualTo(1000000));
-                Assert.That(root.Fired2, Is.EqualTo(1000000));
-
-                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1000));
-            }
-        }
-
-
     }
     // ReSharper restore InconsistentNaming
 

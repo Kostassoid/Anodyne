@@ -14,6 +14,9 @@
 namespace Kostassoid.Anodyne.Wiring.Specs
 {
     using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using Common.Extentions;
     using FakeItEasy;
     using NUnit.Framework;
 
@@ -293,6 +296,50 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 Assert.That(handler.Fired2, Is.EqualTo(1));
             }
         }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_measuring_speed_of_handler_invocations
+        {
+            [Test]
+            [Explicit("For performance experiments")]
+            public void should_be_fast()
+            {
+                EventRouter.Reset();
+
+                var handler = new TestHandler();
+
+                EventRouter.Reset();
+                EventRouter
+                    .ReactOn()
+                    .AllBasedOn<TestEvent>()
+                    .FromThisAssembly()
+                    .With<TestHandler>(EventMatching.Strict)
+                    .As(_ => handler);
+
+
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                var i = 1000000;
+                while (i --> 0)
+                {
+                    EventRouter.Fire(new TestEvent());
+                    EventRouter.Fire(new DerivedTestEvent());
+                }
+
+                stopwatch.Stop();
+
+                Console.WriteLine("Elapsed: {0}", stopwatch.ElapsedMilliseconds);
+
+                Assert.That(handler.Fired1, Is.EqualTo(1000000));
+                Assert.That(handler.Fired2, Is.EqualTo(1000000));
+
+                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1000)); //impossible (yet) mark by design, not an actual test
+            }
+        }
+
+
 
 
 
