@@ -34,3 +34,5 @@ log.txt*
 TestResults
 *.rdl.data
 packages
+!Tools/MongoDb/bin
+testdb
