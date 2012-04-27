@@ -13,6 +13,12 @@
 
 namespace Kostassoid.Anodyne.Domain.Base
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using Events;
+    using Wiring;
+
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
         public virtual object IdObject
@@ -22,9 +28,29 @@ namespace Kostassoid.Anodyne.Domain.Base
 
         public virtual int Version { get; protected set; }
 
+        private static IList<Type> _binded = new BindingList<Type>();
+
+        protected AggregateRoot()
+        {
+            EnsureAggregateEventsAreBindedFor(GetType());
+        }
+
+        private void EnsureAggregateEventsAreBindedFor(Type aggregateType)
+        {
+            if (_binded.Contains(aggregateType)) return;
+
+            EventBus.Extentions.BindDomainEvents(aggregateType);
+            _binded.Add(aggregateType);
+        }
+
         public virtual int NewVersion()
         {
             return Version++;
+        }
+
+        protected void Apply(IAggregateEvent @event)
+        {
+            EventBus.Publish(@event);
         }
     }
 }

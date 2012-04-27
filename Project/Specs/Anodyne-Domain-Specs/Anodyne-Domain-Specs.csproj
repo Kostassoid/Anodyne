@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubscriptionRootSpecs.cs" />
+    <Compile Include="AggregateRootSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

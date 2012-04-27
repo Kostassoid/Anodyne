@@ -18,15 +18,25 @@ namespace Kostassoid.Anodyne.Domain.Events
 
     public static class EventRouterEx
     {
-        public static Action BindDomainEvents<T>(this EventRouterExtentions eventRouter) where T : class
+        public static Action BindDomainEvents<T>(this EventBusExtentions eventBus) where T : class
         {
-            return EventRouter
-                .ReactOn()
+            return EventBus
+                .SubscribeTo()
                 .AllBasedOn<IAggregateEvent>()
                 .From(a => typeof(T).Assembly.FullName == a) //assuming our domain is one assembly with its events
                 .With<T>(EventMatching.Strict)
                 .As(e => e.AggregateObject as T);
         }
-         
+
+        public static Action BindDomainEvents(this EventBusExtentions eventBus, Type aggregateType)
+        {
+            return EventBus
+                .SubscribeTo()
+                .AllBasedOn<IAggregateEvent>()
+                .From(a => aggregateType.Assembly.FullName == a) //assuming our domain is one assembly with its events
+                .With(aggregateType, EventMatching.Strict)
+                .As(e => e.AggregateObject as object);
+        }
+
     }
 }

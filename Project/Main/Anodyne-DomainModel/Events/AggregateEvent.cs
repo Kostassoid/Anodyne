@@ -21,25 +21,16 @@ namespace Kostassoid.Anodyne.Domain.Events
     public abstract class AggregateEvent<TRoot, TKey> : PersistentDomainEvent, IAggregateEvent where TRoot : AggregateRoot<TKey>
     {
         private readonly TRoot _aggregate;
-
-        public TRoot Aggregate
-        {
-            get { return _aggregate; }
-        }
-
-        // should not be stored!
-        public IAggregateRoot AggregateObject
-        {
-            get { return _aggregate; }
-        }
-
-        // should not be stored!
         public TKey AggregateId { get; protected set; }
 
-        public object AggregateIdObject
-        {
-            get { return AggregateId; }
-        }
+        // should not be stored!
+        public TRoot Aggregate { get { return _aggregate; } }
+
+        // should not be stored!
+        public IAggregateRoot AggregateObject { get { return _aggregate; } }
+
+        // should not be stored!
+        public object AggregateIdObject { get { return AggregateId; } }
 
         public int AggregateVersion { get; protected set; }
 

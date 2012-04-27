@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
 {
     using System;
     using System.ComponentModel;
+    using System.Threading.Tasks;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IInternalEventHandler
@@ -22,7 +23,7 @@ namespace Kostassoid.Anodyne.Wiring.Internal
         Action<object> HandlerAction { get; }
         Type EventType { get; }
         int Priority { get; }
-        bool Suitable(object ev);
+        bool Async { get; }
     }
 
     internal class InternalEventHandler<TEvent> : IInternalEventHandler where TEvent : class
@@ -31,16 +32,18 @@ namespace Kostassoid.Anodyne.Wiring.Internal
         private readonly Action<TEvent> _handlerAction;
         private readonly Predicate<TEvent> _predicate;
         private readonly int _priority;
+        private readonly bool _async;
 
-        public InternalEventHandler(Type eventType, Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority)
+        public InternalEventHandler(Type eventType, Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority, bool async)
         {
             _eventType = eventType;
             _handlerAction = handlerAction;
             _predicate = predicate;
             _priority = priority;
+            _async = async;
         }
 
-        public InternalEventHandler(Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority) : this(typeof (TEvent), handlerAction, predicate, priority)
+        public InternalEventHandler(Action<TEvent> handlerAction, Predicate<TEvent> predicate, int priority, bool async) : this(typeof (TEvent), handlerAction, predicate, priority, async)
         {
         }
 
@@ -51,10 +54,9 @@ namespace Kostassoid.Anodyne.Wiring.Internal
             get { return _priority; }
         }
 
-        bool IInternalEventHandler.Suitable(object ev)
+        bool IInternalEventHandler.Async
         {
-            var typedEv = ev as TEvent;
-            return typedEv != null && _predicate(typedEv);
+            get { return _async; }
         }
 
         Action<object> IInternalEventHandler.HandlerAction
@@ -66,7 +68,10 @@ namespace Kostassoid.Anodyne.Wiring.Internal
                                var ev = e as TEvent;
                                if (ev != null && _predicate(ev))
                                {
-                                   _handlerAction(ev);
+                                   if (_async)
+                                       Task.Factory.StartNew(() => _handlerAction(ev));
+                                   else
+                                       _handlerAction(ev);
                                }
                            };
             }

@@ -92,7 +92,7 @@ namespace Kostassoid.Anodyne.DataAccess
 
             if (!IsRoot) return;
 
-            EventRouter.Fire(new UnitOfWorkCompletingEvent(this));
+            EventBus.Publish(new UnitOfWorkCompletingEvent(this));
             DataSession.SaveChanges();
         }
 
@@ -104,7 +104,7 @@ namespace Kostassoid.Anodyne.DataAccess
 
             if (!IsRoot) return;
 
-            EventRouter.Fire(new UnitOfWorkRollbackEvent(this));
+            EventBus.Publish(new UnitOfWorkRollbackEvent(this));
             DataSession.Rollback();
         }
 
@@ -121,7 +121,7 @@ namespace Kostassoid.Anodyne.DataAccess
 
             if (IsRoot)
             {
-                EventRouter.Fire(new UnitOfWorkDisposingEvent(this));
+                EventBus.Publish(new UnitOfWorkDisposingEvent(this));
                 DataSession.Dispose();
             }
         }

@@ -15,11 +15,9 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Common;
     using Common.CodeContracts;
     using Internal;
 
@@ -40,7 +38,8 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
                 {
                     unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, specification.HandlerAction,
                                                                                                                   specification.EventPredicate,
-                                                                                                                  specification.Priority));
+                                                                                                                  specification.Priority,
+                                                                                                                  specification.Async));
                 }
                 else
                 {
@@ -48,7 +47,8 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
                     { 
                         unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, target,
                                                                                                                       specification.EventPredicate,
-                                                                                                                      specification.Priority));
+                                                                                                                      specification.Priority,
+                                                                                                                      specification.Async));
                     }
                 }
             }

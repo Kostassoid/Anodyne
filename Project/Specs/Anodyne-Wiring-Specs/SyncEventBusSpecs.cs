@@ -15,13 +15,11 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
-    using Common.Extentions;
     using FakeItEasy;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
-    public class SubscriptionSpecs
+    public class SyncEventBusSpecs
     {
         public class TestEvent : IEvent
         {
@@ -57,8 +55,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn<TestEvent>().With(handler);
-                EventRouter.Fire(new TestEvent());
+                EventBus.SubscribeTo<TestEvent>().With(handler);
+                EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened();
 
@@ -74,8 +72,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn<TestEvent>().With(handler);
-                EventRouter.Fire(new DerivedTestEvent());
+                EventBus.SubscribeTo<TestEvent>().With(handler);
+                EventBus.Publish(new DerivedTestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
 
@@ -91,10 +89,10 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn<TestEvent>().With(handler);
-                EventRouter.ReactOn<DerivedTestEvent>().With(handler);
+                EventBus.SubscribeTo<TestEvent>().With(handler);
+                EventBus.SubscribeTo<DerivedTestEvent>().With(handler);
 
-                EventRouter.Fire(new DerivedTestEvent());
+                EventBus.Publish(new DerivedTestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
             }
@@ -109,9 +107,9 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
-                EventRouter.Fire(new DerivedTestEvent());
-                EventRouter.Fire(new TestEvent());
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                EventBus.Publish(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
 
@@ -127,9 +125,9 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().Where(t => t.Name.Contains("Derived")).With(handler);
-                EventRouter.Fire(new DerivedTestEvent());
-                EventRouter.Fire(new TestEvent());
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().Where(t => t.Name.Contains("Derived")).With(handler);
+                EventBus.Publish(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
             }
@@ -144,10 +142,10 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn().AllBasedOn<TestEvent>().From(p => p.Contains("Wiring-Specs")).With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>().From(p => p.Contains("Wiring-Specs")).With(handler);
 
-                EventRouter.Fire(new DerivedTestEvent());
-                EventRouter.Fire(new TestEvent());
+                EventBus.Publish(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
 
@@ -163,10 +161,10 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                var unsubscribe = EventRouter.ReactOn<TestEvent>().With(handler);
+                var unsubscribe = EventBus.SubscribeTo<TestEvent>().With(handler);
                 unsubscribe();
 
-                EventRouter.Fire(new TestEvent());
+                EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
             }
@@ -183,8 +181,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 var handled = new bool();
                 var action = new Action<TestEvent>(_ => { handled = true; });
 
-                EventRouter.ReactOn<TestEvent>().With(action);
-                EventRouter.Fire(new TestEvent());
+                EventBus.SubscribeTo<TestEvent>().With(action);
+                EventBus.Publish(new TestEvent());
 
                 Assert.That(handled, Is.True);
             }
@@ -199,9 +197,9 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn<TestEvent>().When(_ => false).With(handler);
+                EventBus.SubscribeTo<TestEvent>().When(_ => false).With(handler);
 
-                EventRouter.Fire(new TestEvent());
+                EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
 
@@ -217,11 +215,11 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                var unsubscribe = EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                var unsubscribe = EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
                 unsubscribe();
 
-                EventRouter.Fire(new TestEvent());
-                EventRouter.Fire(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
+                EventBus.Publish(new DerivedTestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
             }
@@ -236,12 +234,12 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventRouter.ReactOn().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
 
-                EventRouter.Reset();
+                EventBus.Reset();
 
-                EventRouter.Fire(new TestEvent());
-                EventRouter.Fire(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
+                EventBus.Publish(new DerivedTestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustNotHaveHappened();
             }
@@ -256,16 +254,16 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = new TestHandler();
 
-                EventRouter.Reset();
-                EventRouter
-                    .ReactOn()
+                EventBus.Reset();
+                EventBus
+                    .SubscribeTo()
                     .AllBasedOn<TestEvent>()
                     .FromThisAssembly()
                     .With<TestHandler>(EventMatching.Strict)
                     .As(_ => handler);
 
-                EventRouter.Fire(new TestEvent());
-                EventRouter.Fire(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
+                EventBus.Publish(new DerivedTestEvent());
 
                 Assert.That(handler.Fired1, Is.EqualTo(1));
                 Assert.That(handler.Fired2, Is.EqualTo(1));
@@ -281,16 +279,16 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = new TestHandler();
 
-                EventRouter.Reset();
-                EventRouter
-                    .ReactOn()
+                EventBus.Reset();
+                EventBus
+                    .SubscribeTo()
                     .AllBasedOn<TestEvent>()
                     .FromThisAssembly()
                     .With<TestHandler>(EventMatching.All)
                     .As(_ => handler);
 
-                EventRouter.Fire(new TestEvent());
-                EventRouter.Fire(new DerivedTestEvent());
+                EventBus.Publish(new TestEvent());
+                EventBus.Publish(new DerivedTestEvent());
 
                 Assert.That(handler.Fired1, Is.EqualTo(2));
                 Assert.That(handler.Fired2, Is.EqualTo(1));
@@ -305,13 +303,13 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             [Explicit("For performance experiments")]
             public void should_be_fast()
             {
-                EventRouter.Reset();
+                EventBus.Reset();
 
                 var handler = new TestHandler();
 
-                EventRouter.Reset();
-                EventRouter
-                    .ReactOn()
+                EventBus.Reset();
+                EventBus
+                    .SubscribeTo()
                     .AllBasedOn<TestEvent>()
                     .FromThisAssembly()
                     .With<TestHandler>(EventMatching.Strict)
@@ -324,8 +322,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 var i = 1000000;
                 while (i --> 0)
                 {
-                    EventRouter.Fire(new TestEvent());
-                    EventRouter.Fire(new DerivedTestEvent());
+                    EventBus.Publish(new TestEvent());
+                    EventBus.Publish(new DerivedTestEvent());
                 }
 
                 stopwatch.Stop();

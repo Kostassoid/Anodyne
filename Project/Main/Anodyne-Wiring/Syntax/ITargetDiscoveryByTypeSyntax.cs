@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,14 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Wiring
+namespace Kostassoid.Anodyne.Wiring.Syntax
 {
     using System;
-    using Internal;
+    using Common;
 
-    public interface IEventRouter
+    public interface ITargetDiscoveryByTypeSyntax<out TEvent> : ISyntax where TEvent : class, IEvent
     {
-        void Fire(IEvent @event);
-        Action Subscribe(IInternalEventHandler eventHandler);
+        Action As(Func<TEvent, Option<object>> discoveryFunc);
     }
 }

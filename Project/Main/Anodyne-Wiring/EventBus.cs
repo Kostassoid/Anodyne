@@ -17,35 +17,35 @@ namespace Kostassoid.Anodyne.Wiring
     using Syntax;
     using Syntax.Concrete;
 
-    public static class EventRouter
+    public static class EventBus
     {
-        private static IEventAggregator _eventAggregator = new MultiThreadAggregator();
+        private static readonly IEventAggregator EventAggregator = new MultiThreadAggregator();
 
-        public static EventRouterExtentions Extentions { get; private set; }
+        public static EventBusExtentions Extentions { get; private set; }
 
-        static EventRouter()
+        static EventBus()
         {
-            Extentions = new EventRouterExtentions();
+            Extentions = new EventBusExtentions();
         }
 
-        public static void Fire(IEvent @event)
+        public static void Publish(IEvent @event)
         {
-            _eventAggregator.Publish(@event);
+            EventAggregator.Publish(@event);
         }
 
-        public static IPredicateSourceSyntax<TEvent> ReactOn<TEvent>() where TEvent : class, IEvent
+        public static IPredicateSourceSyntax<TEvent> SubscribeTo<TEvent>() where TEvent : class, IEvent
         {
-            return new PredicateSourceSyntax<TEvent>(_eventAggregator);
+            return new PredicateSourceSyntax<TEvent>(EventAggregator);
         }
 
-        public static IConventionSourceSyntax ReactOn()
+        public static IConventionSourceSyntax SubscribeTo()
         {
-            return new ConventionSourceSyntax(_eventAggregator);
+            return new ConventionSourceSyntax(EventAggregator);
         }
 
         public static void Reset()
         {
-            _eventAggregator.Reset();
+            EventAggregator.Reset();
         }
     }
 }

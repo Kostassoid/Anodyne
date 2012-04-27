@@ -54,7 +54,8 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="SubscriptionSpecs.cs" />
+    <Compile Include="AsyncEventBusSpecs.cs" />
+    <Compile Include="SyncEventBusSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

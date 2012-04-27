@@ -33,6 +33,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
         public EventMatching EventMatching { get; set; }
         public Action<TEvent> HandlerAction { get; set; }
         public int Priority { get; set; }
+        public bool Async { get; set; }
 
         public bool IsValid
         {
@@ -44,6 +45,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             get { return SourceAssembly != null; }
         }
 
+
         public SubscriptionSpecification(IEventAggregator eventAggregator)
         {
             Requires.NotNull(eventAggregator, "eventAggregator");
@@ -51,6 +53,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             EventAggregator = eventAggregator;
 
             Priority = 0;
+            Async = false;
             EventPredicate = _ => true;
             TypePredicate = _ => true;
 

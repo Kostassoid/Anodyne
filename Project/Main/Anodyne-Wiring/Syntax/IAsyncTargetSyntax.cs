@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,10 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Wiring
+namespace Kostassoid.Anodyne.Wiring.Syntax
 {
-    public class EventRouterExtentions
+    using System;
+    using Common;
+
+    public interface IAsyncTargetSyntax<out TEvent> : ISyntax where TEvent : class, IEvent
     {
-         
+        Action WithAsync(IHandlerOf<TEvent> handler);
+        Action WithAsync(Action<TEvent> action);
+        ITargetDiscoverySyntax<TEvent, THandler> WithAsync<THandler>(EventMatching eventMatching) where THandler : class;
+        ITargetDiscoveryByTypeSyntax<TEvent> WithAsync(Type handlerType, EventMatching eventMatching);
     }
 }

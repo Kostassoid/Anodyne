@@ -26,7 +26,7 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
 
         public void SetupSubscriptions()
         {
-            EventRouter.ReactOn().AllBasedOn<IMutationEvent>().From(a => a.Contains("Domain")).With(this);
+            EventBus.SubscribeTo().AllBasedOn<IMutationEvent>().From(a => a.Contains("Domain")).With(this);
         }
 
         public void Handle(IMutationEvent @event)

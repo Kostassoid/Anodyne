@@ -14,28 +14,25 @@
 namespace Kostassoid.Anodyne.Domain.Specs
 {
     using System;
-    using System.Diagnostics;
-    using System.Linq;
     using Base;
-    using Common.Extentions;
     using Events;
     using NUnit.Framework;
     using Wiring;
 
     // ReSharper disable InconsistentNaming
-    public class SubscriptionRootSpecs
+    public class AggregateRootSpecs
     {
         public class TestRoot : AggregateRoot<Guid>
         {
             public int Fired1 { get; set; }
             public int Fired2 { get; set; }
 
-            private void Apply(Change1Event ev)
+            private void Handle(Change1Event ev)
             {
                 Fired1++;
             }
 
-            private void Apply(Change2Event ev)
+            private void Handle(Change2Event ev)
             {
                 Fired2++;
             }
@@ -58,21 +55,25 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_firing_root_event_using_extentions
+        public class when_firing_root_event
         {
             [Test]
-            public void should_call_valid_handler()
+            public void should_call_valid_root_handler()
             {
-                EventRouter.Reset();
-                EventRouter.Extentions.BindDomainEvents<TestRoot>();
+                EventBus.Reset();
 
-                var root = new TestRoot();
+                var root1 = new TestRoot();
+                var root2 = new TestRoot();
 
-                EventRouter.Fire(new Change1Event(root));
-                EventRouter.Fire(new Change2Event(root));
+                EventBus.Publish(new Change1Event(root1));
+                EventBus.Publish(new Change2Event(root2));
+                EventBus.Publish(new Change2Event(root1));
+                EventBus.Publish(new Change2Event(root1));
 
-                Assert.That(root.Fired1, Is.EqualTo(1));
-                Assert.That(root.Fired2, Is.EqualTo(1));
+                Assert.That(root1.Fired1, Is.EqualTo(1));
+                Assert.That(root1.Fired2, Is.EqualTo(2));
+                Assert.That(root2.Fired1, Is.EqualTo(0));
+                Assert.That(root2.Fired2, Is.EqualTo(1));
             }
         }
 

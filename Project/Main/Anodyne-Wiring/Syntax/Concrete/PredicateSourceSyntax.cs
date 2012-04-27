@@ -36,9 +36,34 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             return new TargetSyntax<TEvent>(_specification).With(action, priority);
         }
 
-        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching strict) where THandler : class
+        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching) where THandler : class
         {
-            return new TargetDiscoverySyntax<TEvent, THandler>(_specification);
+            return new TargetSyntax<TEvent>(_specification).With<THandler>(eventMatching);
+        }
+
+        public ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching)
+        {
+            return new TargetSyntax<TEvent>(_specification).With(handlerType, eventMatching);
+        }
+
+        public Action WithAsync(IHandlerOf<TEvent> handler)
+        {
+            return new TargetSyntax<TEvent>(_specification).WithAsync(handler);
+        }
+
+        public Action WithAsync(Action<TEvent> action)
+        {
+            return new TargetSyntax<TEvent>(_specification).WithAsync(action);
+        }
+
+        public ITargetDiscoverySyntax<TEvent, THandler> WithAsync<THandler>(EventMatching eventMatching) where THandler : class
+        {
+            return new TargetSyntax<TEvent>(_specification).WithAsync<THandler>(eventMatching);
+        }
+
+        public ITargetDiscoveryByTypeSyntax<TEvent> WithAsync(Type handlerType, EventMatching eventMatching)
+        {
+            return new TargetSyntax<TEvent>(_specification).WithAsync(handlerType, eventMatching);
         }
 
         public ITargetSyntax<TEvent> When(Predicate<TEvent> predicate)

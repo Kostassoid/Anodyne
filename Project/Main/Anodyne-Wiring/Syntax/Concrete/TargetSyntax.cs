@@ -41,9 +41,47 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             return SubscriptionPerformer.Perform(_specification);
         }
 
-        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching strict) where THandler : class
+        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching) where THandler : class
         {
+            _specification.EventMatching = eventMatching;
+
             return new TargetDiscoverySyntax<TEvent, THandler>(_specification);
+        }
+
+        public ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching)
+        {
+            _specification.EventMatching = eventMatching;
+            _specification.TargetType = handlerType;
+
+            return new TargetDiscoveryByTypeSyntax<TEvent>(_specification);
+        }
+
+        public Action WithAsync(IHandlerOf<TEvent> handler)
+        {
+            _specification.Async = true;
+
+            return With(handler);
+        }
+
+        public Action WithAsync(Action<TEvent> action)
+        {
+            _specification.Async = true;
+
+            return With(action);
+        }
+
+        public ITargetDiscoverySyntax<TEvent, THandler> WithAsync<THandler>(EventMatching eventMatching) where THandler : class
+        {
+            _specification.Async = true;
+
+            return With<THandler>(eventMatching);
+        }
+
+        public ITargetDiscoveryByTypeSyntax<TEvent> WithAsync(Type handlerType, EventMatching eventMatching)
+        {
+            _specification.Async = true;
+
+            return With(handlerType, eventMatching);
         }
     }
 }
