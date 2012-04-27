@@ -2,21 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5A2CB7AB-5DB2-40A6-8CCC-A9781B455AEA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kostassoid.BlogNote.Host</RootNamespace>
-    <AssemblyName>BlogNote-Host</AssemblyName>
+    <RootNamespace>Kostassoid.Anodyne.System</RootNamespace>
+    <AssemblyName>Anodyne-System</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -44,35 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\PostUpdatedEvent.cs" />
-    <Compile Include="Domain\PostContents.cs" />
-    <Compile Include="Domain\PostCreatedEvent.cs" />
-    <Compile Include="Domain\Post.cs" />
-    <Compile Include="Domain\UserPostsUpdatedEvent.cs" />
-    <Compile Include="Domain\User.cs" />
-    <Compile Include="Domain\UserCreatedEvent.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Service\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Main\Anodyne-Common\Anodyne-Common.csproj">
-      <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
-      <Name>Anodyne-Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Main\Anodyne-DomainModel\Anodyne-Domain.csproj">
-      <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
-      <Name>Anodyne-Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Main\Anodyne-Wiring\Anodyne-Wiring.csproj">
-      <Project>{321BB928-1A81-40BF-8BA9-644F95B8CD5A}</Project>
-      <Name>Anodyne-Wiring</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

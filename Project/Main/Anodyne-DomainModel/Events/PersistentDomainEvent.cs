@@ -18,10 +18,10 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Base;
 
     [Serializable]
-    public abstract class PersistentDomainEvent : AggregateRoot<Guid>, IDomainEvent
+    public abstract class PersistentDomainEvent<TData> : AggregateRoot<Guid>, IDomainEvent where TData : EventData
     {
         public DateTime Happened { get; protected set; }
-        public EventData Data { get; protected set; }
+        public TData Data { get; protected set; }
 
         // we don't want version-tracking events
         public override int Version
@@ -31,19 +31,14 @@ namespace Kostassoid.Anodyne.Domain.Events
 
         public bool IsReplaying { get; set; }
 
-        protected PersistentDomainEvent(DateTime happened, EventData data)
+        protected PersistentDomainEvent(DateTime happened, TData data)
         {
             Happened = happened;
             Data = data;
         }
 
-        protected PersistentDomainEvent(EventData data)
+        protected PersistentDomainEvent(TData data)
             : this(SystemTime.Now, data)
-        {
-        }
-
-        protected PersistentDomainEvent()
-            : this(SystemTime.Now, new EmptyEventData())
         {
         }
     }

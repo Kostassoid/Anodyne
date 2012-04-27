@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Domain.Events
 
     public interface IAggregateEvent : IMutationEvent
     {
-        IAggregateRoot AggregateObject { get; }
-        object AggregateIdObject { get; }
+        IAggregateRoot Aggregate { get; }
+        object AggregateId { get; }
     }
 }

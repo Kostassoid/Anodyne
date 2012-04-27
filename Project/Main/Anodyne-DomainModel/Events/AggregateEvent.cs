@@ -18,41 +18,30 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Base;
 
     [Serializable]
-    public abstract class AggregateEvent<TRoot, TKey> : PersistentDomainEvent, IAggregateEvent where TRoot : AggregateRoot<TKey>
+    public abstract class AggregateEvent<TRoot, TData> : PersistentDomainEvent<TData>, IAggregateEvent where TRoot : IAggregateRoot where TData : EventData
     {
         private readonly TRoot _aggregate;
-        public TKey AggregateId { get; protected set; }
+        public object AggregateId { get; protected set; }
 
         // should not be stored!
-        public TRoot Aggregate { get { return _aggregate; } }
+        public TRoot AggregateReal { get { return _aggregate; } }
 
         // should not be stored!
-        public IAggregateRoot AggregateObject { get { return _aggregate; } }
-
-        // should not be stored!
-        public object AggregateIdObject { get { return AggregateId; } }
+        public IAggregateRoot Aggregate { get { return _aggregate; } }
 
         public int AggregateVersion { get; protected set; }
 
-        private AggregateEvent()
-        {
-        }
-
-        protected AggregateEvent(TRoot aggregate, DateTime happened, EventData data) : base(happened, data)
+        protected AggregateEvent(TRoot aggregate, DateTime happened, TData data) : base(happened, data)
         {
             _aggregate = aggregate;
-            AggregateId = aggregate.Id;
+            AggregateId = aggregate.IdObject;
             AggregateVersion = aggregate.NewVersion();
         }
 
-        protected AggregateEvent(TRoot aggregate, EventData data)
+        protected AggregateEvent(TRoot aggregate, TData data)
             : this(aggregate, SystemTime.Now, data)
         {
         }
 
-        protected AggregateEvent(TRoot aggregate)
-            : this(aggregate, SystemTime.Now, new EmptyEventData())
-        {
-        }
     }
 }

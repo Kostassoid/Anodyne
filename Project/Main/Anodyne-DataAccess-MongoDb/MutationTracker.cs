@@ -36,9 +36,9 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
 
             var uow = UnitOfWork.Current;
             if (uow.IsNone)
-                throw new InvalidOperationException(String.Format("Should be inside UnitOfWork context to handle {0} for {1} ", aggregateEvent.GetType().Name, aggregateEvent.AggregateIdObject));
+                throw new InvalidOperationException(String.Format("Should be inside UnitOfWork context to handle {0} for {1} ", aggregateEvent.GetType().Name, aggregateEvent.AggregateId));
 
-            uow.Value.MarkAsUpdated(aggregateEvent.AggregateObject);
+            uow.Value.MarkAsUpdated(aggregateEvent.Aggregate);
         }
     }
 }

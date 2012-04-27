@@ -58,6 +58,7 @@
     <Compile Include="SerializableValueObject.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Ticket.cs" />
+    <Compile Include="Tools\SeqGuid.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -17,5 +17,7 @@ namespace Kostassoid.Anodyne.Domain.Base
     {
         object IdObject { get; }
         int Version { get; }
+
+        int NewVersion();
     }
 }
