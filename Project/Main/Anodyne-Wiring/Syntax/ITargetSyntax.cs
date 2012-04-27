@@ -18,9 +18,9 @@ namespace Kostassoid.Anodyne.Wiring.Syntax
 
     public interface ITargetSyntax<out TEvent> : IAsyncTargetSyntax<TEvent>, ISyntax where TEvent : class, IEvent
     {
-        Action With(IHandlerOf<TEvent> handler, int priority = 0);
-        Action With(Action<TEvent> action, int priority = 0);
-        ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching) where THandler : class;
-        ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching);
+        Action With(IHandlerOf<TEvent> handler, Priority priority = Priority.Normal);
+        Action With(Action<TEvent> action, Priority priority = Priority.Normal);
+        ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching, Priority priority = Priority.Normal) where THandler : class;
+        ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching, Priority priority = Priority.Normal);
     }
 }

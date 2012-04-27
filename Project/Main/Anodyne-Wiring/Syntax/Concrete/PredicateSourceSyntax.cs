@@ -26,24 +26,24 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             _specification = new SubscriptionSpecification<TEvent>(eventAggregator);
         }
 
-        public Action With(IHandlerOf<TEvent> handler, int priority = 0)
+        public Action With(IHandlerOf<TEvent> handler, Priority priority = Priority.Normal)
         {
             return new TargetSyntax<TEvent>(_specification).With(handler, priority);
         }
 
-        public Action With(Action<TEvent> action, int priority = 0)
+        public Action With(Action<TEvent> action, Priority priority = Priority.Normal)
         {
             return new TargetSyntax<TEvent>(_specification).With(action, priority);
         }
 
-        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching) where THandler : class
+        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching, Priority priority = Priority.Normal) where THandler : class
         {
-            return new TargetSyntax<TEvent>(_specification).With<THandler>(eventMatching);
+            return new TargetSyntax<TEvent>(_specification).With<THandler>(eventMatching, priority);
         }
 
-        public ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching)
+        public ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching, Priority priority = Priority.Normal)
         {
-            return new TargetSyntax<TEvent>(_specification).With(handlerType, eventMatching);
+            return new TargetSyntax<TEvent>(_specification).With(handlerType, eventMatching, priority);
         }
 
         public Action WithAsync(IHandlerOf<TEvent> handler)

@@ -45,6 +45,7 @@
     </Compile>
     <Compile Include="EventMatching.cs" />
     <Compile Include="EventBusExtentions.cs" />
+    <Compile Include="Priority.cs" />
     <Compile Include="Subscription\AssemblySpecification.cs" />
     <Compile Include="Subscription\SubscriptionPerformer.cs" />
     <Compile Include="Syntax\Concrete\AssemblySourceSyntax.cs" />

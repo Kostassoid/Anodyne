@@ -49,7 +49,7 @@
     <Compile Include="Base\IEntity.cs" />
     <Compile Include="Base\IValueObject.cs" />
     <Compile Include="Events\AggregateEvent.cs" />
-    <Compile Include="Events\EventRouterEx.cs" />
+    <Compile Include="Events\EventBusEx.cs" />
     <Compile Include="Events\IAggregateEvent.cs" />
     <Compile Include="Events\EmptyEventData.cs" />
     <Compile Include="Events\EventData.cs" />

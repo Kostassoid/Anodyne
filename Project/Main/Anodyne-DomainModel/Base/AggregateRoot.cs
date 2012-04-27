@@ -15,7 +15,6 @@ namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using Events;
     using Wiring;
 
@@ -28,7 +27,9 @@ namespace Kostassoid.Anodyne.Domain.Base
 
         public virtual int Version { get; protected set; }
 
-        private static IList<Type> _binded = new BindingList<Type>();
+// ReSharper disable StaticFieldInGenericType
+        private static readonly ISet<Type> Binded = new HashSet<Type>();
+// ReSharper restore StaticFieldInGenericType
 
         protected AggregateRoot()
         {
@@ -37,10 +38,10 @@ namespace Kostassoid.Anodyne.Domain.Base
 
         private void EnsureAggregateEventsAreBindedFor(Type aggregateType)
         {
-            if (_binded.Contains(aggregateType)) return;
+            if (Binded.Contains(aggregateType)) return;
 
             EventBus.Extentions.BindDomainEvents(aggregateType);
-            _binded.Add(aggregateType);
+            Binded.Add(aggregateType);
         }
 
         public virtual int NewVersion()
