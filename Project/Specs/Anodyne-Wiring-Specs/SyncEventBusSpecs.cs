@@ -15,6 +15,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 {
     using System;
     using System.Diagnostics;
+    using System.Text;
+
     using FakeItEasy;
     using NUnit.Framework;
 
@@ -337,6 +339,28 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_firing_events_using_different_priority
+        {
+            [Test]
+            public void should_call_handlers_in_correct_order()
+            {
+                var builder = new StringBuilder();
+                Action<IEvent> handler1 = (ev => builder.Append("a"));
+                Action<IEvent> handler2 = (ev => builder.Append("b"));
+                Action<IEvent> handler3 = (ev => builder.Append("c"));
+
+                EventBus.Reset();
+                EventBus.SubscribeTo<TestEvent>().With(handler1, Priority.Normal);
+                EventBus.SubscribeTo<TestEvent>().With(handler2, Priority.Critical);
+                EventBus.SubscribeTo<TestEvent>().With(handler3, Priority.High);
+
+                EventBus.Publish(new TestEvent());
+
+                Assert.That(builder.ToString(), Is.EqualTo("bca"));
+            }
+        }
 
 
 
