@@ -13,8 +13,10 @@
 
 namespace Kostassoid.Anodyne.Wiring
 {
-    public class EventBusExtentions
+    public sealed class EventBusExtentions
     {
-         
+
+        // use extention methods
+
     }
 }

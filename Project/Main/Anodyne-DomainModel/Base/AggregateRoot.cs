@@ -50,6 +50,7 @@ namespace Kostassoid.Anodyne.Domain.Base
 
         protected void Apply(IAggregateEvent @event)
         {
+            //TODO: use direct invocation, publish later
             EventBus.Publish(@event);
         }
     }
