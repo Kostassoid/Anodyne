@@ -54,6 +54,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeContractsSpecs.cs" />
     <Compile Include="ToolsSpecs.cs" />
     <Compile Include="ExtentionsSpecs.cs" />
     <Compile Include="ExecutionContextSpecs.cs" />

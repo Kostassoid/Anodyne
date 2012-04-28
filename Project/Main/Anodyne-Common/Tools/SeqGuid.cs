@@ -14,7 +14,6 @@
 namespace Kostassoid.Anodyne.Common.Tools
 {
     using System;
-    using System.Threading;
 
     public static class SeqGuid
     {
@@ -24,7 +23,7 @@ namespace Kostassoid.Anodyne.Common.Tools
         public static Guid NewGuid()
         {
             var guidArray = Guid.NewGuid().ToByteArray();
-            var now = DateTime.Now;
+            var now = SystemTime.Now;
             var days = new TimeSpan(now.Ticks - BaseTicks);
             var msecs = now.TimeOfDay;
 

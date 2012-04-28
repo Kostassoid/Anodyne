@@ -76,7 +76,7 @@ namespace Kostassoid.Anodyne.Common.CodeContracts
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1064:ExceptionsShouldBePublic", Justification = "This exception should never be caught.")]
         [Serializable]
-        private class InternalErrorException : Exception
+        public class InternalErrorException : Exception
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="InternalErrorException"/> class.
