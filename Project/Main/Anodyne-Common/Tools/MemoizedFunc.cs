@@ -1,7 +1,6 @@
 ﻿namespace Kostassoid.Anodyne.Common.Tools
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
 
@@ -55,11 +54,10 @@
 
         public static Func<TSource1, TSource2, TReturn> AsMemoized<TSource1, TSource2, TReturn>(this Func<TSource1, TSource2, TReturn> func)
         {
-            var cache = new Dictionary<string, TReturn>();
+            var cache = new Dictionary<Tuple<TSource1, TSource2>, TReturn>();
             return (s1, s2) =>
             {
-                var key = s1.GetHashCode().ToString(CultureInfo.InvariantCulture)
-                    + s2.GetHashCode().ToString(CultureInfo.InvariantCulture);
+                var key = new Tuple<TSource1, TSource2>(s1, s2);
 
                 lock (func)
                 if (!cache.ContainsKey(key))
@@ -72,12 +70,10 @@
 
         public static Func<TSource1, TSource2, TSource3, TReturn> AsMemoized<TSource1, TSource2, TSource3, TReturn>(this Func<TSource1, TSource2, TSource3, TReturn> func)
         {
-            var cache = new Dictionary<string, TReturn>();
+            var cache = new Dictionary<Tuple<TSource1, TSource2, TSource3>, TReturn>();
             return (s1, s2, s3) =>
             {
-                var key = s1.GetHashCode().ToString(CultureInfo.InvariantCulture)
-                    + s2.GetHashCode().ToString(CultureInfo.InvariantCulture)
-                    + s3.GetHashCode().ToString(CultureInfo.InvariantCulture);
+                var key = new Tuple<TSource1, TSource2, TSource3>(s1, s2, s3);
 
                 lock (func)
                 if (!cache.ContainsKey(key))
