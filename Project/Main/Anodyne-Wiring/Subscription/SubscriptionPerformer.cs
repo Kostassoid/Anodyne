@@ -21,6 +21,8 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
     using Common.CodeContracts;
     using Internal;
 
+    using Kostassoid.Anodyne.Common.Extentions;
+
     internal static class SubscriptionPerformer
     {
         public static Action Perform<TEvent>(SubscriptionSpecification<TEvent> specification) where TEvent : class, IEvent
@@ -28,37 +30,46 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             Requires.NotNull(specification, "specification");
             Requires.True(specification.IsValid, "specification", "Invalid specification");
 
-            var sources = FindTypes(specification.BaseEventType, specification.SourceAssembly, specification.TypePredicate);
-
             Action unsubscribeAction = () => { };
 
-            foreach (var source in sources)
+            foreach (var source in ResolveSourceTypes(specification))
             {
                 if (specification.TargetDiscoveryFunction == null)
                 {
-                    unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, specification.HandlerAction,
-                                                                                                                  specification.EventPredicate,
-                                                                                                                  specification.Priority,
-                                                                                                                  specification.Async));
+                    unsubscribeAction += Subscribe(source, specification.HandlerAction, specification);
                 }
                 else
                 {
-                    foreach (var target in FindHandlers(specification.TargetType, source, specification.TargetDiscoveryFunction, specification.EventMatching))
-                    { 
-                        unsubscribeAction += specification.EventAggregator.Subscribe(new InternalEventHandler<TEvent>(source, target,
-                                                                                                                      specification.EventPredicate,
-                                                                                                                      specification.Priority,
-                                                                                                                      specification.Async));
-                    }
+                    unsubscribeAction = ResolveHandlers(source, specification)
+                        .Aggregate(unsubscribeAction, (current, target) => current + Subscribe(source, target, specification));
                 }
             }
 
             return unsubscribeAction;
         }
 
-        private static IEnumerable<Action<TEvent>> FindHandlers<TEvent>(Type targetType, Type eventType, SubscriptionSpecification<TEvent>.TargetDiscoveryFunc targetDiscoveryFunction, EventMatching eventMatching) where TEvent : class, IEvent
+        private static Action Subscribe<TEvent>(Type source, Action<TEvent> target, SubscriptionSpecification<TEvent> specification) where TEvent : class, IEvent
         {
-            var methods = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(mi => IsTargetCompatibleWithSource(mi, eventType, eventMatching)).ToList();
+            return specification
+                .EventAggregator
+                .Subscribe(
+                new InternalEventHandler<TEvent>(source, target, specification.EventPredicate, specification.Priority, specification.Async));
+        }
+
+        private static IEnumerable<Type> ResolveSourceTypes<TEvent>(SubscriptionSpecification<TEvent> specification) where TEvent : class, IEvent
+        {
+            return specification.IsPolymorphic
+                              ? FindTypes(specification.BaseEventType, specification.SourceAssembly, specification.TypePredicate)
+                              : specification.BaseEventType.AsEnumerable();
+        }
+
+        private static IEnumerable<Action<TEvent>> ResolveHandlers<TEvent>(Type eventType, SubscriptionSpecification<TEvent> specification) where TEvent : class, IEvent
+        {
+            var methods = specification.TargetType
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi => IsTargetCompatibleWithSource(mi, eventType, specification.EventMatching))
+                .ToList();
+
             if (methods.Count == 0) yield break;
 
             foreach (var method in methods)
@@ -67,7 +78,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
                 Action<TEvent> handler = ev =>
                 {
-                    var targetObject = targetDiscoveryFunction(ev);
+                    var targetObject = specification.TargetDiscoveryFunction(ev);
                     if (targetObject.IsNone) return;
 
                     handlerDelegate(targetObject.Value, ev);
@@ -117,12 +128,6 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
         private static IEnumerable<Type> FindTypes(Type baseEventType, AssemblySpecification assembly, Predicate<Type> typePredicate)
         {
-            if (assembly == null)
-            {
-                yield return baseEventType;
-                yield break;
-            }
-
             IEnumerable<Type> types;
 
             if (assembly.This.IsSome)
@@ -134,11 +139,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
                     .Where(a => assembly.Filter(a.FullName))
                     .SelectMany(a => a.GetTypes());
 
-
-            foreach (var type in types.Where(t => baseEventType.IsAssignableFrom(t) && typePredicate(t)))
-            {
-                yield return type;
-            }
+            return types.Where(t => baseEventType.IsAssignableFrom(t) && typePredicate(t));
         }
     }
 }

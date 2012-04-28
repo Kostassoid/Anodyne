@@ -21,6 +21,9 @@ namespace Kostassoid.Anodyne.Common.Extentions
         public static IEnumerable<T> SelectDeep<T>(
             this IEnumerable<T> source, Func<T, IEnumerable<T>> selector)
         {
+            if (source == null)
+                yield break;
+
             foreach (T item in source)
             {
                 yield return item;

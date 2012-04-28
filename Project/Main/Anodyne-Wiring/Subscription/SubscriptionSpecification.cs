@@ -40,7 +40,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             get { return HandlerAction != null || TargetDiscoveryFunction != null; }
         }
 
-        public bool IsPolimorphic
+        public bool IsPolymorphic
         {
             get { return SourceAssembly != null; }
         }

@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Common.Tools
 {
     using System;
+    using System.Threading;
 
     public static class SeqGuid
     {

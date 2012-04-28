@@ -50,6 +50,7 @@
     <Compile Include="ExecutionContext\NormalContextProvider.cs" />
     <Compile Include="Extentions\DateTimeEx.cs" />
     <Compile Include="Extentions\EnumerableEx.cs" />
+    <Compile Include="Extentions\ObjectEx.cs" />
     <Compile Include="ISyntax.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Option.cs" />
