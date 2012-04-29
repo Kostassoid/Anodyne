@@ -48,7 +48,7 @@ namespace Kostassoid.BlogNote.Host.Domain
             return user;
         }
 
-        protected void OnUserCreated(UserCreatedEvent @event)
+        protected void OnCreated(UserCreatedEvent @event)
         {
             var eventData = @event.Data;
 

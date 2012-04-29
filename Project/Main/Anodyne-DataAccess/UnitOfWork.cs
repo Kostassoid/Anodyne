@@ -17,8 +17,11 @@ namespace Kostassoid.Anodyne.DataAccess
     using Common;
     using Common.CodeContracts;
     using Common.ExecutionContext;
+    using Domain.Events;
     using Events;
     using Domain.Base;
+    using Exceptions;
+    using Operations;
     using Wiring;
 
     public class UnitOfWork : IDisposable
@@ -54,6 +57,19 @@ namespace Kostassoid.Anodyne.DataAccess
         public static void SetFactory(IDataSessionFactory dataSessionFactory)
         {
             _dataSessionFactory = dataSessionFactory;
+        }
+
+        static UnitOfWork()
+        {
+            EventBus
+                .SubscribeTo()
+                .AllBasedOn<IAggregateEvent>()
+                .From(a => a.Contains("Domain"))
+                .With(e =>
+                          {
+                              if (Current.IsSome && !Current.Value.IsFinished)
+                                  ((UnitOfWork)Current).DataSession.Handle(e);
+                          });
         }
 
         public UnitOfWork()
@@ -93,7 +109,12 @@ namespace Kostassoid.Anodyne.DataAccess
             if (!IsRoot) return;
 
             EventBus.Publish(new UnitOfWorkCompletingEvent(this));
-            DataSession.SaveChanges();
+            var changeSet = DataSession.SaveChanges();
+            EventBus.Publish(new UnitOfWorkCompletedEvent(this, changeSet));
+
+            if (changeSet.StaleDataDetected)
+                throw new StaleDataException(changeSet.StaleData, "Some aggregates wasn't saved due to stale data (version mismatch)");
+
         }
 
         public void Rollback()
@@ -111,7 +132,7 @@ namespace Kostassoid.Anodyne.DataAccess
         public void Dispose()
         {
             if (!IsFinished)
-                Complete(); //complete by default
+                Complete();
 
             if (IsDisposed)
                 return;
@@ -146,6 +167,7 @@ namespace Kostassoid.Anodyne.DataAccess
             return DataSession.GetOperation<TOp>();
         }
 
+/*
         public TEntity MarkAsCreated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
         {
             AssertIfFinished();
@@ -153,6 +175,7 @@ namespace Kostassoid.Anodyne.DataAccess
             DataSession.MarkAsCreated(entity);
             return entity;
         }
+*/
 
         public void MarkAsDeleted<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
         {
@@ -161,11 +184,13 @@ namespace Kostassoid.Anodyne.DataAccess
             DataSession.MarkAsDeleted(entity);
         }
 
+/*
         public void MarkAsUpdated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
         {
             AssertIfFinished();
 
             DataSession.MarkAsUpdated(entity);
         }
+*/
     }
 }

@@ -11,23 +11,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-
-namespace Kostassoid.Anodyne.DataAccess
+namespace Kostassoid.Anodyne.DataAccess.Operations
 {
-    using System;
-    using Domain.Base;
-    using Domain.Events;
-    using Operations;
-    using Wiring;
-
-    public interface IDataSession : IDisposable, IHandlerOf<IAggregateEvent>
+    public interface IDataCommand : IDataOperation
     {
-        IRepository<TRoot> GetRepository<TRoot>() where TRoot : class, IAggregateRoot;
-        TOp GetOperation<TOp>() where TOp : class, IDataOperation;
-
-        void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
-
-        DataChangeSet SaveChanges();
-        void Rollback();
     }
 }

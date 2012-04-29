@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.DataAccess.MongoDb
 {
     using MongoDB.Driver;
+    using Operations;
 
     public class DataSessionFactory : IDataSessionFactory
     {
@@ -24,7 +25,6 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
         public DataSessionFactory(string connectionString, string databaseName, IOperationResolver operationResolver)
         {
             OperationResolver = operationResolver;
-
             DatabaseName = databaseName;
 
             Server = MongoServer.Create(connectionString);
@@ -32,9 +32,8 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
 
         public virtual IDataSession OpenSession()
         {
-            //SafeMode is important!
-            return new DataSession(Server.GetDatabase(DatabaseName, SafeMode.True), OperationResolver);
-                //reusing database connection (ref: http://www.mongodb.org/display/DOCS/CSharp+Driver+Tutorial#CSharpDriverTutorial-Threadsafety)
+            //reusing database connection (ref: http://www.mongodb.org/display/DOCS/CSharp+Driver+Tutorial#CSharpDriverTutorial-Threadsafety)
+            return new MongoDataSession(Server.GetDatabase(DatabaseName, SafeMode.True), OperationResolver);
         }
     }
 }

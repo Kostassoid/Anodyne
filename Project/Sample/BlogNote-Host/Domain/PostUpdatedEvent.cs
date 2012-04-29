@@ -17,18 +17,18 @@ namespace Kostassoid.BlogNote.Host.Domain
 
     public class PostUpdatedEvent : AggregateEvent<Post, PostUpdatedEvent.EventData>
     {
-        public PostUpdatedEvent(Post aggregate, PostContents contents)
-            : base(aggregate, new EventData(contents))
+        public PostUpdatedEvent(Post aggregate, BasePostContent content)
+            : base(aggregate, new EventData(content))
         {
         }
 
         public class EventData : Anodyne.Domain.Events.EventData
         {
-            public PostContents Contents { get; protected set; }
+            public BasePostContent Content { get; protected set; }
 
-            public EventData(PostContents contents)
+            public EventData(BasePostContent content)
             {
-                Contents = contents;
+                Content = content;
             }
         }
 

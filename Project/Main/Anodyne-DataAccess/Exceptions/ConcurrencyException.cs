@@ -11,9 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+namespace Kostassoid.Anodyne.DataAccess.Exceptions
 {
-    public interface IDataOperation
+    using System;
+    using Domain.Base;
+
+    public class ConcurrencyException : Exception
     {
+        public IAggregateRoot Aggregate { get; protected set; }
+
+        public ConcurrencyException(IAggregateRoot aggregate)
+            :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
+                        aggregate.IdObject, aggregate.GetType().Name))
+        {
+            Aggregate = aggregate;
+        }
     }
 }

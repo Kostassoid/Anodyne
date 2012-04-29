@@ -11,22 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+namespace Kostassoid.BlogNote.Host.Domain
 {
-    using System;
+    using Anodyne.Common.CodeContracts;
+    using Anodyne.Domain.Base;
 
-    public abstract class BaseDataOperation
+    public abstract class BasePostContent : IValueObject
     {
-        protected UnitOfWork Owner { get; private set; }
+        public string Title { get; protected set; }
+        public string[] Tags { get; protected set; }
 
-        protected BaseDataOperation()
+        protected BasePostContent(string title, string[] tags = null)
         {
-            if (UnitOfWork.Current.IsNone)
-            {
-                throw new Exception("Should be within UnitOfWork context!");
-            }
+            Requires.NotNullOrEmpty(title, "title");
 
-            Owner = UnitOfWork.Current.Value;
+            Title = title;
+            Tags = tags ?? new string[0];
         }
     }
 }

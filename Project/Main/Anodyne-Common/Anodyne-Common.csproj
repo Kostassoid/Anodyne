@@ -51,6 +51,7 @@
     <Compile Include="Extentions\DateTimeEx.cs" />
     <Compile Include="Extentions\EnumerableEx.cs" />
     <Compile Include="Extentions\ObjectEx.cs" />
+    <Compile Include="ImmutableCollection.cs" />
     <Compile Include="ISyntax.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Option.cs" />

@@ -18,20 +18,22 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
     using System.Linq.Expressions;
     using Common;
     using Domain.Base;
+    using Exceptions;
     using MongoDB.Bson;
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
     using MongoDB.Driver.Linq;
+    using Operations;
 
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IAggregateRoot
+    public class Repository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
         private readonly MongoDatabase _session;
-        private readonly Lazy<MongoCollection<TEntity>> _collection;
+        private readonly Lazy<MongoCollection<TRoot>> _collection;
 
         public Repository(MongoDatabase session)
         {
             _session = session;
-            _collection = new Lazy<MongoCollection<TEntity>>(session.GetCollection<TEntity>);
+            _collection = new Lazy<MongoCollection<TRoot>>(session.GetCollection<TRoot>);
         }
 
         protected virtual MongoDatabase Session
@@ -39,22 +41,22 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
             get { return _session; }
         }
 
-        public virtual TEntity Get(object key)
+        public virtual TRoot Get(object key)
         {
             var found = _collection.Value.FindOne(Query.EQ("_id", key.ToBson()));
             if (found == null)
-                throw new EntityNotFoundException(key);
+                throw new AggregateRootNotFoundException(key);
 
             return found;
         }
 
-        public virtual Option<TEntity> FindBy(object key)
+        public virtual Option<TRoot> FindBy(object key)
         {
             return _collection.Value.FindOne(Query.EQ("_id", key.ToBson()));
         }
 
 
-        public virtual IQueryable<TEntity> All()
+        public virtual IQueryable<TRoot> All()
         {
             return _collection.Value.AsQueryable();
         }
@@ -64,7 +66,7 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
             return FindBy(key).IsSome;
         }
 
-        public long Count(Expression<Func<TEntity, bool>> criteria)
+        public long Count(Expression<Func<TRoot, bool>> criteria)
         {
             return _collection.Value.AsQueryable().Count(criteria);
         }
@@ -74,7 +76,7 @@ namespace Kostassoid.Anodyne.DataAccess.MongoDb
             return _collection.Value.Count();
         }
 
-        public virtual TEntity this[object key]
+        public virtual TRoot this[object key]
         {
             get { return Get(key); }
         }

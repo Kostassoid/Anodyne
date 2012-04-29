@@ -13,96 +13,53 @@
 
 namespace Kostassoid.Anodyne.DataAccess.MongoDb
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.Base;
     using MongoDB.Bson;
     using MongoDB.Driver;
+    using Operations;
 
-    public class DataSession : IDataSession, IDataSessionEx
+    public class MongoDataSession : DataSession, IDataSessionEx
     {
         private readonly MongoDatabase _nativeSession;
-        private readonly IOperationResolver _operationResolver;
 
         object IDataSessionEx.NativeSession
         {
             get { return _nativeSession; }
         }
 
-        private readonly ISet<IAggregateRoot> _newEntities = new HashSet<IAggregateRoot>();
-        private readonly ISet<IAggregateRoot> _updatedEntities = new HashSet<IAggregateRoot>();
-        private readonly ISet<IAggregateRoot> _deletedEntities = new HashSet<IAggregateRoot>();
-
-        public DataSession(MongoDatabase dataContext, IOperationResolver operationResolver)
+        public MongoDataSession(MongoDatabase dataContext, IOperationResolver operationResolver) : base(operationResolver)
         {
             _nativeSession = dataContext;
-            _operationResolver = operationResolver;
         }
 
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IAggregateRoot
+        public override IRepository<TRoot> GetRepository<TRoot>()
         {
-            return new Repository<TEntity>(_nativeSession);
+            return new Repository<TRoot>(_nativeSession);
         }
 
-        public TOp GetOperation<TOp>() where TOp : class, IDataOperation
+        protected override bool ApplyChangeSet(AggregateRootChangeSet changeSet)
         {
-            var operation = _operationResolver.Get<TOp>();
+            var type = changeSet.Aggregate.GetType();
 
-            if (operation == null)
-            {
-                throw new Exception(String.Format("Operation {0} wasn't found. Check your configuration.", typeof (TOp).Name));
-            }
+            var collection = _nativeSession.GetCollection(type);
 
-            return operation;
+            var storedAggregate = collection.FindOneByIdAs(type, changeSet.Aggregate.IdObject.ToBson());
+
+            if (storedAggregate == null && !changeSet.IsNew)
+                return false;
+
+// ReSharper disable PossibleNullReferenceException
+            if ((storedAggregate as IAggregateRoot).Version != changeSet.TargetVersion)
+// ReSharper restore PossibleNullReferenceException
+                return false;
+
+            collection.Save(changeSet.Aggregate);
+
+            if (changeSet.IsDeleted)
+                collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", changeSet.Aggregate.IdObject.ToBson()));
+
+            return true;
         }
 
-        public object MarkAsCreated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
-        {
-            _newEntities.Add(entity);
-            return entity;
-        }
-
-        public void MarkAsDeleted<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
-        {
-            _deletedEntities.Add(entity);
-        }
-
-        public void MarkAsUpdated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
-        {
-            _updatedEntities.Add(entity);
-        }
-
-        public void SaveChanges()
-        {
-            foreach (var entity in _newEntities)
-            {
-                var collection = _nativeSession.GetCollection(entity.GetType());
-                collection.Save(entity);
-            }
-            _newEntities.Clear();
-
-            foreach (var entity in _updatedEntities)
-            {
-                var collection = _nativeSession.GetCollection(entity.GetType());
-                collection.Save(entity);
-            }
-            _updatedEntities.Clear();
-
-            foreach (var entity in _deletedEntities)
-            {
-                var collection = _nativeSession.GetCollection(entity.GetType());
-                collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", entity.IdObject.ToBson()));
-            }
-            _deletedEntities.Clear();
-        }
-
-        public void Rollback()
-        {
-            throw new NotSupportedException("Rollback operation is not supported");
-        }
-
-        public void Dispose()
-        {
-        }
     }
 }

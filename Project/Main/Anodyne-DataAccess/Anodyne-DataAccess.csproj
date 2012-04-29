@@ -43,17 +43,23 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BaseDataOperation.cs" />
-    <Compile Include="ICommand.cs" />
-    <Compile Include="IDataOperation.cs" />
-    <Compile Include="EntityNotFoundException.cs" />
+    <Compile Include="AggregateRootChangeSet.cs" />
+    <Compile Include="Operations\BaseDataOperation.cs" />
+    <Compile Include="DataSession.cs" />
+    <Compile Include="Exceptions\StaleDataException.cs" />
+    <Compile Include="Exceptions\ConcurrencyException.cs" />
+    <Compile Include="DataChangeSet.cs" />
+    <Compile Include="Events\UnitOfWorkCompletedEvent.cs" />
+    <Compile Include="Operations\IDataCommand.cs" />
+    <Compile Include="Operations\IDataOperation.cs" />
+    <Compile Include="Exceptions\AggregateRootNotFoundException.cs" />
     <Compile Include="Events\UnitOfWorkRollbackEvent.cs" />
     <Compile Include="IDataSession.cs" />
     <Compile Include="IDataSessionEx.cs" />
     <Compile Include="IDataSessionFactory.cs" />
-    <Compile Include="IOperationResolver.cs" />
-    <Compile Include="IQuery.cs" />
-    <Compile Include="IRepository.cs" />
+    <Compile Include="Operations\IOperationResolver.cs" />
+    <Compile Include="Operations\IDataQuery.cs" />
+    <Compile Include="Operations\IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitOfWork.cs" />
     <Compile Include="Events\UnitOfWorkCompletingEvent.cs" />

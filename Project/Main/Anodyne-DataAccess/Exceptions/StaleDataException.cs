@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,17 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+namespace Kostassoid.Anodyne.DataAccess.Exceptions
 {
     using System;
+    using System.Collections.Generic;
+    using Domain.Base;
 
-    public class EntityNotFoundException : Exception
+    public class StaleDataException : Exception
     {
-        public object Key { get; protected set; }
+        public IList<IAggregateRoot> StaleData { get; protected set; }
 
-        public EntityNotFoundException(object key)
+        public StaleDataException(IList<IAggregateRoot> staleData, string message):base(message)
         {
-            Key = key;
+            StaleData = staleData;
         }
     }
 }

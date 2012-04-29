@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,10 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+namespace Kostassoid.Anodyne.DataAccess.Operations
 {
-    public interface IOperationResolver
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Common;
+    using Domain.Base;
+
+    public interface IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
-        TOp Get<TOp>() where TOp : IDataOperation;
+        TRoot this[object key] { get; }
+        TRoot Get(object key);
+        Option<TRoot> FindBy(object key);
+        IQueryable<TRoot> All();
+        bool Exists(object key);
+        long Count(Expression<Func<TRoot, bool>> criteria);
+        long Count();
     }
 }

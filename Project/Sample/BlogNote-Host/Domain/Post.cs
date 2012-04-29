@@ -23,7 +23,7 @@ namespace Kostassoid.BlogNote.Host.Domain
     {
         public Guid User { get; protected set; }
 
-        public PostContents Contents { get; protected set; }
+        public BasePostContent Content { get; protected set; }
 
         public DateTime Created { get; protected set; }
         public DateTime? Updated { get; protected set; }
@@ -35,18 +35,18 @@ namespace Kostassoid.BlogNote.Host.Domain
             Id = SeqGuid.NewGuid();
         }
 
-        public static Post Create(PostContents contents)
+        public static Post Create(BasePostContent content)
         {
-            Requires.NotNull(contents, "contents");
+            Requires.NotNull(content, "Content");
 
             var post = new Post();
-            post.Apply(new PostCreatedEvent(post, contents));
+            post.Apply(new PostCreatedEvent(post, content));
             return post;
         }
 
-        protected void OnPostCreated(PostCreatedEvent @event)
+        protected void OnCreated(PostCreatedEvent @event)
         {
-            Contents = @event.Data.Contents;
+            Content = @event.Data.Content;
 
             Created = SystemTime.Now;
         }
@@ -55,16 +55,16 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         #region Update
 
-        public void Update(PostContents contents)
+        public void Update(BasePostContent content)
         {
-            Requires.NotNull(contents, "contents");
+            Requires.NotNull(content, "Content");
 
-            Apply(new PostUpdatedEvent(this, contents));
+            Apply(new PostUpdatedEvent(this, content));
         }
 
         protected void OnUpdated(PostUpdatedEvent @event)
         {
-            Contents = @event.Data.Contents;
+            Content = @event.Data.Content;
 
             Updated = SystemTime.Now;
         }

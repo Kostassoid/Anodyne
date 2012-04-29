@@ -11,25 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Host.Domain
+namespace Kostassoid.Anodyne.DataAccess.Operations
 {
-    using Anodyne.Common.CodeContracts;
-    using Anodyne.Domain.Base;
-
-    public class PostContents : IValueObject
+    public interface IOperationResolver
     {
-        public string Title { get; protected set; }
-        public string Body { get; protected set; }
-        public string[] Tags { get; protected set; }
-
-        public PostContents(string title, string body, string[] tags = null)
-        {
-            Requires.NotNullOrEmpty(title, "title");
-            Requires.NotNullOrEmpty(body, "body");
-
-            Title = title;
-            Body = body;
-            Tags = tags ?? new string[0];
-        }
+        TOp Get<TOp>() where TOp : IDataOperation;
     }
 }

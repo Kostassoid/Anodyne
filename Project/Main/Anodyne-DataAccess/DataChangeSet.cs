@@ -11,27 +11,23 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Host.Domain
+namespace Kostassoid.Anodyne.DataAccess
 {
-    using Anodyne.Domain.Events;
+    using System.Collections.Generic;
+    using Domain.Base;
+    using Domain.Events;
 
-    public class PostCreatedEvent : AggregateEvent<Post, PostCreatedEvent.EventData>
+    public class DataChangeSet
     {
-        public PostCreatedEvent(Post aggregate, BasePostContent content)
-            : base(aggregate, new EventData(content))
+        public IList<IAggregateEvent> AppliedEvents { get; protected set; }
+        public IList<IAggregateRoot> StaleData { get; protected set; }
+
+        public bool StaleDataDetected { get { return StaleData.Count > 0; } }
+
+        public DataChangeSet(IList<IAggregateEvent> appliedEvents, IList<IAggregateRoot> staleData)
         {
+            AppliedEvents = appliedEvents;
+            StaleData = staleData;
         }
-
-        public class EventData : Anodyne.Domain.Events.EventData
-        {
-            public BasePostContent Content { get; protected set; }
-
-            public EventData(BasePostContent content)
-            {
-                Content = content;
-            }
-        }
-
     }
-
 }

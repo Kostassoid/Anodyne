@@ -13,25 +13,17 @@
 
 namespace Kostassoid.BlogNote.Host.Domain
 {
-    using Anodyne.Domain.Events;
+    using Anodyne.Common.CodeContracts;
 
-    public class PostCreatedEvent : AggregateEvent<Post, PostCreatedEvent.EventData>
+    public class TextContent : BasePostContent
     {
-        public PostCreatedEvent(Post aggregate, BasePostContent content)
-            : base(aggregate, new EventData(content))
+        public string Body { get; protected set; }
+
+        public TextContent(string title, string body, string[] tags = null) : base(title, tags)
         {
+            Requires.NotNullOrEmpty(body, "body");
+
+            Body = body;
         }
-
-        public class EventData : Anodyne.Domain.Events.EventData
-        {
-            public BasePostContent Content { get; protected set; }
-
-            public EventData(BasePostContent content)
-            {
-                Content = content;
-            }
-        }
-
     }
-
 }
