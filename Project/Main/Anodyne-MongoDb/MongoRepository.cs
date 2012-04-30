@@ -25,12 +25,12 @@ namespace Kostassoid.Anodyne.MongoDb
     using global::System.Linq;
     using global::System.Linq.Expressions;
 
-    public class Repository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
+    public class MongoRepository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
         private readonly MongoDatabase _session;
         private readonly Lazy<MongoCollection<TRoot>> _collection;
 
-        public Repository(MongoDatabase session)
+        public MongoRepository(MongoDatabase session)
         {
             _session = session;
             _collection = new Lazy<MongoCollection<TRoot>>(session.GetCollection<TRoot>);

@@ -55,7 +55,7 @@
     <Compile Include="MongoDataSession.cs" />
     <Compile Include="MongoHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
+    <Compile Include="MongoRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

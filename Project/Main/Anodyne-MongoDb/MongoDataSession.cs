@@ -36,7 +36,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public override IRepository<TRoot> GetRepository<TRoot>()
         {
-            return new Repository<TRoot>(_nativeSession);
+            return new MongoRepository<TRoot>(_nativeSession);
         }
 
         protected override IAggregateRoot FindOne(Type type, object id)

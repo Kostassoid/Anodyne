@@ -31,17 +31,17 @@ namespace Kostassoid.Anodyne.DataAccess
         public AggregateRootChangeSet(IAggregateRoot aggregate)
         {
             Aggregate = aggregate;
-            CurrentVersion = aggregate.Version;
-            TargetVersion = aggregate.Version - 1; // Aggregate version is already incremented at this moment
+            CurrentVersion = TargetVersion = aggregate.Version - 1; // Aggregate version is already incremented at this moment
             Events = new List<IAggregateEvent>();
         }
 
         public void Register(IAggregateEvent @event)
         {
-            if (Aggregate != @event.Aggregate || CurrentVersion != @event.Aggregate.Version)
+            if (Aggregate != @event.Aggregate || CurrentVersion != @event.AggregateVersion)
                 throw new ConcurrencyException(Aggregate);
 
             Events.Add(@event);
+            CurrentVersion = @event.Aggregate.Version;
         }
 
         public void MarkAsDeleted()

@@ -131,19 +131,23 @@ namespace Kostassoid.Anodyne.DataAccess
 
         public void Dispose()
         {
-            if (!IsFinished)
-                Complete();
+            if (IsDisposed) return;
 
-            if (IsDisposed)
-                return;
-
-            Context.Release(_contextKey);
-            Current = _parent;
-
-            if (IsRoot)
+            try
             {
-                EventBus.Publish(new UnitOfWorkDisposingEvent(this));
-                DataSession.Dispose();
+                if (!IsFinished)
+                    Complete();
+            }
+            finally
+            {
+                Context.Release(_contextKey);
+                Current = _parent;
+
+                if (IsRoot)
+                {
+                    EventBus.Publish(new UnitOfWorkDisposingEvent(this));
+                    DataSession.Dispose();
+                }
             }
         }
 

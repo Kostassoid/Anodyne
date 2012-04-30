@@ -110,7 +110,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
         public class when_updating_existing_root : UnitOfWorkScenario
         {
             [Test]
-            public void should_change_root_version()
+            public void should_update_root_version()
             {
                 Guid rootId;
                 using (var uow = new UnitOfWork())
@@ -134,11 +134,45 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_updating_root_several_times_in_one_uow : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_update_root_version()
+            {
+                TestRoot originalRoot;
+                using (var uow = new UnitOfWork())
+                {
+                    originalRoot = TestRoot.Create();
+                    originalRoot.Update();
+                }
+
+                Assert.That(originalRoot.Version, Is.EqualTo(2));
+
+                using (var uow = new UnitOfWork())
+                {
+                    var root = uow.Query<TestRoot>().FindBy(originalRoot.Id).Value;
+                    root.Update();
+                    root.Update();
+                    root.Update();
+                    Assert.That(root.Version, Is.EqualTo(5));
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var root = uow.Query<TestRoot>().FindBy(originalRoot.Id).Value;
+                    Assert.That(root.Version, Is.EqualTo(5));
+                }
+
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_updating_root_and_there_is_a_newer_version : UnitOfWorkScenario
         {
             [Test]
             [ExpectedException(typeof(StaleDataException))]
-            public void should_throw_stale_data()
+            public void should_throw_stale_data_exception()
             {
                 Guid rootId;
                 using (var uow = new UnitOfWork())
@@ -157,7 +191,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 {
                     var anotherRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
                     anotherRoot.Update();
-                    root.Update(); // actual mistake is here, but thrown later
+                    root.Update(); // actual mistake is here, but detected later at UoW dispose
                 }
 
             }
@@ -165,7 +199,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_working_with_same_root_object_from_different_unit_of_work : UnitOfWorkScenario
+        public class when_working_with_different_objects_of_the_same_root_from_single_unit_of_work : UnitOfWorkScenario
         {
             [Test]
             public void should_throw_concurrency_exception()
@@ -176,10 +210,9 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     rootId = TestRoot.Create().Id;
                 }
 
-                TestRoot root;
                 using (var uow = new UnitOfWork())
                 {
-                    root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    var root = uow.Query<TestRoot>().FindBy(rootId).Value;
                     root.Update();
                     var anotherRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
                     Assert.Throws<ConcurrencyException>(anotherRoot.Update);
