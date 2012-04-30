@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
     using System;
     using System.Diagnostics;
     using System.Text;
-
+    using Common;
     using FakeItEasy;
     using NUnit.Framework;
 

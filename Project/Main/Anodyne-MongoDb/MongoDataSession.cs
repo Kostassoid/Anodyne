@@ -11,12 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.MongoDb
+namespace Kostassoid.Anodyne.MongoDb
 {
+    using DataAccess;
     using Domain.Base;
     using MongoDB.Bson;
     using MongoDB.Driver;
-    using Operations;
+    using DataAccess.Operations;
 
     public class MongoDataSession : DataSession, IDataSessionEx
     {

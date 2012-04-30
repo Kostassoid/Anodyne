@@ -14,11 +14,11 @@
 
 namespace Kostassoid.Anodyne.DataAccess
 {
-    using System;
     using Domain.Base;
     using Domain.Events;
     using Operations;
     using Wiring;
+    using global::System;
 
     public interface IDataSession : IDisposable, IHandlerOf<IAggregateEvent>
     {

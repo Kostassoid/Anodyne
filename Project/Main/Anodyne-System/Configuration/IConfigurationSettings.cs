@@ -11,8 +11,15 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System.Runtime.InteropServices;
+namespace Kostassoid.Anodyne.System.Configuration
+{
+    using Dependency;
+    using Logging;
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-
-[assembly: Guid("dc3ce7b5-7e01-4d82-b268-e6276d36849a")]
+    public interface IConfigurationSettings
+    {
+        IContainer Container { get; }
+        ILoggerAdapter Logger { get; }
+        RuntimeMode RuntimeMode { get; }
+    }
+}

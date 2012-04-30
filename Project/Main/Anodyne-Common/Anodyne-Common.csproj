@@ -56,6 +56,7 @@
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Period.cs" />
+    <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableValueObject.cs" />
     <Compile Include="SystemTime.cs" />
@@ -63,7 +64,9 @@
     <Compile Include="Tools\MemoizedFunc.cs" />
     <Compile Include="Tools\SeqGuid.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Reflection\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

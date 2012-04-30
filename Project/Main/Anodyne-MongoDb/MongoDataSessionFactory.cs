@@ -11,21 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.MongoDb
+namespace Kostassoid.Anodyne.MongoDb
 {
+    using DataAccess;
     using MongoDB.Driver;
-    using Operations;
+    using DataAccess.Operations;
 
-    public class DataSessionFactory : IDataSessionFactory
+    public class MongoDataSessionFactory : IDataSessionFactory
     {
         protected string DatabaseName { get; private set; }
         protected MongoServer Server { get; private set; }
         protected IOperationResolver OperationResolver { get; private set; }
 
-        public DataSessionFactory(string connectionString, string databaseName, IOperationResolver operationResolver)
+        public MongoDataSessionFactory(string connectionString, string databaseName, IOperationResolver operationResolver)
         {
-            OperationResolver = operationResolver;
             DatabaseName = databaseName;
+            OperationResolver = operationResolver;
 
             Server = MongoServer.Create(connectionString);
         }

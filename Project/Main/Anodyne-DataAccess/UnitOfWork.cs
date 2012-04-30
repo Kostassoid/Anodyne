@@ -13,7 +13,6 @@
 
 namespace Kostassoid.Anodyne.DataAccess
 {
-    using System;
     using Common;
     using Common.CodeContracts;
     using Common.ExecutionContext;
@@ -23,6 +22,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Exceptions;
     using Operations;
     using Wiring;
+    using global::System;
 
     public class UnitOfWork : IDisposable
     {
@@ -113,7 +113,7 @@ namespace Kostassoid.Anodyne.DataAccess
             EventBus.Publish(new UnitOfWorkCompletedEvent(this, changeSet));
 
             if (changeSet.StaleDataDetected)
-                throw new StaleDataException(changeSet.StaleData, "Some aggregates wasn't saved due to stale data (version mismatch)");
+                throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
 
         }
 
@@ -125,8 +125,8 @@ namespace Kostassoid.Anodyne.DataAccess
 
             if (!IsRoot) return;
 
-            EventBus.Publish(new UnitOfWorkRollbackEvent(this));
             DataSession.Rollback();
+            EventBus.Publish(new UnitOfWorkRollbackEvent(this));
         }
 
         public void Dispose()
@@ -167,16 +167,6 @@ namespace Kostassoid.Anodyne.DataAccess
             return DataSession.GetOperation<TOp>();
         }
 
-/*
-        public TEntity MarkAsCreated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
-        {
-            AssertIfFinished();
-
-            DataSession.MarkAsCreated(entity);
-            return entity;
-        }
-*/
-
         public void MarkAsDeleted<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
         {
             AssertIfFinished();
@@ -184,13 +174,5 @@ namespace Kostassoid.Anodyne.DataAccess
             DataSession.MarkAsDeleted(entity);
         }
 
-/*
-        public void MarkAsUpdated<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
-        {
-            AssertIfFinished();
-
-            DataSession.MarkAsUpdated(entity);
-        }
-*/
     }
 }

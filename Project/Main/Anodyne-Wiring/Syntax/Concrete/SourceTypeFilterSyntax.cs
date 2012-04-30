@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
     using System;
+    using Common;
     using Subscription;
 
     internal class SourceTypeFilterSyntax<TEvent> : ISourceTypeFilterSyntax<TEvent> where TEvent : class, IEvent

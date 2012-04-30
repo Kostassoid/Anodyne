@@ -11,10 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.System
+namespace Kostassoid.Anodyne.System.Configuration
 {
-    public interface IConfiguration
+    using Dependency;
+    using Logging;
+
+    public interface IConfigurationBuilder
     {
-         
+        bool IsValid { get; }
+
+        void SetContainerAdapter(IContainer container);
+        void SetLoggerAdapter(ILoggerAdapter loggerAdapter);
     }
 }

@@ -13,9 +13,9 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Exceptions
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.Base;
+    using global::System;
+    using global::System.Collections.Generic;
 
     public class StaleDataException : Exception
     {

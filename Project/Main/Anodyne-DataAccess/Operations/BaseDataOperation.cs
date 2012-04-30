@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Operations
 {
-    using System;
+    using global::System;
 
     public abstract class BaseDataOperation
     {
@@ -23,7 +23,7 @@ namespace Kostassoid.Anodyne.DataAccess.Operations
         {
             if (UnitOfWork.Current.IsNone)
             {
-                throw new Exception("Should be within UnitOfWork context!");
+                throw new InvalidOperationException("Should be within UnitOfWork context!");
             }
 
             Owner = UnitOfWork.Current.Value;

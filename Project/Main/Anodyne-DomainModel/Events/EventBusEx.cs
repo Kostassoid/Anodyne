@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Domain.Events
 {
     using System;
+    using Common;
     using Wiring;
 
     public static class EventBusEx

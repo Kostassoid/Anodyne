@@ -13,10 +13,10 @@
 
 namespace Kostassoid.Anodyne.DataAccess
 {
-    using System.Collections.Generic;
     using Domain.Base;
     using Domain.Events;
     using Exceptions;
+    using global::System.Collections.Generic;
 
     public class AggregateRootChangeSet
     {

@@ -11,22 +11,27 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.MongoDb
+namespace Kostassoid.Anodyne.System.Dependency
 {
-    using System;
-    using Domain.Base;
-    using MongoDB.Driver;
+    using global::System;
+    using global::System.Collections.Generic;
 
-    public static class MongoDatabaseEx
+    public interface IContainer
     {
-        public static MongoCollection<TEntity> GetCollection<TEntity>(this MongoDatabase database) where TEntity : class, IAggregateRoot
-        {
-            return database.GetCollection<TEntity>(typeof (TEntity).Name);
-        }
+        IList<T> GetAll<T>();
+        T Get<T>();
+        IBindingSyntax For<T>();
+        IServiceAssemblySyntax ForAll<T>();
+    }
 
-        public static MongoCollection GetCollection(this MongoDatabase database, Type type)
-        {
-            return database.GetCollection(type, type.Name);
-        }
+    public interface IServiceAssemblySyntax : IBindingSyntax
+    {
+        IBindingSyntax From();
+    }
+
+    public interface IBindingSyntax
+    {
+        void Use<T>();
+        void Use(Func<object> bindingFunc);
     }
 }

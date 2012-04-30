@@ -11,14 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.MongoDb
+namespace Kostassoid.Anodyne.MongoDb
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
+    using global::System;
+    using global::System.Collections.Generic;
+    using global::System.Linq;
+    using global::System.Linq.Expressions;
 
     public static class MongoCollectionEx
     {

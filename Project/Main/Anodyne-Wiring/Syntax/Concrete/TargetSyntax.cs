@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
     using System;
+    using Common;
     using Subscription;
 
     internal class TargetSyntax<TEvent> : ITargetSyntax<TEvent> where TEvent : class, IEvent
