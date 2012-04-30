@@ -13,6 +13,9 @@
 
 namespace Kostassoid.Anodyne.Domain.Base
 {
+    using System;
+
+    [Serializable]
     public class Entity<TKey> : IEntity
     {
         public TKey Id { get; protected set; }

@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
     using Common;
+    using Common.Extentions;
     using Domain.Base;
     using Anodyne.DataAccess.Exceptions;
     using Anodyne.DataAccess.Operations;
@@ -37,18 +38,19 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
             if (found == null)
                 throw new AggregateRootNotFoundException(key);
 
-            return found;
+            return found.DeepClone();
         }
 
         public virtual Option<TRoot> FindBy(object key)
         {
-            return _collection.FirstOrDefault(r => r.IdObject.Equals(key));
+            var found = _collection.FirstOrDefault(r => r.IdObject.Equals(key));
+            return found != null ? found.DeepClone() : null;
         }
 
 
         public virtual IQueryable<TRoot> All()
         {
-            return _collection.AsQueryable();
+            return _collection.AsQueryable().Select(r => r.DeepClone());
         }
 
         public virtual bool Exists(object key)

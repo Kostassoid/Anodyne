@@ -19,5 +19,6 @@ namespace Kostassoid.Anodyne.Domain.Events
     {
         IAggregateRoot Aggregate { get; }
         object AggregateId { get; }
+        int AggregateVersion { get; }
     }
 }

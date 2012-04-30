@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
     using Common.Tools;
     using Domain.Base;
     using Domain.Events;
+    using Exceptions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -31,6 +32,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             }
         }
 
+        [Serializable]
         public class TestRoot : AggregateRoot<Guid>
         {
             protected TestRoot()
@@ -49,12 +51,32 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             {
                 
             }
-            
+
+            public void Update()
+            {
+                Apply(new TestRootUpdated(this));
+            }
+
+            protected void OnUpdated(TestRootUpdated @event)
+            {
+
+            }
+
+
         }
 
-        public class TestRootCreated : AggregateEvent<TestRoot,EmptyEventData>
+        public class TestRootCreated : AggregateEvent<TestRoot, EmptyEventData>
         {
-            public TestRootCreated(TestRoot aggregate) : base(aggregate, new EmptyEventData())
+            public TestRootCreated(TestRoot aggregate)
+                : base(aggregate, new EmptyEventData())
+            {
+            }
+        }
+
+        public class TestRootUpdated : AggregateEvent<TestRoot, EmptyEventData>
+        {
+            public TestRootUpdated(TestRoot aggregate)
+                : base(aggregate, new EmptyEventData())
             {
             }
         }
@@ -79,6 +101,88 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     Assert.That(root.IsSome, Is.True);
                     Assert.That(root.Value.Id, Is.EqualTo(rootId));
                     Assert.That(root.Value.Version, Is.EqualTo(1));
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_updating_existing_root : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_change_root_version()
+            {
+                Guid rootId;
+                using (var uow = new UnitOfWork())
+                {
+                    rootId = TestRoot.Create().Id;
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    root.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var updatedRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    Assert.That(updatedRoot.Version, Is.EqualTo(2));
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_updating_root_and_there_is_a_newer_version : UnitOfWorkScenario
+        {
+            [Test]
+            [ExpectedException(typeof(StaleDataException))]
+            public void should_throw_stale_data()
+            {
+                Guid rootId;
+                using (var uow = new UnitOfWork())
+                {
+                    rootId = TestRoot.Create().Id;
+                }
+
+                TestRoot root;
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    root.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var anotherRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    anotherRoot.Update();
+                    root.Update(); // actual mistake is here, but thrown later
+                }
+
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_working_with_same_root_object_from_different_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_throw_concurrency_exception()
+            {
+                Guid rootId;
+                using (var uow = new UnitOfWork())
+                {
+                    rootId = TestRoot.Create().Id;
+                }
+
+                TestRoot root;
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    root.Update();
+                    var anotherRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    Assert.Throws<ConcurrencyException>(anotherRoot.Update);
                 }
             }
         }

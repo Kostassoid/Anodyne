@@ -24,14 +24,15 @@ namespace Kostassoid.Anodyne.DataAccess
         public int TargetVersion { get; protected set; }
         public int CurrentVersion { get; protected set; }
         public bool IsDeleted { get; protected set; }
-        public bool IsNew { get { return TargetVersion == 1; } }
+        public bool IsNew { get { return TargetVersion == 0; } }
 
         public IList<IAggregateEvent> Events { get; protected set; }
 
         public AggregateRootChangeSet(IAggregateRoot aggregate)
         {
             Aggregate = aggregate;
-            TargetVersion = CurrentVersion = aggregate.Version;
+            CurrentVersion = aggregate.Version;
+            TargetVersion = aggregate.Version - 1; // Aggregate version is already incremented at this moment
             Events = new List<IAggregateEvent>();
         }
 

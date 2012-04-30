@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.Domain.Base
     using Events;
     using Wiring;
 
+    [Serializable]
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
         public virtual object IdObject

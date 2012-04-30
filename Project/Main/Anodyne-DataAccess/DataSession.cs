@@ -72,9 +72,6 @@ namespace Kostassoid.Anodyne.DataAccess
 
             var storedAggregate = FindOne(type, changeSet.Aggregate.IdObject);
 
-            //var collection = _nativeSession.GetCollection(type);
-            //var storedAggregate = collection.FindOneByIdAs(type, changeSet.Aggregate.IdObject.ToBson());
-
             if (storedAggregate == null && !changeSet.IsNew)
                 return false;
 
