@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.Windsor
     using Castle.Facilities.Startable;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
+    using Registration;
     using global::System;
     using global::System.Collections.Generic;
 
@@ -45,12 +46,12 @@ namespace Kostassoid.Anodyne.Windsor
             return _container.Resolve<T>();
         }
 
-        public IBindingSyntax For<T>()
+        public IBindingSyntax<TService> For<TService>() where TService : class
         {
-            throw new NotImplementedException();
+            return new BindingSyntax<TService>(_container);
         }
 
-        public IServiceAssemblySyntax ForAll<T>()
+        public IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class
         {
             throw new NotImplementedException();
         }

@@ -13,8 +13,8 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataGeneration
 {
-    using System;
-    using System.Text;
+    using global::System;
+    using global::System.Text;
 
     public class SimpleGenerator : AbstractGenerator
     {

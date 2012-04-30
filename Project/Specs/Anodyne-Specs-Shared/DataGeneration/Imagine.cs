@@ -13,8 +13,8 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataGeneration
 {
-    using System;
     using Common;
+    using global::System;
 
     public static class Imagine
     {

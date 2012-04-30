@@ -11,17 +11,24 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Specs.Shared.DataGeneration
+namespace Kostassoid.Anodyne.Specs.Shared
 {
-    using global::System;
+    using System.Configuration;
+    using Anodyne.DataAccess;
+    using DataAccess;
 
-    public abstract class AbstractGenerator
+    public static class ConfigurationEx
     {
-        protected readonly Func<Random> Random;
-
-        internal AbstractGenerator(Func<Random> random)
+        public static void UseInMemoryDataAccess(this IConfiguration configuration)
         {
-            Random = random;
+            var cfg = (configuration as IConfigurationSettings);
+
+            cfg.Container.For<IDataSessionFactory>()
+                .Use(() => new InMemoryDataSessionFactory());
+
+            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
         }
+
     }
+
 }

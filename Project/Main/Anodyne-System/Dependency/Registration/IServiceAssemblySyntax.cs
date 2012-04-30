@@ -15,8 +15,8 @@ namespace Kostassoid.Anodyne.System.Dependency.Registration
 {
     using Common;
 
-    public interface IServiceAssemblySyntax : IBindingSyntax, ISyntax
+    public interface IServiceAssemblySyntax<in TService> : IBindingSyntax<TService>, ISyntax where TService : class
     {
-        IBindingSyntax From();
+        IBindingSyntax<TService> From();
     }
 }

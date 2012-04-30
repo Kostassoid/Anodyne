@@ -16,9 +16,9 @@ namespace Kostassoid.Anodyne.System.Dependency.Registration
     using Common;
     using global::System;
 
-    public interface IBindingSyntax : ISyntax
+    public interface IBindingSyntax<in TService> : ISyntax where TService : class
     {
-        void Use<T>();
-        void Use(Func<object> bindingFunc);
+        void Use<TImpl>(Lifestyle lifestyle = Lifestyle.Singleton) where TImpl : TService;
+        void Use(Func<TService> bindingFunc, Lifestyle lifestyle = Lifestyle.Singleton);
     }
 }

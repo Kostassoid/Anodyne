@@ -20,7 +20,7 @@ namespace Kostassoid.Anodyne.System.Dependency
     {
         IList<T> GetAll<T>();
         T Get<T>();
-        IBindingSyntax For<T>();
-        IServiceAssemblySyntax ForAll<T>();
+        IBindingSyntax<TService> For<TService>() where TService : class;
+        IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class;
     }
 }

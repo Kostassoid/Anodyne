@@ -40,7 +40,7 @@ namespace Kostassoid.Anodyne.DataAccess
         public static Option<UnitOfWork> Current
         {
             get { return Context.FindAs<UnitOfWork>(HeadContextKey); }
-            protected set { Context.Set(HeadContextKey, value); }
+            protected set { Context.Set(HeadContextKey, value.IsSome ? value.Value : null); }
         }
 
         public bool IsRoot
@@ -64,7 +64,7 @@ namespace Kostassoid.Anodyne.DataAccess
         {
             EventBus
                 .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>(From.Assemblies(a => a.FullName.Contains("Domain")))
+                .AllBasedOn<IAggregateEvent>(From.Assemblies(_ => true))
                 .With(e =>
                           {
                               if (Current.IsSome && !Current.Value.IsFinished)

@@ -66,7 +66,28 @@ namespace Kostassoid.Anodyne.DataAccess
             GetChangeSetFor(aggregate).MarkAsDeleted();
         }
 
-        protected abstract bool ApplyChangeSet(AggregateRootChangeSet changeSet);
+        protected bool ApplyChangeSet(AggregateRootChangeSet changeSet)
+        {
+            var type = changeSet.Aggregate.GetType();
+
+            var storedAggregate = FindOne(type, changeSet.Aggregate.IdObject);
+
+            //var collection = _nativeSession.GetCollection(type);
+            //var storedAggregate = collection.FindOneByIdAs(type, changeSet.Aggregate.IdObject.ToBson());
+
+            if (storedAggregate == null && !changeSet.IsNew)
+                return false;
+
+            if (storedAggregate != null && storedAggregate.Version != changeSet.TargetVersion)
+                return false;
+
+            SaveOne(type, changeSet.Aggregate);
+
+            if (changeSet.IsDeleted)
+                RemoveOne(type, changeSet.Aggregate.IdObject);
+
+            return true;
+        }
 
         public DataChangeSet SaveChanges()
         {
@@ -96,5 +117,10 @@ namespace Kostassoid.Anodyne.DataAccess
         }
 
         public void Dispose() {}
+
+        protected abstract IAggregateRoot FindOne(Type type, object id);
+        protected abstract void SaveOne(Type type, IAggregateRoot root);
+        protected abstract void RemoveOne(Type type, object id);
+
     }
 }

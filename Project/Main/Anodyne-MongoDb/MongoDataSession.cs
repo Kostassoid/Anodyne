@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Bson;
     using MongoDB.Driver;
     using DataAccess.Operations;
+    using global::System;
 
     public class MongoDataSession : DataSession, IDataSessionEx
     {
@@ -38,28 +39,22 @@ namespace Kostassoid.Anodyne.MongoDb
             return new Repository<TRoot>(_nativeSession);
         }
 
-        protected override bool ApplyChangeSet(AggregateRootChangeSet changeSet)
+        protected override IAggregateRoot FindOne(Type type, object id)
         {
-            var type = changeSet.Aggregate.GetType();
-
             var collection = _nativeSession.GetCollection(type);
+            return collection.FindOneByIdAs(type, id.ToBson()) as IAggregateRoot;
+        }
 
-            var storedAggregate = collection.FindOneByIdAs(type, changeSet.Aggregate.IdObject.ToBson());
+        protected override void SaveOne(Type type, IAggregateRoot root)
+        {
+            var collection = _nativeSession.GetCollection(type);
+            collection.Save(root);
+        }
 
-            if (storedAggregate == null && !changeSet.IsNew)
-                return false;
-
-// ReSharper disable PossibleNullReferenceException
-            if ((storedAggregate as IAggregateRoot).Version != changeSet.TargetVersion)
-// ReSharper restore PossibleNullReferenceException
-                return false;
-
-            collection.Save(changeSet.Aggregate);
-
-            if (changeSet.IsDeleted)
-                collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", changeSet.Aggregate.IdObject.ToBson()));
-
-            return true;
+        protected override void RemoveOne(Type type, object id)
+        {
+            var collection = _nativeSession.GetCollection(type);
+            collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", id.ToBson()));
         }
 
     }
