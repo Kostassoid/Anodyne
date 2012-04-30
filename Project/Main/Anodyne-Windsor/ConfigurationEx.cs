@@ -13,14 +13,9 @@
 
 namespace Kostassoid.Anodyne.Windsor
 {
-    using System;
     using System.Configuration;
-    using System.Dependency;
-    using Castle.Facilities.Startable;
-    using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
     using global::System;
-    using global::System.Collections.Generic;
 
     public static class ConfigurationEx
     {
@@ -34,40 +29,5 @@ namespace Kostassoid.Anodyne.Windsor
             (configuration as IConfigurationBuilder).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
         }
 
-    }
-
-    public class WindsorContainerAdapter : IContainer
-    {
-        private readonly IWindsorContainer _container;
-
-        public WindsorContainerAdapter(IWindsorContainer container)
-        {
-            _container = container;
-
-            _container.Kernel.ReleasePolicy = new TransientReleasePolicy(_container.Kernel);
-            _container.Kernel.Resolver.AddSubResolver(new ListResolver(_container.Kernel));
-
-            _container.AddFacility<StartableFacility>();
-        }
-
-        public IList<T> GetAll<T>()
-        {
-            return _container.ResolveAll<T>();
-        }
-
-        public T Get<T>()
-        {
-            return _container.Resolve<T>();
-        }
-
-        public IBindingSyntax For<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IServiceAssemblySyntax ForAll<T>()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

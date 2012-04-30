@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Domain.Events
 {
     using System;
     using Common;
+    using Common.Reflection;
     using Wiring;
 
     public static class EventBusEx
@@ -23,8 +24,7 @@ namespace Kostassoid.Anodyne.Domain.Events
         {
             return EventBus
                 .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>()
-                .From(a => typeof(T).Assembly.FullName == a) //assuming our domain is one assembly with its events
+                .AllBasedOn<IAggregateEvent>(From.Assemblies(a => typeof(T).Assembly == a)) //assuming our domain is one assembly with its events
                 .With<T>(EventMatching.Strict, Priority.Critical)
                 .As(e => e.Aggregate as T);
         }
@@ -33,8 +33,7 @@ namespace Kostassoid.Anodyne.Domain.Events
         {
             return EventBus
                 .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>()
-                .From(a => aggregateType.Assembly.FullName == a) //assuming our domain is one assembly with its events
+                .AllBasedOn<IAggregateEvent>(From.Assemblies(a => aggregateType.Assembly == a)) //assuming our domain is one assembly with its events
                 .With(aggregateType, EventMatching.Strict, Priority.Critical)
                 .As(e => e.Aggregate as object);
         }

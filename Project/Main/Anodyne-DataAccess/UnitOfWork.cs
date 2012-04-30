@@ -16,6 +16,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Common;
     using Common.CodeContracts;
     using Common.ExecutionContext;
+    using Common.Reflection;
     using Domain.Events;
     using Events;
     using Domain.Base;
@@ -63,8 +64,7 @@ namespace Kostassoid.Anodyne.DataAccess
         {
             EventBus
                 .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>()
-                .From(a => a.Contains("Domain"))
+                .AllBasedOn<IAggregateEvent>(From.Assemblies(a => a.FullName.Contains("Domain")))
                 .With(e =>
                           {
                               if (Current.IsSome && !Current.Value.IsFinished)

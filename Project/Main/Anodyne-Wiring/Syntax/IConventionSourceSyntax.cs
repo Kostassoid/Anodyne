@@ -13,10 +13,13 @@
 
 namespace Kostassoid.Anodyne.Wiring.Syntax
 {
+    using System.Collections.Generic;
+    using System.Reflection;
     using Common;
 
     public interface IConventionSourceSyntax : ISyntax
     {
-        IAssemblySourceSyntax<TEvent> AllBasedOn<TEvent>() where TEvent : class, IEvent;
+        ISourceTypeFilterSyntax<TEvent> AllBasedOn<TEvent>() where TEvent : class, IEvent;
+        ISourceTypeFilterSyntax<TEvent> AllBasedOn<TEvent>(IEnumerable<Assembly> assemblies) where TEvent : class, IEvent;
     }
 }

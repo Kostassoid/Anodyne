@@ -13,6 +13,11 @@
 
 namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Common.Extentions;
+    using Common.Reflection;
     using Internal;
     using Subscription;
 
@@ -25,15 +30,27 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             _eventAggregator = eventAggregator;
         }
 
-        public IAssemblySourceSyntax<TEvent> AllBasedOn<TEvent>() where TEvent : class, IEvent
+        public ISourceTypeFilterSyntax<TEvent> AllBasedOn<TEvent>() where TEvent : class, IEvent
         {
             var specification = new SubscriptionSpecification<TEvent>(_eventAggregator)
                                     {
-                                        BaseEventType = typeof (TEvent)
+                                        BaseEventType = typeof (TEvent),
+                                        SourceAssemblies = Assembly.GetCallingAssembly().AsEnumerable().ToList()
                                     };
 
 
-            return new AssemblySourceSyntax<TEvent>(specification);
+            return new SourceTypeFilterSyntax<TEvent>(specification);
+        }
+
+        public ISourceTypeFilterSyntax<TEvent> AllBasedOn<TEvent>(IEnumerable<Assembly> assemblies) where TEvent : class, IEvent
+        {
+            var specification = new SubscriptionSpecification<TEvent>(_eventAggregator)
+            {
+                BaseEventType = typeof(TEvent),
+                SourceAssemblies = assemblies.ToList()
+            };
+
+            return new SourceTypeFilterSyntax<TEvent>(specification);
         }
     }
 }

@@ -23,10 +23,11 @@ namespace Kostassoid.BlogNote.Host
     {
         static void Main(string[] args)
         {
-            const string serviceName = Const.ProjectName + "-Host";
-
+            //TODO: get rid of this
             XmlConfigurator.Configure(new FileInfo("log4net.config"));
             var logger = LogManager.GetLogger(typeof(Program));
+
+            const string serviceName = Const.ProjectName + "-Host";
 
             var h = HostFactory.New(x =>
             {

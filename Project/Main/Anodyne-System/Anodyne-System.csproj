@@ -55,7 +55,9 @@
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
     <Compile Include="Configuration\IConfigurationSettings.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
     <Compile Include="Dependency\IContainer.cs" />
+    <Compile Include="Dependency\Registration\IServiceAssemblySyntax.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILoggerAdapter.cs" />
     <Compile Include="Logging\LogLevel.cs" />
@@ -65,7 +67,7 @@
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="Subsystem\ISubsystem.cs" />
     <Compile Include="Subsystem\Subsystem.cs" />
-    <Compile Include="Subsystem\SystemState.cs" />
+    <Compile Include="SystemState.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

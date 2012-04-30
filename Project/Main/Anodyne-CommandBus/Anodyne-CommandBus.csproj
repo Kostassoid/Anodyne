@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</ProjectGuid>
+    <ProjectGuid>{796945E4-9836-4942-BC79-6C7B3E7C0EBF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kostassoid.Anodyne.Common</RootNamespace>
-    <AssemblyName>Anodyne-Common</AssemblyName>
+    <RootNamespace>Kostassoid.Anodyne.CommandBus</RootNamespace>
+    <AssemblyName>Anodyne-CommandBus</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,29 +43,9 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CodeContracts\Assumes.cs" />
-    <Compile Include="CodeContracts\Requires.cs" />
-    <Compile Include="ExecutionContext\Context.cs" />
-    <Compile Include="ExecutionContext\IContextProvider.cs" />
-    <Compile Include="ExecutionContext\NormalContextProvider.cs" />
-    <Compile Include="Extentions\DateTimeEx.cs" />
-    <Compile Include="Extentions\EnumerableEx.cs" />
-    <Compile Include="Extentions\ObjectEx.cs" />
-    <Compile Include="ImmutableCollection.cs" />
-    <Compile Include="ISyntax.cs" />
-    <Compile Include="ObjectFactory.cs" />
-    <Compile Include="Option.cs" />
-    <Compile Include="Period.cs" />
-    <Compile Include="Priority.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection\From.cs" />
-    <Compile Include="SerializableValueObject.cs" />
-    <Compile Include="SystemTime.cs" />
-    <Compile Include="Ticket.cs" />
-    <Compile Include="Tools\MemoizedFunc.cs" />
-    <Compile Include="Tools\SeqGuid.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

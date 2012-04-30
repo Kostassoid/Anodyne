@@ -47,7 +47,6 @@
     <Compile Include="EventBusExtentions.cs" />
     <Compile Include="Subscription\AssemblySpecification.cs" />
     <Compile Include="Subscription\SubscriptionPerformer.cs" />
-    <Compile Include="Syntax\Concrete\AssemblySourceSyntax.cs" />
     <Compile Include="Syntax\IAsyncTargetSyntax.cs" />
     <Compile Include="Syntax\ITargetDiscoveryByTypeSyntax.cs" />
     <Compile Include="Syntax\IConventionSourceSyntax.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="Internal\SingleThreadAggregator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EventBus.cs" />
-    <Compile Include="Syntax\IAssemblySourceSyntax.cs" />
     <Compile Include="Syntax\ISourceTypeFilterSyntax.cs" />
     <Compile Include="Syntax\ITargetDiscoverySyntax.cs" />
     <Compile Include="Syntax\ITargetSyntax.cs" />

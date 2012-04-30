@@ -11,16 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.System.Dependency
+namespace Kostassoid.Anodyne.System.Dependency.Registration
 {
-    using Registration;
-    using global::System.Collections.Generic;
+    using Common;
 
-    public interface IContainer
+    public interface IServiceAssemblySyntax : IBindingSyntax, ISyntax
     {
-        IList<T> GetAll<T>();
-        T Get<T>();
-        IBindingSyntax For<T>();
-        IServiceAssemblySyntax ForAll<T>();
+        IBindingSyntax From();
     }
 }

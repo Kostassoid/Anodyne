@@ -17,6 +17,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
     using System.Diagnostics;
     using System.Text;
     using Common;
+    using Common.Reflection;
     using FakeItEasy;
     using NUnit.Framework;
 
@@ -109,7 +110,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>().With(handler);
                 EventBus.Publish(new DerivedTestEvent());
                 EventBus.Publish(new TestEvent());
 
@@ -127,7 +128,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().Where(t => t.Name.Contains("Derived")).With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>(From.ThisAssembly).Where(t => t.Name.Contains("Derived")).With(handler);
                 EventBus.Publish(new DerivedTestEvent());
                 EventBus.Publish(new TestEvent());
 
@@ -144,7 +145,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventBus.SubscribeTo().AllBasedOn<TestEvent>().From(p => p.Contains("Wiring-Specs")).With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>(From.Assemblies(a => a.FullName.Contains("Wiring-Specs"))).With(handler);
 
                 EventBus.Publish(new DerivedTestEvent());
                 EventBus.Publish(new TestEvent());
@@ -217,7 +218,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                var unsubscribe = EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                var unsubscribe = EventBus.SubscribeTo().AllBasedOn<TestEvent>(From.ThisAssembly).With(handler);
                 unsubscribe();
 
                 EventBus.Publish(new TestEvent());
@@ -236,7 +237,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventBus.SubscribeTo().AllBasedOn<TestEvent>().FromThisAssembly().With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>(From.ThisAssembly).With(handler);
 
                 EventBus.Reset();
 
@@ -259,8 +260,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.Reset();
                 EventBus
                     .SubscribeTo()
-                    .AllBasedOn<TestEvent>()
-                    .FromThisAssembly()
+                    .AllBasedOn<TestEvent>(From.ThisAssembly)
                     .With<TestHandler>(EventMatching.Strict)
                     .As(_ => handler);
 
@@ -284,8 +284,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.Reset();
                 EventBus
                     .SubscribeTo()
-                    .AllBasedOn<TestEvent>()
-                    .FromThisAssembly()
+                    .AllBasedOn<TestEvent>(From.ThisAssembly)
                     .With<TestHandler>(EventMatching.All)
                     .As(_ => handler);
 
@@ -312,8 +311,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.Reset();
                 EventBus
                     .SubscribeTo()
-                    .AllBasedOn<TestEvent>()
-                    .FromThisAssembly()
+                    .AllBasedOn<TestEvent>(From.ThisAssembly)
                     .With<TestHandler>(EventMatching.Strict)
                     .As(_ => handler);
 

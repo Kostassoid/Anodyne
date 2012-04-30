@@ -14,6 +14,8 @@
 namespace Kostassoid.Anodyne.Wiring.Subscription
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection;
     using Common;
     using Common.CodeContracts;
     using Internal;
@@ -24,7 +26,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
         public IEventAggregator EventAggregator { get; protected set; }
         public Type BaseEventType { get; set; }
-        public AssemblySpecification SourceAssembly { get; set; }
+        public IList<Assembly> SourceAssemblies { get; set; }
         public Predicate<Type> TypePredicate { get; set; }
         public Predicate<TEvent> EventPredicate { get; set; }
 
@@ -42,7 +44,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
         public bool IsPolymorphic
         {
-            get { return SourceAssembly != null; }
+            get { return SourceAssemblies != null; }
         }
 
 

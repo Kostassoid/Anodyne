@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
     using Common.CodeContracts;
     using Internal;
 
-    using Kostassoid.Anodyne.Common.Extentions;
+    using Common.Extentions;
 
     internal static class SubscriptionPerformer
     {
@@ -59,7 +59,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
         private static IEnumerable<Type> ResolveSourceTypes<TEvent>(SubscriptionSpecification<TEvent> specification) where TEvent : class, IEvent
         {
             return specification.IsPolymorphic
-                              ? FindTypes(specification.BaseEventType, specification.SourceAssembly, specification.TypePredicate)
+                              ? FindTypes(specification.BaseEventType, specification.SourceAssemblies, specification.TypePredicate)
                               : specification.BaseEventType.AsEnumerable();
         }
 
@@ -126,20 +126,11 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             }
         }
 
-        private static IEnumerable<Type> FindTypes(Type baseEventType, AssemblySpecification assembly, Predicate<Type> typePredicate)
+        private static IEnumerable<Type> FindTypes(Type baseEventType, IEnumerable<Assembly> assemblies, Predicate<Type> typePredicate)
         {
-            IEnumerable<Type> types;
-
-            if (assembly.This.IsSome)
-                types = assembly.This.Value.GetTypes();
-            else
-                types = AppDomain
-                    .CurrentDomain
-                    .GetAssemblies()
-                    .Where(a => assembly.Filter(a.FullName))
-                    .SelectMany(a => a.GetTypes());
-
-            return types.Where(t => baseEventType.IsAssignableFrom(t) && typePredicate(t));
+            return assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(t => baseEventType.IsAssignableFrom(t) && typePredicate(t));
         }
     }
 }
