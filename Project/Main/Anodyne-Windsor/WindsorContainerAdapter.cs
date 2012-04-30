@@ -24,31 +24,31 @@ namespace Kostassoid.Anodyne.Windsor
 
     public class WindsorContainerAdapter : IContainer
     {
-        private readonly IWindsorContainer _container;
+        public IWindsorContainer NativeContainer { get; protected set; }
 
         public WindsorContainerAdapter(IWindsorContainer container)
         {
-            _container = container;
+            NativeContainer = container;
 
-            _container.Kernel.ReleasePolicy = new TransientReleasePolicy(_container.Kernel);
-            _container.Kernel.Resolver.AddSubResolver(new ListResolver(_container.Kernel));
+            NativeContainer.Kernel.ReleasePolicy = new TransientReleasePolicy(NativeContainer.Kernel);
+            NativeContainer.Kernel.Resolver.AddSubResolver(new ListResolver(NativeContainer.Kernel));
 
-            _container.AddFacility<StartableFacility>();
+            NativeContainer.AddFacility<StartableFacility>();
         }
 
         public IList<T> GetAll<T>()
         {
-            return _container.ResolveAll<T>();
+            return NativeContainer.ResolveAll<T>();
         }
 
         public T Get<T>()
         {
-            return _container.Resolve<T>();
+            return NativeContainer.Resolve<T>();
         }
 
         public IBindingSyntax<TService> For<TService>() where TService : class
         {
-            return new BindingSyntax<TService>(_container);
+            return new BindingSyntax<TService>(NativeContainer);
         }
 
         public IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class

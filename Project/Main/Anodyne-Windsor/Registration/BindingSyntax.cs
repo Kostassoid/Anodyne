@@ -28,22 +28,31 @@ namespace Kostassoid.Anodyne.Windsor.Registration
             _container = container;
         }
 
-        public void Use<TImpl>(Lifestyle lifestyle) where TImpl : TService
+        //TODO: DRY
+        public void Use<TImpl>(Lifestyle lifestyle, string name) where TImpl : TService
         {
-            _container.Register(
-                Component
-                    .For<TService>()
-                    .ImplementedBy<TImpl>()
-                    .LifeStyle.Is(GetLifestyle(lifestyle)));
+            var componentRegistration = Component
+                .For<TService>()
+                .ImplementedBy<TImpl>()
+                .LifeStyle.Is(GetLifestyle(lifestyle));
+
+            if (!string.IsNullOrEmpty(name))
+                componentRegistration = componentRegistration.Named(name);
+
+            _container.Register(componentRegistration);
         }
 
-        public void Use(Func<TService> bindingFunc, Lifestyle lifestyle)
+        public void Use(Func<TService> bindingFunc, Lifestyle lifestyle, string name)
         {
-            _container.Register(
-                Component
-                    .For<TService>()
-                    .UsingFactoryMethod(bindingFunc)
-                    .LifeStyle.Is(GetLifestyle(lifestyle)));
+            var componentRegistration = Component
+                .For<TService>()
+                .UsingFactoryMethod(bindingFunc)
+                .LifeStyle.Is(GetLifestyle(lifestyle));
+
+            if (!string.IsNullOrEmpty(name))
+                componentRegistration = componentRegistration.Named(name);
+
+            _container.Register(componentRegistration);
         }
 
         private static Castle.Core.LifestyleType GetLifestyle(Lifestyle lifestyle)

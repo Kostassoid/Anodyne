@@ -15,9 +15,6 @@ namespace Kostassoid.Anodyne.System
 {
     using Common.Extentions;
     using Configuration;
-    using Subsystem;
-    using global::System.Collections.Generic;
-    using global::System.Linq;
 
     public abstract class AnodyneSystem
     {
@@ -35,7 +32,7 @@ namespace Kostassoid.Anodyne.System
         public virtual void OnStart() {}
         public virtual void OnShutdown() {}
 
-        private IList<ISubsystem> _subsystems = new List<ISubsystem>();
+        //private IList<ISubsystem> _subsystems = new List<ISubsystem>();
 
         public void Start()
         {
@@ -44,12 +41,12 @@ namespace Kostassoid.Anodyne.System
             if (MustBeConfigured)
                 OnConfigure(_configuration);
 
-            Cfg.Container.GetAll<IBootstrapper>()
-                .OrderByDescending(b => b.Priority)
-                .ForEach(b => b.Perform(Cfg));
+            Cfg.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Cfg));
 
+/*
             _subsystems = Cfg.Container.GetAll<ISubsystem>();
             _subsystems.ForEach(s => s.Start());
+*/
 
             OnStart();
 
@@ -60,9 +57,11 @@ namespace Kostassoid.Anodyne.System
         {
             if (!CanBeStopped) return;
 
+            Cfg.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Cfg));
+
             OnShutdown();
 
-            _subsystems.ForEach(s => s.Stop());
+            //_subsystems.ForEach(s => s.Stop());
 
             State = SystemState.Stopped;
         }

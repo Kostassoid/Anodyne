@@ -11,17 +11,27 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.System.Configuration
+namespace Kostassoid.BlogNote.Host.Domain
 {
-    using Dependency;
-    using Logging;
-    using Wcf;
+    using Anodyne.Domain.Events;
 
-    public interface IConfigurationSettings
+    public class PostCreated : AggregateEvent<Post, PostCreated.EventData>
     {
-        RuntimeMode RuntimeMode { get; }
-        IContainer Container { get; }
-        ILoggerAdapter Logger { get; }
-        IWcfServiceProvider WcfServiceProvider { get; }
+        public PostCreated(Post aggregate, BasePostContent content)
+            : base(aggregate, new EventData(content))
+        {
+        }
+
+        public class EventData : Anodyne.Domain.Events.EventData
+        {
+            public BasePostContent Content { get; protected set; }
+
+            public EventData(BasePostContent content)
+            {
+                Content = content;
+            }
+        }
+
     }
+
 }

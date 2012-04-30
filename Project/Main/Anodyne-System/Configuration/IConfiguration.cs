@@ -18,5 +18,7 @@ namespace Kostassoid.Anodyne.System.Configuration
     public interface IConfiguration : ISyntax
     {
         void RunIn(RuntimeMode runtimeMode);
+        void OnStartupPerform<TStartup>() where TStartup : IStartupAction;
+        void OnShutdownPerform<TShutdown>() where TShutdown : IShutdownAction;
     }
 }

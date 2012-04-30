@@ -15,22 +15,20 @@ namespace Kostassoid.BlogNote.Host.Domain
 {
     using Anodyne.Domain.Events;
 
-    public class UserCreatedEvent : AggregateEvent<User, UserCreatedEvent.EventData>
+    public class UserPostsUpdated : AggregateEvent<User, UserPostsUpdated.EventData>
     {
-        public UserCreatedEvent(User aggregate, string name, string email)
-            : base(aggregate, new EventData(name, email))
+        public UserPostsUpdated(User aggregate, uint posts)
+            : base(aggregate, new EventData(posts))
         {
         }
 
         public class EventData : Anodyne.Domain.Events.EventData
         {
-            public string Name { get; protected set; }
-            public string Email { get; protected set; }
+            public uint Posts { get; protected set; }
 
-            public EventData(string name, string email)
+            public EventData(uint posts)
             {
-                Name = name;
-                Email = email;
+                Posts = posts;
             }
         }
 

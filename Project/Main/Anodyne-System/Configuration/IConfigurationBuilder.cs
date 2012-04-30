@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.System.Configuration
 {
     using Dependency;
     using Logging;
+    using Wcf;
 
     public interface IConfigurationBuilder
     {
@@ -22,5 +23,6 @@ namespace Kostassoid.Anodyne.System.Configuration
 
         void SetContainerAdapter(IContainer container);
         void SetLoggerAdapter(ILoggerAdapter loggerAdapter);
+        void SetWcfServiceProvider(IWcfServiceProvider wcfServiceProvider);
     }
 }

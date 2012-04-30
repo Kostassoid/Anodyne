@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.System.Configuration
 {
     using Dependency;
     using Logging;
+    using Wcf;
 
     public class SystemConfiguration : IConfiguration, IConfigurationBuilder, IConfigurationSettings
     {
@@ -26,6 +27,9 @@ namespace Kostassoid.Anodyne.System.Configuration
 
         private ILoggerAdapter _loggerAdapter;
         ILoggerAdapter IConfigurationSettings.Logger { get { return _loggerAdapter; } }
+
+        private IWcfServiceProvider _wcfServiceProvider;
+        IWcfServiceProvider IConfigurationSettings.WcfServiceProvider { get { return _wcfServiceProvider; } }
 
         public SystemConfiguration()
         {
@@ -45,13 +49,32 @@ namespace Kostassoid.Anodyne.System.Configuration
         void IConfigurationBuilder.SetLoggerAdapter(ILoggerAdapter loggerAdapter)
         {
             _loggerAdapter = loggerAdapter;
-
             LogManager.Adapter = loggerAdapter;
+        }
+
+        void IConfigurationBuilder.SetWcfServiceProvider(IWcfServiceProvider wcfServiceProvider)
+        {
+            _wcfServiceProvider = wcfServiceProvider;
         }
 
         public void RunIn(RuntimeMode runtimeMode)
         {
             _runtimeMode = runtimeMode;
+        }
+
+        private string GetTypeUniqueName<T>(string prefix)
+        {
+            return prefix + "-" + typeof (T).Name;
+        }
+
+        public void OnStartupPerform<TStartup>() where TStartup : IStartupAction
+        {
+            _container.For<IStartupAction>().Use<TStartup>(Lifestyle.Singleton, GetTypeUniqueName<TStartup>("Startup"));
+        }
+
+        public void OnShutdownPerform<TShutdown>() where TShutdown : IShutdownAction
+        {
+            _container.For<IShutdownAction>().Use<TShutdown>(Lifestyle.Singleton, GetTypeUniqueName<TShutdown>("Shutdown"));
         }
     }
 }

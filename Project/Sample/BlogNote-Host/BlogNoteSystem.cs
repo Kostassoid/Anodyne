@@ -11,14 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Windsor;
-
-namespace Kostassoid.BlogNote.Host.System
+namespace Kostassoid.BlogNote.Host
 {
+    using Anodyne.Windsor;
     using Anodyne.Log4Net;
     using Anodyne.MongoDb;
     using Anodyne.System;
     using Anodyne.System.Configuration;
+    using Startup;
 
     public class BlogNoteSystem : AnodyneSystem
     {
@@ -26,9 +26,13 @@ namespace Kostassoid.BlogNote.Host.System
         {
             c.UseLog4NetLogger();
             c.UseWindsorContainer();
+            c.UseWindsorWcfServiceProvider();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer"), Configured.From.AppSettings("DatabaseName"));
-            //c.DiscoverDataOperations(From.Assemblies(a => a.FullName.Contains("BlogNote")));
-            //c.DiscoverBootstrappers(From.Assemblies(a => a.FullName.Contains("BlogNote")));
+
+            c.OnStartupPerform<DataAccessConfiguration>();
+            c.OnStartupPerform<WcfServicesRegistration>();
+
+            c.OnShutdownPerform<WcfServicesRegistration>();
         }
 
     }

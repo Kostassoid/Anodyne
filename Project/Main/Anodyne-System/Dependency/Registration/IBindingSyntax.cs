@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.System.Dependency.Registration
 
     public interface IBindingSyntax<in TService> : ISyntax where TService : class
     {
-        void Use<TImpl>(Lifestyle lifestyle = Lifestyle.Singleton) where TImpl : TService;
-        void Use(Func<TService> bindingFunc, Lifestyle lifestyle = Lifestyle.Singleton);
+        void Use<TImpl>(Lifestyle lifestyle = Lifestyle.Singleton, string name = null) where TImpl : TService;
+        void Use(Func<TService> bindingFunc, Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
     }
 }

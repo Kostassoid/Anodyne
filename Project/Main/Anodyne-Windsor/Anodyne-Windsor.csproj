@@ -36,6 +36,9 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration">
+      <HintPath>..\..\Libs\Castle\Castle.Facilities.WcfIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
     </Reference>
@@ -53,6 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransientReleasePolicy.cs" />
     <Compile Include="WindsorContainerAdapter.cs" />
+    <Compile Include="WindsorWcfServiceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

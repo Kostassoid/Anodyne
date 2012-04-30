@@ -51,10 +51,10 @@
     </Compile>
     <Compile Include="AnodyneSystem.cs" />
     <Compile Include="Configuration\Configured.cs" />
-    <Compile Include="Configuration\From.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
     <Compile Include="Configuration\IConfigurationSettings.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="IShutdownAction.cs" />
     <Compile Include="Dependency\Lifestyle.cs" />
     <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
     <Compile Include="Dependency\IContainer.cs" />
@@ -65,11 +65,12 @@
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeMode.cs" />
-    <Compile Include="IBootstrapper.cs" />
+    <Compile Include="IStartupAction.cs" />
     <Compile Include="Subsystem\ISubsystem.cs" />
     <Compile Include="Subsystem\Subsystem.cs" />
     <Compile Include="SystemState.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
+    <Compile Include="Wcf\IWcfServiceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -80,6 +81,7 @@
       <Name>Anodyne-Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

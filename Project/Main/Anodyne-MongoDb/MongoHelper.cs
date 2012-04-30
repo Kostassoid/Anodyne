@@ -20,7 +20,9 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Driver.Builders;
     using MongoDB.Driver.Wrappers;
     using global::System;
+    using global::System.Collections.Generic;
     using global::System.Linq;
+    using global::System.Reflection;
 
     public class MongoHelper
     {
@@ -53,7 +55,7 @@ namespace Kostassoid.Anodyne.MongoDb
             }
         }
 
-        public static void CreateMapForAllClassesBasedOn<TBase>(Predicate<string> assemblyNamePredicate)
+        public static void CreateMapForAllClassesBasedOn<TBase>(IEnumerable<Assembly> assemblies)
         {
             BsonClassMap.RegisterClassMap<TBase>(cm =>
                                                      {
@@ -63,8 +65,7 @@ namespace Kostassoid.Anodyne.MongoDb
                                                      });
 
 
-            var types = AppDomain.CurrentDomain.GetAssemblies().Where(a => assemblyNamePredicate(a.FullName)).ToList()
-                .SelectMany(s => s.GetTypes())
+            var types = assemblies.SelectMany(s => s.GetTypes())
                 .Where(typeof (TBase).IsAssignableFrom).Where(t => !t.ContainsGenericParameters);
 
             foreach (var type in types)

@@ -40,11 +40,11 @@ namespace Kostassoid.BlogNote.Host.Domain
             Requires.NotNull(content, "Content");
 
             var post = new Post();
-            post.Apply(new PostCreatedEvent(post, content));
+            post.Apply(new PostCreated(post, content));
             return post;
         }
 
-        protected void OnCreated(PostCreatedEvent @event)
+        protected void OnCreated(PostCreated @event)
         {
             Content = @event.Data.Content;
 
@@ -59,10 +59,10 @@ namespace Kostassoid.BlogNote.Host.Domain
         {
             Requires.NotNull(content, "Content");
 
-            Apply(new PostUpdatedEvent(this, content));
+            Apply(new PostUpdated(this, content));
         }
 
-        protected void OnUpdated(PostUpdatedEvent @event)
+        protected void OnUpdated(PostUpdated @event)
         {
             Content = @event.Data.Content;
 

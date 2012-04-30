@@ -107,6 +107,45 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_updating_several_roots_within_one_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_update_all_roots()
+            {
+                TestRoot root1;
+                TestRoot root2;
+                using (var uow = new UnitOfWork())
+                {
+                    root1 = TestRoot.Create();
+                    root2 = TestRoot.Create();
+                    root1.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var foundRoot1 = uow.Query<TestRoot>().FindBy(root1.Id);
+                    var foundRoot2 = uow.Query<TestRoot>().FindBy(root2.Id);
+                    foundRoot2.Value.Update();
+                    foundRoot2.Value.Update();
+                    foundRoot2.Value.Update();
+                    foundRoot1.Value.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var foundRoot1 = uow.Query<TestRoot>().FindBy(root1.Id);
+                    var foundRoot2 = uow.Query<TestRoot>().FindBy(root2.Id);
+
+                    Assert.That(foundRoot1.Value.Id, Is.EqualTo(root1.Id));
+                    Assert.That(foundRoot2.Value.Id, Is.EqualTo(root2.Id));
+                    Assert.That(foundRoot1.Value.Version, Is.EqualTo(3));
+                    Assert.That(foundRoot2.Value.Version, Is.EqualTo(4));
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_updating_existing_root : UnitOfWorkScenario
         {
             [Test]
@@ -219,6 +258,8 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 }
             }
         }
+
+
 
     }
     // ReSharper restore InconsistentNaming

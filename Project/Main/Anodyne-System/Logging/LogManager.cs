@@ -39,7 +39,6 @@ namespace Kostassoid.Anodyne.System.Logging
             return Adapter.GetLogger(type);
         }
 
-
         public static ILog GetLogger(string name)
         {
             return Adapter.GetLogger(name);

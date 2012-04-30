@@ -40,6 +40,9 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\Libs\Castle\Castle.Facilities.WcfIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
     </Reference>
@@ -48,6 +51,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,16 +68,19 @@
     <Compile Include="Const.cs" />
     <Compile Include="Domain\UrlContent.cs" />
     <Compile Include="Domain\TextContent.cs" />
-    <Compile Include="Domain\PostUpdatedEvent.cs" />
+    <Compile Include="Domain\PostUpdated.cs" />
     <Compile Include="Domain\BasePostContent.cs" />
-    <Compile Include="Domain\PostCreatedEvent.cs" />
+    <Compile Include="Domain\PostCreated.cs" />
     <Compile Include="Domain\Post.cs" />
-    <Compile Include="Domain\UserPostsUpdatedEvent.cs" />
+    <Compile Include="Domain\UserPostsUpdated.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="Domain\UserCreatedEvent.cs" />
+    <Compile Include="Domain\UserCreated.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="System\BlogNoteSystem.cs" />
+    <Compile Include="Service\IUserService.cs" />
+    <Compile Include="Startup\DataAccessConfiguration.cs" />
+    <Compile Include="Startup\WcfServicesRegistration.cs" />
+    <Compile Include="BlogNoteSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -82,10 +89,12 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Service\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\Main\Anodyne-CommandBus\Anodyne-CommandBus.csproj">
+      <Project>{796945E4-9836-4942-BC79-6C7B3E7C0EBF}</Project>
+      <Name>Anodyne-CommandBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Main\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
@@ -117,6 +126,10 @@
     <ProjectReference Include="..\..\Main\Anodyne-Wiring\Anodyne-Wiring.csproj">
       <Project>{321BB928-1A81-40BF-8BA9-644F95B8CD5A}</Project>
       <Name>Anodyne-Wiring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlogNote-Contracts\BlogNote-Contracts.csproj">
+      <Project>{20B9EE59-59E5-4577-A937-61371685DA3E}</Project>
+      <Name>BlogNote-Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

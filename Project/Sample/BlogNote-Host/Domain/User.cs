@@ -43,12 +43,12 @@ namespace Kostassoid.BlogNote.Host.Domain
 
             var user = new User();
 
-            user.Apply(new UserCreatedEvent(user, name, email));
+            user.Apply(new UserCreated(user, name, email));
 
             return user;
         }
 
-        protected void OnCreated(UserCreatedEvent @event)
+        protected void OnCreated(UserCreated @event)
         {
             var eventData = @event.Data;
 
@@ -66,10 +66,10 @@ namespace Kostassoid.BlogNote.Host.Domain
         {
             Requires.True(posts >= Posts, "posts", "We can't actually decrease Posts, by design");
 
-            Apply(new UserPostsUpdatedEvent(this, posts));
+            Apply(new UserPostsUpdated(this, posts));
         }
 
-        protected void OnPostsUpdated(UserPostsUpdatedEvent @event)
+        protected void OnPostsUpdated(UserPostsUpdated @event)
         {
             Posts = @event.Data.Posts;
         }

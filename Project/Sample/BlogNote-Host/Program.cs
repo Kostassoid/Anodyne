@@ -13,7 +13,6 @@
 
 namespace Kostassoid.BlogNote.Host
 {
-    using System;
     using Topshelf;
     using global::System.IO;
     using log4net;
