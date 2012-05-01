@@ -59,6 +59,7 @@
     <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\From.cs" />
+    <Compile Include="Extentions\TypeEx.cs" />
     <Compile Include="SerializableValueObject.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Ticket.cs" />

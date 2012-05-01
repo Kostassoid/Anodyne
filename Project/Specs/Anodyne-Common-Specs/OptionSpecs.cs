@@ -151,7 +151,20 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 Option<string> option = someObject;
 
-                Assert.That(() => { var anotherObject = (string) option; }, Throws.TypeOf<NotSupportedException>());
+                Assert.That(() => { var anotherObject = (string)option; }, Throws.TypeOf<NotSupportedException>());
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_creating_option_of_option
+        {
+            [Test]
+            public void should_throw()
+            {
+                var someObject = "zzz".AsOption();
+
+                Assert.That(() => { var anotherObject = someObject.AsOption(); }, Throws.TypeOf<InvalidOperationException>());
             }
         }
 

@@ -13,6 +13,9 @@
 
 namespace Kostassoid.Anodyne.Common
 {
+    using System;
+    using Extentions;
+
     public abstract class Option<T> where T : class
     {
         public static Option<T> None
@@ -53,7 +56,12 @@ namespace Kostassoid.Anodyne.Common
         {
             if (value == null)
             {
-                throw new System.ArgumentNullException("value", "Some value was null, use None instead");
+                throw new ArgumentNullException("value", "Some value was null, use None instead");
+            }
+
+            if (typeof(T).IsSubclassOfRawGeneric(typeof(Option<>)))
+            {
+                throw new InvalidOperationException("Nested Option is not supported!");
             }
 
             _value = value;
