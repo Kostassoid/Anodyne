@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Bson;
     using MongoDB.Driver;
     using DataAccess.Operations;
+    using MongoDB.Driver.Builders;
     using global::System;
 
     public class MongoDataSession : DataSession, IDataSessionEx
@@ -39,10 +40,21 @@ namespace Kostassoid.Anodyne.MongoDb
             return new MongoRepository<TRoot>(_nativeSession);
         }
 
+        private BsonValue GetIdValue(object id)
+        {
+            if (id is Guid) return (Guid)id;
+            if (id is string) return (string)id;
+            if (id is int) return (int)id;
+            if (id is long) return (long)id;
+            if (id is ObjectId) return (ObjectId)id;
+
+            throw new InvalidOperationException(string.Format("Unsupported _id type : {0}", id.GetType().Name));
+        }
+
         protected override IAggregateRoot FindOne(Type type, object id)
         {
             var collection = _nativeSession.GetCollection(type);
-            return collection.FindOneByIdAs(type, id.ToBson()) as IAggregateRoot;
+            return collection.FindOneByIdAs(type, GetIdValue(id)) as IAggregateRoot;
         }
 
         protected override void SaveOne(Type type, IAggregateRoot root)
@@ -54,7 +66,7 @@ namespace Kostassoid.Anodyne.MongoDb
         protected override void RemoveOne(Type type, object id)
         {
             var collection = _nativeSession.GetCollection(type);
-            collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", id.ToBson()));
+            collection.Remove(Query.EQ("_id", GetIdValue(id)));
         }
 
     }

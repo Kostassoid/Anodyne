@@ -17,7 +17,7 @@ namespace Kostassoid.BlogNote.Host.Domain
     using Anodyne.Common.CodeContracts;
     using Anodyne.Common.Tools;
     using Anodyne.Domain.Base;
-    using global::System;
+    using System;
 
     public class User : AggregateRoot<Guid>
     {
@@ -39,7 +39,6 @@ namespace Kostassoid.BlogNote.Host.Domain
         public static User Create(string name, string email)
         {
             Requires.NotNullOrEmpty(name, "name");
-            Requires.NotNullOrEmpty(email, "email");
 
             var user = new User();
 
@@ -64,7 +63,7 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         public void UpdatePosts(uint posts)
         {
-            Requires.True(posts >= Posts, "posts", "We can't actually decrease Posts, by design");
+            Requires.True(posts >= Posts, "posts", "We can't actually delete posts, by design");
 
             Apply(new UserPostsUpdated(this, posts));
         }

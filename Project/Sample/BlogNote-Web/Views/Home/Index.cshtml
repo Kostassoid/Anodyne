@@ -1,0 +1,26 @@
+﻿@using Kostassoid.BlogNote.Web.Models
+@model UserModel
+
+@{
+    ViewBag.Title = "User Authentication";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Who are you?</h2>
+<div align="center">
+
+@using (Html.BeginForm("Index"))
+{
+    @Html.LabelFor(u => u.Name)
+    @Html.TextBoxFor(u => u.Name);
+    @Html.ValidationMessageFor(u => u.Name);
+    <br />
+    @Html.LabelFor(u => u.Email)
+    @Html.TextBoxFor(u => u.Email);
+    @Html.ValidationMessageFor(u => u.Email);
+    <br />
+    <input type="submit" value="Sign-Up & Sign-In" />
+}
+
+</div>
+

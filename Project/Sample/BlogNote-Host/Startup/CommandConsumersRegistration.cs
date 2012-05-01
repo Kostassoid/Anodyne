@@ -12,16 +12,19 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-namespace Kostassoid.BlogNote.Host.Service
+namespace Kostassoid.BlogNote.Host.Startup
 {
     using Anodyne.CommandBus;
-    using Contracts;
+    using Anodyne.Common.Reflection;
+    using Anodyne.System;
+    using Anodyne.System.Configuration;
 
-    public class UserService : IUserService
+    public class CommandConsumersRegistration : IStartupAction
     {
-        public ICommandResult Send(ICommand command)
+        public void OnStartup(IConfigurationSettings configuration)
         {
-            return null;
+            //configuration.Container.For(typeof(IConsumerOf<>)).UseAll(From.Assemblies(a => a.FullName.Contains(Const.ProjectName)));
         }
+
     }
 }

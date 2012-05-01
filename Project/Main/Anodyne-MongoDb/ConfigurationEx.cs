@@ -25,6 +25,9 @@ namespace Kostassoid.Anodyne.MongoDb
 
             cfg.Container.For<IDataSessionFactory>()
                 .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container)));
+
+            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>());
+
             //cfg.Container.ForAll<IDataOperation>().Use<MongoDataSessionFactory>();
         }
 

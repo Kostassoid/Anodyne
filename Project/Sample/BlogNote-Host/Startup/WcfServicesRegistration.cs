@@ -30,11 +30,13 @@ namespace Kostassoid.BlogNote.Host.Startup
             var windsorContainer = (configuration.Container as WindsorContainerAdapter).NativeContainer;
 
             var userServiceModel = new DefaultServiceModel()
-                .AddBaseAddresses("http://localhost:1000/")
-                .AddEndpoints(WcfEndpoint.BoundTo(new BasicHttpBinding()).At("UserService"))
+                .AddBaseAddresses(Configured.From.AppSettings("UserServiceUrl"))
+                .AddEndpoints(WcfEndpoint.BoundTo(new BasicHttpBinding()))
                 .PublishMetadata(o => o.EnableHttpGet());
 
             windsorContainer.Register(Component.For<IUserService>().ImplementedBy<UserService>().AsWcfService(userServiceModel));
+
+            //Publish<TService>().ImplementedBy<TImpl>().At(Endpoint.)
         }
 
         public void OnShutdown(IConfigurationSettings configuration)

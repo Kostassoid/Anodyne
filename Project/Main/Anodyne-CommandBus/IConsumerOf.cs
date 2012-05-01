@@ -12,11 +12,10 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-namespace Kostassoid.Anodyne.System.Wcf
+namespace Kostassoid.Anodyne.CommandBus
 {
-    public interface IWcfServiceProvider
+    public interface IConsumerOf<in TCommand> where TCommand : ICommand
     {
-        
-         
+        void Handle(TCommand command);
     }
 }

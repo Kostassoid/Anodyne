@@ -12,19 +12,31 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-namespace Kostassoid.BlogNote.Contracts
+namespace Kostassoid.BlogNote.Host.Service
 {
     using System;
-    using System.ServiceModel;
+    using System.Linq;
     using Anodyne.CommandBus;
+    using Anodyne.DataAccess;
+    using Contracts;
+    using Domain;
 
-    [ServiceContract]
-    public interface IUserService
+    public class UserService : IUserService
     {
-        [OperationContract]
-        ICommandResult Send(ICommand command);
+        public ICommandResult Send(ICommand command)
+        {
+            return null;
+        }
 
-        [OperationContract]
-        Guid EnsureUserExists(string name, string email);
+        public Guid EnsureUserExists(string name, string email)
+        {
+            using (var uow = new UnitOfWork())
+            {
+                var foundUser = uow.Query<User>().All().FirstOrDefault(u => u.Name == name);
+                if (foundUser != null) return foundUser.Id;
+
+                return User.Create(name, email).Id;
+            }
+        }
     }
 }

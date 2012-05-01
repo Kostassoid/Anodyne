@@ -1,0 +1,11 @@
+﻿@model object
+
+@{
+    ViewBag.Title = "Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2> @Session["userName"]'s Blog</h2>
+@Html.ActionLink("Logout", "Index");
+
+
