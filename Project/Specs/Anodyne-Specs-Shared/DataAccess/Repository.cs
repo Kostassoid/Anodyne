@@ -32,7 +32,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
             _collection = roots.Values.Cast<TRoot>().ToList();
         }
 
-        public virtual TRoot Get(object key)
+        public virtual TRoot GetOne(object key)
         {
             var found = _collection.FirstOrDefault(r => r.IdObject.Equals(key));
             if (found == null)
@@ -41,7 +41,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
             return found.DeepClone();
         }
 
-        public virtual Option<TRoot> FindBy(object key)
+        public virtual Option<TRoot> FindOne(object key)
         {
             var found = _collection.FirstOrDefault(r => r.IdObject.Equals(key));
             return found != null ? found.DeepClone() : null;
@@ -55,7 +55,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public virtual bool Exists(object key)
         {
-            return FindBy(key).IsSome;
+            return FindOne(key).IsSome;
         }
 
         public long Count(Expression<Func<TRoot, bool>> criteria)
@@ -70,7 +70,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public virtual TRoot this[object key]
         {
-            get { return Get(key); }
+            get { return GetOne(key); }
         }
     }
 }

@@ -22,8 +22,8 @@ namespace Kostassoid.Anodyne.DataAccess.Operations
     public interface IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
         TRoot this[object key] { get; }
-        TRoot Get(object key);
-        Option<TRoot> FindBy(object key);
+        TRoot GetOne(object key);
+        Option<TRoot> FindOne(object key);
         IQueryable<TRoot> All();
         bool Exists(object key);
         long Count(Expression<Func<TRoot, bool>> criteria);

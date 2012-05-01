@@ -96,7 +96,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var root = uow.Query<TestRoot>().FindBy(rootId);
+                    var root = uow.Query<TestRoot>().FindOne(rootId);
 
                     Assert.That(root.IsSome, Is.True);
                     Assert.That(root.Value.Id, Is.EqualTo(rootId));
@@ -123,8 +123,8 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var foundRoot1 = uow.Query<TestRoot>().FindBy(root1.Id);
-                    var foundRoot2 = uow.Query<TestRoot>().FindBy(root2.Id);
+                    var foundRoot1 = uow.Query<TestRoot>().FindOne(root1.Id);
+                    var foundRoot2 = uow.Query<TestRoot>().FindOne(root2.Id);
                     foundRoot2.Value.Update();
                     foundRoot2.Value.Update();
                     foundRoot2.Value.Update();
@@ -133,8 +133,8 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var foundRoot1 = uow.Query<TestRoot>().FindBy(root1.Id);
-                    var foundRoot2 = uow.Query<TestRoot>().FindBy(root2.Id);
+                    var foundRoot1 = uow.Query<TestRoot>().FindOne(root1.Id);
+                    var foundRoot2 = uow.Query<TestRoot>().FindOne(root2.Id);
 
                     Assert.That(foundRoot1.Value.Id, Is.EqualTo(root1.Id));
                     Assert.That(foundRoot2.Value.Id, Is.EqualTo(root2.Id));
@@ -159,13 +159,13 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    var root = uow.Query<TestRoot>().FindOne(rootId).Value;
                     root.Update();
                 }
 
                 using (var uow = new UnitOfWork())
                 {
-                    var updatedRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    var updatedRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
                     Assert.That(updatedRoot.Version, Is.EqualTo(2));
                 }
             }
@@ -189,7 +189,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var root = uow.Query<TestRoot>().FindBy(originalRoot.Id).Value;
+                    var root = uow.Query<TestRoot>().FindOne(originalRoot.Id).Value;
                     root.Update();
                     root.Update();
                     root.Update();
@@ -198,7 +198,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var root = uow.Query<TestRoot>().FindBy(originalRoot.Id).Value;
+                    var root = uow.Query<TestRoot>().FindOne(originalRoot.Id).Value;
                     Assert.That(root.Version, Is.EqualTo(5));
                 }
 
@@ -222,13 +222,13 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 TestRoot root;
                 using (var uow = new UnitOfWork())
                 {
-                    root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    root = uow.Query<TestRoot>().FindOne(rootId).Value;
                     root.Update();
                 }
 
                 using (var uow = new UnitOfWork())
                 {
-                    var anotherRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
                     anotherRoot.Update();
                     root.Update(); // actual mistake is here, but detected later at UoW dispose
                 }
@@ -251,9 +251,9 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var root = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    var root = uow.Query<TestRoot>().FindOne(rootId).Value;
                     root.Update();
-                    var anotherRoot = uow.Query<TestRoot>().FindBy(rootId).Value;
+                    var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
                     Assert.Throws<ConcurrencyException>(anotherRoot.Update);
                 }
             }

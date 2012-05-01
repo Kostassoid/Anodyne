@@ -28,8 +28,6 @@ namespace Kostassoid.Anodyne.MongoDb
                 .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container)));
 
             UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>());
-
-            //cfg.Container.ForAll<IDataOperation>().Use<MongoDataSessionFactory>();
         }
 
         public static void UseMongoDataAccess(this IConfiguration configuration, Tuple<string, string> databaseServerAndName)

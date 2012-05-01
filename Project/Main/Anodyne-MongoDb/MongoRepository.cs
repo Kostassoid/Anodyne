@@ -41,7 +41,7 @@ namespace Kostassoid.Anodyne.MongoDb
             get { return _session; }
         }
 
-        public virtual TRoot Get(object key)
+        public virtual TRoot GetOne(object key)
         {
             var found = _collection.Value.FindOne(Query.EQ("_id", key.ToBson()));
             if (found == null)
@@ -50,7 +50,7 @@ namespace Kostassoid.Anodyne.MongoDb
             return found;
         }
 
-        public virtual Option<TRoot> FindBy(object key)
+        public virtual Option<TRoot> FindOne(object key)
         {
             return _collection.Value.FindOne(Query.EQ("_id", key.ToBson()));
         }
@@ -63,7 +63,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public virtual bool Exists(object key)
         {
-            return FindBy(key).IsSome;
+            return FindOne(key).IsSome;
         }
 
         public long Count(Expression<Func<TRoot, bool>> criteria)
@@ -78,7 +78,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public virtual TRoot this[object key]
         {
-            get { return Get(key); }
+            get { return GetOne(key); }
         }
     }
 }

@@ -16,15 +16,17 @@ namespace Kostassoid.BlogNote.Contracts
 {
     using System;
     using System.ServiceModel;
-    using Anodyne.CommandBus;
 
     [ServiceContract]
     public interface IUserService
     {
         [OperationContract]
-        ICommandResult Send(ICommand command);
+        Guid EnsureUserExists(string name, string email);
 
         [OperationContract]
-        Guid EnsureUserExists(string name, string email);
+        Guid PostText(Guid user, string title, string body, string[] tags);
+
+        [OperationContract]
+        Guid PostUrl(Guid user, string title, string url, string[] tags);
     }
 }

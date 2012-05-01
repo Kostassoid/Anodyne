@@ -24,6 +24,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Operations;
     using Wiring;
     using global::System;
+    using global::System.Linq;
 
     public class UnitOfWork : IDisposable
     {
@@ -157,11 +158,18 @@ namespace Kostassoid.Anodyne.DataAccess
                 throw new InvalidOperationException("UnitOfWork must be properly disposed!");
         }
 
-        public IRepository<TEntity> Query<TEntity>() where TEntity : class, IAggregateRoot
+        public IRepository<TRoot> Query<TRoot>() where TRoot : class, IAggregateRoot
         {
             AssertIfFinished();
 
-            return DataSession.GetRepository<TEntity>();
+            return DataSession.GetRepository<TRoot>();
+        }
+
+        public IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot
+        {
+            AssertIfFinished();
+
+            return Query<TRoot>().All();
         }
 
         public TOp Using<TOp>() where TOp : class, IDataOperation
@@ -171,7 +179,7 @@ namespace Kostassoid.Anodyne.DataAccess
             return DataSession.GetOperation<TOp>();
         }
 
-        public void MarkAsDeleted<TEntity>(TEntity entity) where TEntity : class, IAggregateRoot
+        public void MarkAsDeleted<TRoot>(TRoot entity) where TRoot : class, IAggregateRoot
         {
             AssertIfFinished();
 

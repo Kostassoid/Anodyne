@@ -16,26 +16,51 @@ namespace Kostassoid.BlogNote.Host.Service
 {
     using System;
     using System.Linq;
-    using Anodyne.CommandBus;
+    using System.ServiceModel;
     using Anodyne.DataAccess;
     using Contracts;
     using Domain;
 
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class UserService : IUserService
     {
-        public ICommandResult Send(ICommand command)
+        private void RequireUserExists(Guid user)
         {
-            return null;
+            using (var uow = new UnitOfWork())
+            {
+                if (!uow.Query<User>().Exists(user))
+                    throw new ArgumentException("Unknown user", "user");
+            }
         }
 
         public Guid EnsureUserExists(string name, string email)
         {
             using (var uow = new UnitOfWork())
             {
-                var foundUser = uow.Query<User>().All().FirstOrDefault(u => u.Name == name);
+                var foundUser = uow.AllOf<User>().FirstOrDefault(u => u.Name == name);
                 if (foundUser != null) return foundUser.Id;
 
                 return User.Create(name, email).Id;
+            }
+        }
+
+        public Guid PostText(Guid user, string title, string body, string[] tags)
+        {
+            RequireUserExists(user);
+
+            using (var uow = new UnitOfWork())
+            {
+                return Post.Create(new TextContent(title, body, tags)).Id;
+            }
+        }
+
+        public Guid PostUrl(Guid user, string title, string url, string[] tags)
+        {
+            RequireUserExists(user);
+
+            using (var uow = new UnitOfWork())
+            {
+                return Post.Create(new UrlContent(title, url, tags)).Id;
             }
         }
     }
