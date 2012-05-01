@@ -12,11 +12,11 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-namespace Kostassoid.BlogNote.Web.Models
+namespace Kostassoid.BlogNote.Web.Models.Forms
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class UserModel
+    public class UserForm
     {
         [Required]
         [StringLength(6, MinimumLength = 3)]
@@ -29,13 +29,13 @@ namespace Kostassoid.BlogNote.Web.Models
         [Display(Name = "EMail (optional)")]
         public string Email { get; set; }
 
-        public UserModel(string name, string email)
+        public UserForm(string name, string email)
         {
             Name = name;
             Email = email;
         }
 
-        public UserModel()
+        public UserForm()
         {
             Name = "";
             Email = "";

@@ -1,23 +1,30 @@
-﻿@using Kostassoid.BlogNote.Web.Models
-@model UserModel
+﻿@using Kostassoid.BlogNote.Web.Models.View
+@model IndexViewData
 
 @{
     ViewBag.Title = "User Authentication";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>Registered users</h2>
+
+@foreach (var user in Model.Users)
+{
+    <b>@user.Name (@user.Posts posts)</b><br />
+}
+<br/>
 <h2>Who are you?</h2>
 <div align="center">
 
 @using (Html.BeginForm("Index"))
 {
-    @Html.LabelFor(u => u.Name)
-    @Html.TextBoxFor(u => u.Name);
-    @Html.ValidationMessageFor(u => u.Name);
+    @Html.LabelFor(u => u.UserForm.Name)
+    @Html.TextBoxFor(u => u.UserForm.Name);
+    @Html.ValidationMessageFor(u => u.UserForm.Name);
     <br />
-    @Html.LabelFor(u => u.Email)
-    @Html.TextBoxFor(u => u.Email);
-    @Html.ValidationMessageFor(u => u.Email);
+    @Html.LabelFor(u => u.UserForm.Email)
+    @Html.TextBoxFor(u => u.UserForm.Email);
+    @Html.ValidationMessageFor(u => u.UserForm.Email);
     <br />
     <input type="submit" value="Sign-Up & Sign-In" />
 }

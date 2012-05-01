@@ -44,10 +44,6 @@ namespace Kostassoid.BlogNote.Web
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container.Kernel));
 
             container.Install(FromAssembly.This());
-
-            container.AddFacility<WcfFacility>();
-            container.Register(Component.For<IUserService>().AsWcfClient(WcfEndpoint.BoundTo(new BasicHttpBinding()).At("http://localhost:10000/UserService")));
-
         }
     }
 }

@@ -2,51 +2,55 @@
 
 namespace Kostassoid.BlogNote.Web.Controllers
 {
+    using System;
+    using System.Web.Security;
     using Contracts;
-    using Models;
+    using Models.Forms;
+    using Models.View;
+    using Query;
 
     public class HomeController : Controller
     {
         private readonly IUserService _userService;
+        private readonly UserQuery _userQuery;
 
-        public HomeController(IUserService userService)
+        public HomeController(IUserService userService, UserQuery userQuery)
         {
             _userService = userService;
+            _userQuery = userQuery;
         }
-
-        //
-        // GET: /Home/
 
         [HttpGet]
         public ActionResult Index()
         {
-            return View(new UserModel());
+            return View(new IndexViewData(_userQuery.GetAll(), new UserForm()));
         }
 
         [HttpPost]
-        public ActionResult Index(UserModel user)
+        public ActionResult Index(UserForm user)
         {
             if (ModelState.IsValid)
             {
                 var userId = _userService.EnsureUserExists(user.Name, user.Email);
-                Session["userId"] = userId;
-                Session["userName"] = user.Name;
+                FormsAuthentication.SetAuthCookie(userId.ToString(), false);
                 return RedirectToAction("Blog");
             }
 
-            return View(user);
+            return View(new IndexViewData(_userQuery.GetAll(), user));
+        }
+
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Blog()
         {
-            if (Session["userId"] == null)
-                return RedirectToAction("Index");
-
-            return View();
+            return View(new BlogViewData(_userQuery.GetOne(new Guid(HttpContext.User.Identity.Name))));
         }
-
-
 
     }
 }

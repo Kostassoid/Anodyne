@@ -1,4 +1,4 @@
-namespace Kostassoid.BlogNote.Web.Common
+namespace Kostassoid.BlogNote.Web.Installers
 {
     using System.Web.Mvc;
     using Castle.MicroKernel.Registration;
@@ -11,7 +11,6 @@ namespace Kostassoid.BlogNote.Web.Common
         {
             container.Register(
                 AllTypes.FromThisAssembly().BasedOn<IController>()
-                    //.If(Component.IsInSameNamespaceAs<HomeController>())
                     .If(t => t.Name.EndsWith("Controller")).LifestyleTransient());
         }
     }
