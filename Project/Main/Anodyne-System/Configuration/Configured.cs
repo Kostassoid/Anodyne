@@ -14,6 +14,7 @@
 
 namespace Kostassoid.Anodyne.System.Configuration
 {
+    using global::System;
     using global::System.Configuration;
 
     public static class Configured
@@ -40,6 +41,19 @@ namespace Kostassoid.Anodyne.System.Configuration
             public string AppSettings(string key)
             {
                 return ConfigurationManager.AppSettings[key];
+            }
+            public Tuple<string, string> AppSettings(string key1, string key2)
+            {
+                return new Tuple<string, string>(
+                    ConfigurationManager.AppSettings[key1],
+                    ConfigurationManager.AppSettings[key2]);
+            }
+            public Tuple<string, string, string> AppSettings(string key1, string key2, string key3)
+            {
+                return new Tuple<string, string, string>(
+                    ConfigurationManager.AppSettings[key1],
+                    ConfigurationManager.AppSettings[key2],
+                    ConfigurationManager.AppSettings[key3]);
             }
         }
 

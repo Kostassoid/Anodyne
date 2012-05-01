@@ -16,6 +16,7 @@ namespace Kostassoid.Anodyne.MongoDb
     using System.Configuration;
     using DataAccess;
     using DataAccess.Operations;
+    using global::System;
 
     public static class ConfigurationEx
     {
@@ -29,6 +30,11 @@ namespace Kostassoid.Anodyne.MongoDb
             UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>());
 
             //cfg.Container.ForAll<IDataOperation>().Use<MongoDataSessionFactory>();
+        }
+
+        public static void UseMongoDataAccess(this IConfiguration configuration, Tuple<string, string> databaseServerAndName)
+        {
+            UseMongoDataAccess(configuration, databaseServerAndName.Item1, databaseServerAndName.Item2);
         }
 
         private static string NormalizeConnectionString(string connectionString)
