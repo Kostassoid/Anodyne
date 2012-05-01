@@ -7,27 +7,14 @@
 }
 
 <h2>Registered users</h2>
-
+@if (Model.Users.Count == 0)
+{
+    @:<br />No users registered yet.<br />
+    
+}
 @foreach (var user in Model.Users)
 {
     <b>@user.Name (@user.Posts posts)</b><br />
 }
 <br/>
-<h2>Who are you?</h2>
-<div align="center">
-
-@using (Html.BeginForm("Index"))
-{
-    @Html.LabelFor(u => u.UserForm.Name)
-    @Html.TextBoxFor(u => u.UserForm.Name);
-    @Html.ValidationMessageFor(u => u.UserForm.Name);
-    <br />
-    @Html.LabelFor(u => u.UserForm.Email)
-    @Html.TextBoxFor(u => u.UserForm.Email);
-    @Html.ValidationMessageFor(u => u.UserForm.Email);
-    <br />
-    <input type="submit" value="Sign-Up & Sign-In" />
-}
-
-</div>
-
+@Html.Partial("SignIn", Model.UserForm)

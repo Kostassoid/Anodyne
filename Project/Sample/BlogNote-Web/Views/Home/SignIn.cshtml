@@ -1,0 +1,21 @@
+﻿@using Kostassoid.BlogNote.Web.Models.Forms
+@model UserForm
+
+@{
+    Layout = null;
+}
+
+<h2>Who are you?</h2>
+
+@using (Html.BeginForm("Index"))
+{
+    @Html.LabelFor(u => u.Name)
+    <br />
+    @Html.TextBoxFor(u => u.Name) @Html.ValidationMessageFor(u => u.Name)
+    <br />
+    @Html.LabelFor(u => u.Email)
+    <br />
+    @Html.TextBoxFor(u => u.Email) @Html.ValidationMessageFor(u => u.Email)
+    <br />
+    <input type="submit" value="Sign-Up & Sign-In" />
+}

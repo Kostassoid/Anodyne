@@ -1,11 +1,12 @@
-﻿@model object
+﻿@using Kostassoid.BlogNote.Web.Models.View
+@model BlogViewData
 
 @{
     ViewBag.Title = "Blog";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2> @Session["userName"]'s Blog</h2>
-@Html.ActionLink("Logout", "Index");
+<h2> @Model.User.Name's Blog</h2>
+@Html.ActionLink("Logout", "Logout")
 
 
