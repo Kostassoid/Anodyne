@@ -24,8 +24,12 @@ namespace Kostassoid.BlogNote.Host.Startup
     {
         public void OnStartup(IConfigurationSettings configuration)
         {
-            //this is needed for correct mapping of polymorphic entities
-            MongoHelper.CreateMapForAllClassesBasedOn<BasePostContent>(From.ThisAssembly);
+            configuration.DataAccess
+                .OnNative(db =>
+                {
+                    db.MapAllClassesBasedOn<BasePostContent>(From.ThisAssembly);
+                    db.EnsureUniqueIndexFor<User>(u => u.Name);
+                });
         }
     }
 }

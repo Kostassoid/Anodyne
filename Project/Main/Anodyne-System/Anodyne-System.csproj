@@ -54,6 +54,7 @@
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
     <Compile Include="Configuration\IConfigurationSettings.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="DataAccess\ContainerOperationResolver.cs" />
     <Compile Include="IShutdownAction.cs" />
     <Compile Include="Dependency\Lifestyle.cs" />
     <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
@@ -79,6 +80,10 @@
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Anodyne-DataAccess\Anodyne-DataAccess.csproj">
+      <Project>{6E6AEA6A-502C-419F-AADA-35AD702473B7}</Project>
+      <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

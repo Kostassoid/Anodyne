@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationEx.cs" />
+    <Compile Include="DataAccessProviderEx.cs" />
     <Compile Include="MongoDataSessionFactory.cs" />
     <Compile Include="MongoCollectionEx.cs" />
     <Compile Include="MongoDatabaseEx.cs" />

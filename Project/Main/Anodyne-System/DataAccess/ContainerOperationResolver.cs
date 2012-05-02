@@ -11,9 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Operations
+namespace Kostassoid.Anodyne.System.DataAccess
 {
-    using System.Dependency;
+    using Anodyne.DataAccess.Operations;
+    using Dependency;
 
     public class ContainerOperationResolver : IOperationResolver
     {

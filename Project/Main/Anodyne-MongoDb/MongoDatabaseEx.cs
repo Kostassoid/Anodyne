@@ -16,6 +16,9 @@ namespace Kostassoid.Anodyne.MongoDb
     using Domain.Base;
     using MongoDB.Driver;
     using global::System;
+    using global::System.Collections.Generic;
+    using global::System.Linq.Expressions;
+    using global::System.Reflection;
 
     public static class MongoDatabaseEx
     {
@@ -28,5 +31,21 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             return database.GetCollection(type, type.Name);
         }
+
+        public static void MapAllClassesBasedOn<T>(this MongoDatabase database, IEnumerable<Assembly> assemblies)
+        {
+            MongoHelper.CreateMapForAllClassesBasedOn<T>(assemblies);
+        }
+
+        public static void EnsureIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class, IAggregateRoot
+        {
+            database.GetCollection<TRoot>().EnsureIndex(index, false, true);
+        }
+
+        public static void EnsureUniqueIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class, IAggregateRoot
+        {
+            database.GetCollection<TRoot>().EnsureIndex(index, true, true);
+        }
+
     }
 }

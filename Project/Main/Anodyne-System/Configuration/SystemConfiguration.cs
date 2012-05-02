@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.System.Configuration
 {
+    using Anodyne.DataAccess;
     using Dependency;
     using Logging;
     using Wcf;
@@ -27,6 +28,8 @@ namespace Kostassoid.Anodyne.System.Configuration
 
         private ILoggerAdapter _loggerAdapter;
         ILoggerAdapter IConfigurationSettings.Logger { get { return _loggerAdapter; } }
+
+        IDataAccessProvider IConfigurationSettings.DataAccess { get { return _container.Get<IDataAccessProvider>(); } }
 
         private IWcfServiceProvider _wcfServiceProvider;
         IWcfServiceProvider IConfigurationSettings.WcfServiceProvider { get { return _wcfServiceProvider; } }

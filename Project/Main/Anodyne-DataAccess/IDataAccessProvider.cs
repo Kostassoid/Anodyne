@@ -13,8 +13,7 @@
 
 namespace Kostassoid.Anodyne.DataAccess
 {
-    public interface IDataSessionFactory : IDataAccessProvider
+    public interface IDataAccessProvider
     {
-        IDataSession OpenSession();
     }
 }
