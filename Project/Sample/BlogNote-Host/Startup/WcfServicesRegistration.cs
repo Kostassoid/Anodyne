@@ -17,9 +17,7 @@ namespace Kostassoid.BlogNote.Host.Startup
     using System.ServiceModel;
     using Anodyne.System;
     using Anodyne.System.Configuration;
-    using Anodyne.Windsor;
-    using Castle.Facilities.WcfIntegration;
-    using Castle.MicroKernel.Registration;
+    using Anodyne.System.Wcf.Registration;
     using Contracts;
     using Service;
 
@@ -27,19 +25,16 @@ namespace Kostassoid.BlogNote.Host.Startup
     {
         public void OnStartup(ISystemConfiguration configuration)
         {
-            configuration.Container
-                .OnNative(container =>
-                              {
-                                  var userServiceModel = new DefaultServiceModel()
-                                      .AddBaseAddresses(Configured.From.AppSettings("UserServiceUrl"))
-                                      .AddEndpoints(WcfEndpoint.BoundTo(new BasicHttpBinding()))
-                                      .PublishMetadata(o => o.EnableHttpGet());
-
-                                  container.Register(Component.For<IUserService>().ImplementedBy<UserService>().AsWcfService(userServiceModel));
-
-                                  //Publish<TService>().ImplementedBy<TImpl>().At(Endpoint.)
-                              });
-
+            configuration
+                .WcfServicePublisher
+                .Start<IUserService>()
+                .ImplementedBy<UserService>()
+                .ConfiguredWith(c =>
+                {
+                    c.BaseAddress(Configured.From.AppSettings("UserServiceUrl"));
+                    c.Endpoint(Bound.To(new BasicHttpBinding()));
+                    c.PublishedMetadata();
+                });
         }
 
         public void OnShutdown(ISystemConfiguration configuration)

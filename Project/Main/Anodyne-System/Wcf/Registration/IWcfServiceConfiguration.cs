@@ -1,9 +1,9 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-//  
+// 
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,19 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.System.Configuration
+namespace Kostassoid.Anodyne.System.Wcf.Registration
 {
-    using Anodyne.DataAccess;
-    using Dependency;
-    using Logging;
-    using Wcf;
+    using Common;
 
-    public interface ISystemConfiguration
+    public interface IWcfServiceConfiguration : ISyntax
     {
-        RuntimeMode RuntimeMode { get; }
-        IContainer Container { get; }
-        ILoggerAdapter Logger { get; }
-        IWcfServicePublisher WcfServicePublisher { get; }
-        IDataAccessProvider DataAccess { get; }
+        void BaseAddress(string address);
+        void Endpoint(WcfEndpointSpecification endpointSpecification);
+        void PublishedMetadata();
     }
 }

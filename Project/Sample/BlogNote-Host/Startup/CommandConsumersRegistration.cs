@@ -14,8 +14,6 @@
 
 namespace Kostassoid.BlogNote.Host.Startup
 {
-    using Anodyne.CommandBus;
-    using Anodyne.Common.Reflection;
     using Anodyne.System;
     using Anodyne.System.Configuration;
 

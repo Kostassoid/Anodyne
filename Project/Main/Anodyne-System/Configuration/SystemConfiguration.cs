@@ -31,8 +31,8 @@ namespace Kostassoid.Anodyne.System.Configuration
 
         IDataAccessProvider ISystemConfiguration.DataAccess { get { return _container.Get<IDataAccessProvider>(); } }
 
-        private IWcfServiceProvider _wcfServiceProvider;
-        IWcfServiceProvider ISystemConfiguration.WcfServiceProvider { get { return _wcfServiceProvider; } }
+        private IWcfServicePublisher _wcfServicePublisher;
+        IWcfServicePublisher ISystemConfiguration.WcfServicePublisher { get { return _wcfServicePublisher; } }
 
         public SystemConfiguration()
         {
@@ -55,9 +55,9 @@ namespace Kostassoid.Anodyne.System.Configuration
             LogManager.Adapter = loggerAdapter;
         }
 
-        void IConfigurationBuilder.SetWcfServiceProvider(IWcfServiceProvider wcfServiceProvider)
+        void IConfigurationBuilder.SetWcfServiceProvider(IWcfServicePublisher wcfServicePublisher)
         {
-            _wcfServiceProvider = wcfServiceProvider;
+            _wcfServicePublisher = wcfServicePublisher;
         }
 
         public void RunIn(RuntimeMode runtimeMode)

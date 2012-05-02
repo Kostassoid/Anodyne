@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,7 +72,16 @@
     <Compile Include="Subsystem\Subsystem.cs" />
     <Compile Include="SystemState.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
-    <Compile Include="Wcf\IWcfServiceProvider.cs" />
+    <Compile Include="Wcf\Registration\IWcfServiceConfiguration.cs" />
+    <Compile Include="Wcf\Registration\Bound.cs" />
+    <Compile Include="Wcf\Registration\IServiceConfigurationSyntax.cs" />
+    <Compile Include="Wcf\Registration\IServiceImplementationSyntax.cs" />
+    <Compile Include="Wcf\IWcfServicePublisher.cs" />
+    <Compile Include="Wcf\Registration\Concrete\ServiceConfigurationSyntax.cs" />
+    <Compile Include="Wcf\Registration\Concrete\ServiceImplementationSyntax.cs" />
+    <Compile Include="Wcf\Registration\WcfEndpointSpecification.cs" />
+    <Compile Include="Wcf\Registration\WcfServiceSpecification.cs" />
+    <Compile Include="Wcf\WcfServicePublisher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

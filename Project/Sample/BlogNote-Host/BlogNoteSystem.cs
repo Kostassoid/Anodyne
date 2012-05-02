@@ -24,9 +24,9 @@ namespace Kostassoid.BlogNote.Host
     {
         public override void OnConfigure(IConfiguration c)
         {
-            c.UseLog4NetLogger();
+            c.UseLog4Net();
             c.UseWindsorContainer();
-            c.UseWindsorWcfServiceProvider();
+            c.UseWindsorWcfServicePublisher();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
 
             c.OnStartupPerform<DataAccessConfiguration>();

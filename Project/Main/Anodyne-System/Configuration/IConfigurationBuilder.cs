@@ -23,6 +23,6 @@ namespace Kostassoid.Anodyne.System.Configuration
 
         void SetContainerAdapter(IContainer container);
         void SetLoggerAdapter(ILoggerAdapter loggerAdapter);
-        void SetWcfServiceProvider(IWcfServiceProvider wcfServiceProvider);
+        void SetWcfServiceProvider(IWcfServicePublisher wcfServicePublisher);
     }
 }
