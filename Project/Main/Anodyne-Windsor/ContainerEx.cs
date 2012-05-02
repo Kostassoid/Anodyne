@@ -12,23 +12,20 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-namespace Kostassoid.Anodyne.MongoDb
+namespace Kostassoid.Anodyne.Windsor
 {
-    using DataAccess;
-    using MongoDB.Driver;
+    using System.Dependency;
+    using Castle.Windsor;
     using global::System;
 
-    public static class DataAccessProviderEx
+    public static class ContainerEx
     {
-        public static void OnNative(this IDataAccessProvider provider,  Action<MongoDatabase> nativeAction)
+        public static void OnNative(this IContainer provider,  Action<IWindsorContainer> nativeAction)
         {
-            if (!(provider is MongoDataSessionFactory))
-                throw new InvalidOperationException("Exprected MongoDb DataAccess provider, but was {0}" + provider.GetType().Name);
+            if (!(provider is WindsorContainerAdapter))
+                throw new InvalidOperationException("Exprected WindsorContainerAdapter, but was {0}" + provider.GetType().Name);
 
-            using (var session = ((MongoDataSessionFactory)provider).OpenSession())
-            {
-                nativeAction(((IDataSessionEx) session).NativeSession as MongoDatabase);
-            }
+            nativeAction(((WindsorContainerAdapter) provider).NativeContainer);
         }
     }
 }

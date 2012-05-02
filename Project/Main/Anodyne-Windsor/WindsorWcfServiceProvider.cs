@@ -25,7 +25,7 @@ namespace Kostassoid.Anodyne.Windsor
 
         public WindsorWcfServiceProvider(IConfiguration configuration)
         {
-            var containerAdapter = (configuration as IConfigurationSettings).Container;
+            var containerAdapter = (configuration as ISystemConfiguration).Container;
 
             if (!(containerAdapter is WindsorContainerAdapter))
                 throw new InvalidOperationException("WindsorWcfServiceProvider requires Windsor Container");

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerEx.cs" />
     <Compile Include="Registration\BindingSyntax.cs" />
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

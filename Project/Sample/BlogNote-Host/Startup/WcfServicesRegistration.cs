@@ -25,21 +25,24 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class WcfServicesRegistration : IStartupAction, IShutdownAction
     {
-        public void OnStartup(IConfigurationSettings configuration)
+        public void OnStartup(ISystemConfiguration configuration)
         {
-            var windsorContainer = (configuration.Container as WindsorContainerAdapter).NativeContainer;
+            configuration.Container
+                .OnNative(container =>
+                              {
+                                  var userServiceModel = new DefaultServiceModel()
+                                      .AddBaseAddresses(Configured.From.AppSettings("UserServiceUrl"))
+                                      .AddEndpoints(WcfEndpoint.BoundTo(new BasicHttpBinding()))
+                                      .PublishMetadata(o => o.EnableHttpGet());
 
-            var userServiceModel = new DefaultServiceModel()
-                .AddBaseAddresses(Configured.From.AppSettings("UserServiceUrl"))
-                .AddEndpoints(WcfEndpoint.BoundTo(new BasicHttpBinding()))
-                .PublishMetadata(o => o.EnableHttpGet());
+                                  container.Register(Component.For<IUserService>().ImplementedBy<UserService>().AsWcfService(userServiceModel));
 
-            windsorContainer.Register(Component.For<IUserService>().ImplementedBy<UserService>().AsWcfService(userServiceModel));
+                                  //Publish<TService>().ImplementedBy<TImpl>().At(Endpoint.)
+                              });
 
-            //Publish<TService>().ImplementedBy<TImpl>().At(Endpoint.)
         }
 
-        public void OnShutdown(IConfigurationSettings configuration)
+        public void OnShutdown(ISystemConfiguration configuration)
         {
         }
     }

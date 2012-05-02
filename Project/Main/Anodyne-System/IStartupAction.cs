@@ -17,6 +17,6 @@ namespace Kostassoid.Anodyne.System
 
     public interface IStartupAction
     {
-        void OnStartup(IConfigurationSettings configuration);
+        void OnStartup(ISystemConfiguration configuration);
     }
 }

@@ -17,6 +17,6 @@ namespace Kostassoid.Anodyne.System
 
     public interface IShutdownAction
     {
-        void OnShutdown(IConfigurationSettings configuration);
+        void OnShutdown(ISystemConfiguration configuration);
     }
 }

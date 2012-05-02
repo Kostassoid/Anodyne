@@ -20,7 +20,7 @@ namespace Kostassoid.Anodyne.System
     {
         private readonly IConfiguration _configuration = new SystemConfiguration();
 
-        private IConfigurationSettings Cfg { get { return _configuration as IConfigurationSettings; } }
+        private ISystemConfiguration Cfg { get { return _configuration as ISystemConfiguration; } }
 
         public SystemState State { get; private set; }
 

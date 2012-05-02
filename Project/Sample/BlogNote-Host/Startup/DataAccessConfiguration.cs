@@ -22,7 +22,7 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class DataAccessConfiguration : IStartupAction
     {
-        public void OnStartup(IConfigurationSettings configuration)
+        public void OnStartup(ISystemConfiguration configuration)
         {
             configuration.DataAccess
                 .OnNative(db =>

@@ -52,7 +52,7 @@
     <Compile Include="AnodyneSystem.cs" />
     <Compile Include="Configuration\Configured.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
-    <Compile Include="Configuration\IConfigurationSettings.cs" />
+    <Compile Include="Configuration\ISystemConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="DataAccess\ContainerOperationResolver.cs" />
     <Compile Include="IShutdownAction.cs" />

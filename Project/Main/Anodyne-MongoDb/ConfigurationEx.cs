@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.MongoDb
     {
         public static void UseMongoDataAccess(this IConfiguration configuration, string databaseServer, string databaseName)
         {
-            var cfg = (configuration as IConfigurationSettings);
+            var cfg = (configuration as ISystemConfiguration);
 
             cfg.Container.For<IDataAccessProvider>()
                 .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container)));

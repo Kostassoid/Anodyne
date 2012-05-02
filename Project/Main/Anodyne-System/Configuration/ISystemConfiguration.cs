@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.System.Configuration
     using Logging;
     using Wcf;
 
-    public interface IConfigurationSettings
+    public interface ISystemConfiguration
     {
         RuntimeMode RuntimeMode { get; }
         IContainer Container { get; }

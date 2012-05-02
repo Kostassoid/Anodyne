@@ -18,21 +18,21 @@ namespace Kostassoid.Anodyne.System.Configuration
     using Logging;
     using Wcf;
 
-    public class SystemConfiguration : IConfiguration, IConfigurationBuilder, IConfigurationSettings
+    public class SystemConfiguration : IConfiguration, IConfigurationBuilder, ISystemConfiguration
     {
         private RuntimeMode _runtimeMode;
-        RuntimeMode IConfigurationSettings.RuntimeMode { get { return _runtimeMode; } }
+        RuntimeMode ISystemConfiguration.RuntimeMode { get { return _runtimeMode; } }
 
         private IContainer _container;
-        IContainer IConfigurationSettings.Container { get { return _container; } }
+        IContainer ISystemConfiguration.Container { get { return _container; } }
 
         private ILoggerAdapter _loggerAdapter;
-        ILoggerAdapter IConfigurationSettings.Logger { get { return _loggerAdapter; } }
+        ILoggerAdapter ISystemConfiguration.Logger { get { return _loggerAdapter; } }
 
-        IDataAccessProvider IConfigurationSettings.DataAccess { get { return _container.Get<IDataAccessProvider>(); } }
+        IDataAccessProvider ISystemConfiguration.DataAccess { get { return _container.Get<IDataAccessProvider>(); } }
 
         private IWcfServiceProvider _wcfServiceProvider;
-        IWcfServiceProvider IConfigurationSettings.WcfServiceProvider { get { return _wcfServiceProvider; } }
+        IWcfServiceProvider ISystemConfiguration.WcfServiceProvider { get { return _wcfServiceProvider; } }
 
         public SystemConfiguration()
         {
