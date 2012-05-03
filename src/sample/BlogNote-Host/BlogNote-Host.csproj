@@ -40,7 +40,7 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Facilities.WcfIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Facilities.WcfIntegration">
       <HintPath>..\..\..\libs\Castle\Castle.Facilities.WcfIntegration.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
@@ -112,7 +112,7 @@
       <Project>{6E6AEA6A-502C-419F-AADA-35AD702473B7}</Project>
       <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Main\Anodyne-DomainModel\Anodyne-Domain.csproj">
+    <ProjectReference Include="..\..\main\Anodyne-Domain\Anodyne-Domain.csproj">
       <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
       <Name>Anodyne-Domain</Name>
     </ProjectReference>

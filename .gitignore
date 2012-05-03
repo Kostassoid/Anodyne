@@ -34,5 +34,6 @@ log.txt*
 TestResults
 *.rdl.data
 packages
-!tools/MongoDb/bin
 testdb
+output
+tmp
