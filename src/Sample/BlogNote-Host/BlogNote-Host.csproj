@@ -41,7 +41,7 @@
       <HintPath>..\..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Facilities.WcfIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\Libs\Castle\Castle.Facilities.WcfIntegration.dll</HintPath>
+      <HintPath>..\..\..\libs\Castle\Castle.Facilities.WcfIntegration.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
