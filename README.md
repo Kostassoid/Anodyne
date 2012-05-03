@@ -6,6 +6,20 @@ Yet another framework for creating scalable applications with rich domain model 
 It is designed to be highly pluggable and super-easy to use due to intensive use of DSL (fluent interfaces).
 And if you're into F# (and functional programming in general) you can get some special comforts like Option, memoized functions, etc.
 
+For example, typical application server configuration with Anodyne looks like this:
+
+        public override void OnConfigure(IConfiguration c)
+        {
+            c.UseLog4Net();
+            c.UseWindsorContainer();
+            c.UseWindsorWcfServicePublisher();
+            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
+
+            c.OnStartupPerform<DataAccessConfiguration>();
+            c.OnStartupPerform<WcfServicesRegistration>();
+            c.OnStartupPerform<CommandConsumersRegistration>();
+        }
+
 See [Wiki](https://github.com/Kostassoid/Anodyne/wiki) for more details.
 
 Current Status
