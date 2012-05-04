@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Node.Configuration
 {
     using Anodyne.DataAccess;
+    using Anodyne.DataAccess.Policy;
     using Dependency;
     using Logging;
     using Wcf;
@@ -64,6 +65,14 @@ namespace Kostassoid.Anodyne.Node.Configuration
         public void RunIn(RuntimeMode runtimeMode)
         {
             _runtimeMode = runtimeMode;
+        }
+
+        public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)
+        {
+            var dataPolicy = new DataAccessPolicy();
+            policyAction(dataPolicy);
+
+            UnitOfWork.EnforcePolicy(dataPolicy);
         }
 
         private string GetTypeUniqueName<T>(string prefix)

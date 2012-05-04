@@ -19,7 +19,7 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class CommandConsumersRegistration : IStartupAction
     {
-        public void OnStartup(INodeInstance configuration)
+        public void OnStartup(INodeInstance instance)
         {
             //system.Container.For(typeof(IConsumerOf<>)).UseAll(From.Assemblies(a => a.FullName.Contains(Const.ProjectName)));
         }

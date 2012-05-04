@@ -104,6 +104,10 @@
       <Project>{6E6AEA6A-502C-419F-AADA-35AD702473B7}</Project>
       <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Anodyne-Domain\Anodyne-Domain.csproj">
+      <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
+      <Name>Anodyne-Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

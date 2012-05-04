@@ -22,6 +22,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Domain.Base;
     using Exceptions;
     using Operations;
+    using Policy;
     using Wiring;
     using System;
     using System.Linq;
@@ -29,6 +30,7 @@ namespace Kostassoid.Anodyne.DataAccess
     public class UnitOfWork : IDisposable
     {
         private static IDataSessionFactory _dataSessionFactory;
+        private static DataAccessPolicy _policy = new DataAccessPolicy();
 
         private const string RootContextKey = "unit-of-work";
         private const string HeadContextKey = "head-unit-of-work";
@@ -37,6 +39,8 @@ namespace Kostassoid.Anodyne.DataAccess
         private readonly UnitOfWork _parent;
 
         public IDataSession DataSession { get; protected set; }
+
+        private StaleDataPolicy _staleDataPolicy = StaleDataPolicy.Strict;
 
         public static Option<UnitOfWork> Current
         {
@@ -61,6 +65,11 @@ namespace Kostassoid.Anodyne.DataAccess
             _dataSessionFactory = dataSessionFactory;
         }
 
+        public static void EnforcePolicy(DataAccessPolicy policy)
+        {
+            _policy = policy;
+        }
+
         static UnitOfWork()
         {
             EventBus
@@ -68,12 +77,15 @@ namespace Kostassoid.Anodyne.DataAccess
                 .AllBasedOn<IAggregateEvent>(From.Assemblies(_ => true))
                 .With(e =>
                           {
+                              if (_policy.ReadOnly)
+                                  throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
+
                               if (Current.IsSome && !Current.Value.IsFinished)
                                   ((UnitOfWork)Current).DataSession.Handle(e);
                           });
         }
 
-        public UnitOfWork()
+        public UnitOfWork(StaleDataPolicy? staleDataPolicy = null)
         {
             var parentUnitOfWork = Context.FindAs<UnitOfWork>(_contextKey);
             if (parentUnitOfWork.IsSome)
@@ -89,6 +101,10 @@ namespace Kostassoid.Anodyne.DataAccess
                 if (DataSession == null)
                     throw new Exception("Unable to create IDataSession (bad configuration?)");
             }
+
+            _staleDataPolicy = staleDataPolicy.HasValue
+                ? staleDataPolicy.Value
+                : _policy.StaleDataPolicy;
 
             Context.Set(_contextKey, this);
             Current = this;
@@ -110,12 +126,11 @@ namespace Kostassoid.Anodyne.DataAccess
             if (!IsRoot) return;
 
             EventBus.Publish(new UnitOfWorkCompletingEvent(this));
-            var changeSet = DataSession.SaveChanges();
+            var changeSet = DataSession.SaveChanges(_staleDataPolicy);
             EventBus.Publish(new UnitOfWorkCompletedEvent(this, changeSet));
 
-            if (changeSet.StaleDataDetected)
+            if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
                 throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
-
         }
 
         public void Rollback()

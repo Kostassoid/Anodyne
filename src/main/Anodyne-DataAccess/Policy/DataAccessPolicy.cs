@@ -10,26 +10,29 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-// 
 
-namespace Kostassoid.BlogNote.Host.Startup
+namespace Kostassoid.Anodyne.DataAccess.Policy
 {
-    using Anodyne.Common.Reflection;
-    using Anodyne.MongoDb;
-    using Anodyne.Node;
-    using Anodyne.Node.Configuration;
-    using Domain;
-
-    public class DataAccessConfiguration : IStartupAction
+    public class DataAccessPolicy
     {
-        public void OnStartup(INodeInstance instance)
+        public StaleDataPolicy StaleDataPolicy { get; internal set; }
+        public bool ReadOnly { get; internal set; }
+
+        public DataAccessPolicy()
         {
-            instance.DataAccess
-                .OnNative(db =>
-                {
-                    db.MapAllClassesBasedOn<BasePostContent>(From.ThisAssembly);
-                    db.EnsureUniqueIndexFor<User>(u => u.Name);
-                });
+            StaleDataPolicy = StaleDataPolicy.Strict;
+            ReadOnly = false;
         }
+
+        public void ReadOnlyAccess()
+        {
+            ReadOnly = true;
+        }
+
+        public void OnStaleData(StaleDataPolicy policy)
+        {
+            StaleDataPolicy = policy;
+        }
+
     }
 }

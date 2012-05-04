@@ -20,6 +20,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
     using Domain.Events;
     using Exceptions;
     using NUnit.Framework;
+    using Policy;
 
     // ReSharper disable InconsistentNaming
     public class UnitOfWorkSpecs
@@ -231,6 +232,43 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
                     anotherRoot.Update();
                     root.Update(); // actual mistake is here, but detected later at UoW dispose
+                }
+
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_updating_root_and_there_is_a_newer_version_with_silentlyskip_policy : UnitOfWorkScenario
+        {
+            [Test]
+            [Ignore("Fix it")]
+            public void should_skip_conflicting_roots()
+            {
+                Guid rootId;
+                using (var uow = new UnitOfWork())
+                {
+                    rootId = TestRoot.Create().Id;
+                }
+
+                TestRoot root;
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    root.Update();
+                }
+
+                using (var uow = new UnitOfWork(StaleDataPolicy.SilentlySkip))
+                {
+                    var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    anotherRoot.Update();
+                    root.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    Assert.That(root.Version, Is.EqualTo(3));
                 }
 
             }

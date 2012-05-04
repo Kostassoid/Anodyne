@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using Anodyne.DataAccess.Policy;
     using Common;
     using System;
 
@@ -24,6 +25,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
 */
 
         void RunIn(RuntimeMode runtimeMode);
+
+        void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
 
         void OnStartupPerform<TStartup>() where TStartup : IStartupAction;
         void OnStartupPerform(Action<INodeInstance> startupAction);

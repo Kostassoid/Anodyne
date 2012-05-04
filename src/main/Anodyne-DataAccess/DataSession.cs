@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Operations;
     using System;
     using System.Collections.Generic;
+    using Policy;
 
     public abstract class DataSession : IDataSession
     {
@@ -66,17 +67,20 @@ namespace Kostassoid.Anodyne.DataAccess
             GetChangeSetFor(aggregate).MarkAsDeleted();
         }
 
-        protected bool ApplyChangeSet(AggregateRootChangeSet changeSet)
+        protected bool ApplyChangeSet(AggregateRootChangeSet changeSet, bool ignoreConflicts = false)
         {
             var type = changeSet.Aggregate.GetType();
 
             var storedAggregate = FindOne(type, changeSet.Aggregate.IdObject);
 
-            if (storedAggregate == null && !changeSet.IsNew)
-                return false;
+            if (!ignoreConflicts)
+            {
+                if (storedAggregate == null && !changeSet.IsNew)
+                    return false;
 
-            if (storedAggregate != null && storedAggregate.Version != changeSet.TargetVersion)
-                return false;
+                if (storedAggregate != null && storedAggregate.Version != changeSet.TargetVersion)
+                    return false;
+            }
 
             SaveOne(type, changeSet.Aggregate);
 
@@ -86,14 +90,15 @@ namespace Kostassoid.Anodyne.DataAccess
             return true;
         }
 
-        public DataChangeSet SaveChanges()
+        //TODO: use stale data policy
+        public DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy)
         {
             var appliedEvent = new List<IAggregateEvent>();
             var staleDate = new List<IAggregateRoot>();
 
             foreach (var changeSet in ChangeSets.Values)
             {
-                if (ApplyChangeSet(changeSet))
+                if (ApplyChangeSet(changeSet, staleDataPolicy == StaleDataPolicy.Ignore))
                 {
                     appliedEvent.AddRange(changeSet.Events);
                 }

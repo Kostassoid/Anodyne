@@ -23,9 +23,9 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class WcfServicesRegistration : IStartupAction, IShutdownAction
     {
-        public void OnStartup(INodeInstance configuration)
+        public void OnStartup(INodeInstance instance)
         {
-            configuration
+            instance
                 .WcfServicePublisher
                 .Start<IUserService>()
                 .ImplementedBy<UserService>()

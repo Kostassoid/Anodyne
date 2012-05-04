@@ -20,7 +20,7 @@ namespace Kostassoid.BlogNote.Host
     using Anodyne.MongoDb;
     using Startup;
 
-    public class BlogNoteAppServer : Node
+    public class BlogNoteHost : Node
     {
         public override void OnConfigure(IConfiguration c)
         {
