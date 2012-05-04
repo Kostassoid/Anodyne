@@ -13,12 +13,12 @@
 
 namespace Kostassoid.Anodyne.Windsor
 {
-    using System.Configuration;
-    using System.Wcf;
-    using System.Wcf.Registration;
     using Castle.Facilities.WcfIntegration;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
+    using Node.Configuration;
+    using Node.Wcf;
+    using Node.Wcf.Registration;
     using global::System;
 
     public class WindsorWcfServicePublisher : WcfServicePublisher
@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.Windsor
 
         public WindsorWcfServicePublisher(IConfiguration configuration)
         {
-            var containerAdapter = (configuration as ISystemConfiguration).Container;
+            var containerAdapter = (configuration as INodeInstance).Container;
 
             if (!(containerAdapter is WindsorContainerAdapter))
                 throw new InvalidOperationException("WindsorWcfServicePublisher requires Windsor Container");

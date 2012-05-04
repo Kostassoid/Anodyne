@@ -15,7 +15,8 @@
 namespace Kostassoid.Anodyne.Specs.Shared
 {
     using System;
-    using System.Configuration;
+    using Node;
+    using Node.Configuration;
     using Windsor;
 
     public static class IntegrationContext

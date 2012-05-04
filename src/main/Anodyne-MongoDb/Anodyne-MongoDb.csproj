@@ -77,9 +77,9 @@
       <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
       <Name>Anodyne-Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Anodyne-System\Anodyne-System.csproj">
+    <ProjectReference Include="..\Anodyne-Node\Anodyne-Node.csproj">
       <Project>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</Project>
-      <Name>Anodyne-System</Name>
+      <Name>Anodyne-Node</Name>
     </ProjectReference>
     <ProjectReference Include="..\Anodyne-Wiring\Anodyne-Wiring.csproj">
       <Project>{321BB928-1A81-40BF-8BA9-644F95B8CD5A}</Project>

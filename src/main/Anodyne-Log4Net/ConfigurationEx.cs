@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Log4Net
 {
-    using System.Configuration;
+    using Node.Configuration;
 
     public static class ConfigurationEx
     {

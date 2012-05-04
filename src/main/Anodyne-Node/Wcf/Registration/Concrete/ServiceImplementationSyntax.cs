@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-//  
+// 
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,21 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Log4Net
+namespace Kostassoid.Anodyne.Node.Wcf.Registration.Concrete
 {
-    using Node.Logging;
-    using global::System;
-
-    public class Log4NetLoggerAdapter : ILoggerAdapter
+    internal class ServiceImplementationSyntax<TService> : IServiceImplementationSyntax<TService> where TService : class
     {
-        public ILog GetLogger(Type type)
+        private readonly WcfServicePublisher _wcfServicePublisher;
+
+        public ServiceImplementationSyntax(WcfServicePublisher wcfServicePublisher)
         {
-            return GetLogger(type.Name);
+            _wcfServicePublisher = wcfServicePublisher;
         }
 
-        public ILog GetLogger(string source)
+        public IServiceConfigurationSyntax<TService, TImpl> ImplementedBy<TImpl>() where TImpl : class, TService
         {
-            return new Log4NetLog(source);
+            return new ServiceConfigurationSyntax<TService, TImpl>(_wcfServicePublisher);
         }
     }
 }

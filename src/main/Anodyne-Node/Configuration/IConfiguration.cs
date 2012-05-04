@@ -11,24 +11,24 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Node.Configuration
 {
-    using Anodyne.DataAccess;
-    using DataAccess;
-    using Node.Configuration;
+    using Common;
+    using global::System;
 
-    public static class ConfigurationEx
+    public interface IConfiguration : ISyntax
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
-        {
-            var cfg = (configuration as INodeInstance);
+/* not sure
+        void ActAsApplicationServer();
+        void ActAsClient();
+*/
 
-            cfg.Container.For<IDataSessionFactory>()
-                .Use(() => new InMemoryDataSessionFactory());
+        void RunIn(RuntimeMode runtimeMode);
 
-            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
-        }
+        void OnStartupPerform<TStartup>() where TStartup : IStartupAction;
+        void OnStartupPerform(Action<INodeInstance> startupAction);
 
+        void OnShutdownPerform<TShutdown>() where TShutdown : IShutdownAction;
+        void OnShutdownPerform(Action<INodeInstance> shutdownAction);
     }
-
 }

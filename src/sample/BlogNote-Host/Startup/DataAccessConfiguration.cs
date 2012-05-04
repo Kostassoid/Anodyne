@@ -16,13 +16,14 @@ namespace Kostassoid.BlogNote.Host.Startup
 {
     using Anodyne.Common.Reflection;
     using Anodyne.MongoDb;
+    using Anodyne.Node;
+    using Anodyne.Node.Configuration;
     using Anodyne.System;
-    using Anodyne.System.Configuration;
     using Domain;
 
     public class DataAccessConfiguration : IStartupAction
     {
-        public void OnStartup(ISystemConfiguration configuration)
+        public void OnStartup(INodeInstance configuration)
         {
             configuration.DataAccess
                 .OnNative(db =>

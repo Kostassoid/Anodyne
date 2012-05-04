@@ -15,15 +15,16 @@
 namespace Kostassoid.BlogNote.Host.Startup
 {
     using System.ServiceModel;
+    using Anodyne.Node;
+    using Anodyne.Node.Configuration;
+    using Anodyne.Node.Wcf.Registration;
     using Anodyne.System;
-    using Anodyne.System.Configuration;
-    using Anodyne.System.Wcf.Registration;
     using Contracts;
     using Service;
 
     public class WcfServicesRegistration : IStartupAction, IShutdownAction
     {
-        public void OnStartup(ISystemConfiguration configuration)
+        public void OnStartup(INodeInstance configuration)
         {
             configuration
                 .WcfServicePublisher
@@ -37,7 +38,7 @@ namespace Kostassoid.BlogNote.Host.Startup
                 });
         }
 
-        public void OnShutdown(ISystemConfiguration configuration)
+        public void OnShutdown(INodeInstance configuration)
         {
         }
     }

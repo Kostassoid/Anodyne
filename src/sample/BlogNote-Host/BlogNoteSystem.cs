@@ -13,11 +13,12 @@
 
 namespace Kostassoid.BlogNote.Host
 {
+    using Anodyne.Node;
+    using Anodyne.Node.Configuration;
     using Anodyne.Windsor;
     using Anodyne.Log4Net;
     using Anodyne.MongoDb;
     using Anodyne.System;
-    using Anodyne.System.Configuration;
     using Startup;
 
     public class BlogNoteSystem : AnodyneSystem

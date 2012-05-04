@@ -58,9 +58,9 @@
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Anodyne-System\Anodyne-System.csproj">
+    <ProjectReference Include="..\Anodyne-Node\Anodyne-Node.csproj">
       <Project>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</Project>
-      <Name>Anodyne-System</Name>
+      <Name>Anodyne-Node</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

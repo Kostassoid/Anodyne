@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,24 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Node.Dependency
 {
-    using Anodyne.DataAccess;
-    using DataAccess;
-    using Node.Configuration;
+    using Registration;
+    using global::System.Collections.Generic;
 
-    public static class ConfigurationEx
+    public interface IContainer
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
-        {
-            var cfg = (configuration as INodeInstance);
-
-            cfg.Container.For<IDataSessionFactory>()
-                .Use(() => new InMemoryDataSessionFactory());
-
-            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
-        }
-
+        IList<T> GetAll<T>();
+        T Get<T>();
+        IBindingSyntax<TService> For<TService>() where TService : class;
+        IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class;
     }
-
 }

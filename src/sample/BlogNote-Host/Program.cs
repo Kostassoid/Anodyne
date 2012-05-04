@@ -14,7 +14,7 @@
 namespace Kostassoid.BlogNote.Host
 {
     using Topshelf;
-    using global::System.IO;
+    using System.IO;
     using log4net;
     using log4net.Config;
 
@@ -22,8 +22,8 @@ namespace Kostassoid.BlogNote.Host
     {
         static void Main(string[] args)
         {
-            //TODO: get rid of this
-            XmlConfigurator.Configure(new FileInfo("log4net.config"));
+            XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
+
             var logger = LogManager.GetLogger(typeof(Program));
 
             const string serviceName = Const.ProjectName + "-Host";

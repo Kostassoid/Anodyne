@@ -74,9 +74,9 @@
       <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
       <Name>Anodyne-Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Main\Anodyne-System\Anodyne-System.csproj">
+    <ProjectReference Include="..\..\Main\Anodyne-Node\Anodyne-Node.csproj">
       <Project>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</Project>
-      <Name>Anodyne-System</Name>
+      <Name>Anodyne-Node</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Main\Anodyne-Windsor\Anodyne-Windsor.csproj">
       <Project>{B3E5199B-F192-497A-A3D0-80FCFA77BDD8}</Project>

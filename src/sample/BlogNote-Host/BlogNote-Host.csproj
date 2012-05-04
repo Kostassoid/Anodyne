@@ -124,9 +124,9 @@
       <Project>{A7E60C58-D519-471E-B1FF-5CB47128C1CD}</Project>
       <Name>Anodyne-MongoDb</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Main\Anodyne-System\Anodyne-System.csproj">
+    <ProjectReference Include="..\..\Main\Anodyne-Node\Anodyne-Node.csproj">
       <Project>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</Project>
-      <Name>Anodyne-System</Name>
+      <Name>Anodyne-Node</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Main\Anodyne-Windsor\Anodyne-Windsor.csproj">
       <Project>{B3E5199B-F192-497A-A3D0-80FCFA77BDD8}</Project>

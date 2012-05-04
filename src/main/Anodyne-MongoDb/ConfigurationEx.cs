@@ -13,18 +13,18 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
-    using System.Configuration;
-    using System.DataAccess;
     using Common.Reflection;
     using DataAccess;
     using Domain.Base;
+    using Node.Configuration;
+    using Node.DataAccess;
     using global::System;
 
     public static class ConfigurationEx
     {
         public static void UseMongoDataAccess(this IConfiguration configuration, string databaseServer, string databaseName)
         {
-            var cfg = (configuration as ISystemConfiguration);
+            var cfg = (configuration as INodeInstance);
 
             cfg.Container.For<IDataAccessProvider>()
                 .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container)));

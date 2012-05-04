@@ -13,10 +13,10 @@
 
 namespace Kostassoid.Anodyne.Windsor.Registration
 {
-    using System.Dependency;
-    using System.Dependency.Registration;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
+    using Node.Dependency;
+    using Node.Dependency.Registration;
     using global::System;
 
     public class BindingSyntax<TService> : IBindingSyntax<TService> where TService : class

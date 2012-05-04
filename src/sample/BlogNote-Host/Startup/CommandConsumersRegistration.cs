@@ -14,12 +14,13 @@
 
 namespace Kostassoid.BlogNote.Host.Startup
 {
+    using Anodyne.Node;
+    using Anodyne.Node.Configuration;
     using Anodyne.System;
-    using Anodyne.System.Configuration;
 
     public class CommandConsumersRegistration : IStartupAction
     {
-        public void OnStartup(ISystemConfiguration configuration)
+        public void OnStartup(INodeInstance configuration)
         {
             //system.Container.For(typeof(IConsumerOf<>)).UseAll(From.Assemblies(a => a.FullName.Contains(Const.ProjectName)));
         }

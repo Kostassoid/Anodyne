@@ -13,8 +13,8 @@
 
 namespace Kostassoid.Anodyne.Windsor
 {
-    using System.Configuration;
     using Castle.Windsor;
+    using Node.Configuration;
     using global::System;
 
     public static class ConfigurationEx
