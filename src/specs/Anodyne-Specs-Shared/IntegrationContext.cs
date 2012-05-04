@@ -14,16 +14,15 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared
 {
-    using System;
     using Node;
     using Node.Configuration;
     using Windsor;
 
     public static class IntegrationContext
     {
-        public static AnodyneSystem System;
+        public static Node System;
 
-        class TestSystem : AnodyneSystem
+        class TestSystem : Node
         {
             public override void OnConfigure(IConfiguration c)
             {

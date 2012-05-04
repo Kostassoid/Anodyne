@@ -87,7 +87,7 @@
     <Compile Include="Startup\CommandConsumersRegistration.cs" />
     <Compile Include="Startup\DataAccessConfiguration.cs" />
     <Compile Include="Startup\WcfServicesRegistration.cs" />
-    <Compile Include="BlogNoteSystem.cs" />
+    <Compile Include="BlogNoteAppServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

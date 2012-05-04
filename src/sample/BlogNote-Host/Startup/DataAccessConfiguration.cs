@@ -18,7 +18,6 @@ namespace Kostassoid.BlogNote.Host.Startup
     using Anodyne.MongoDb;
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
-    using Anodyne.System;
     using Domain;
 
     public class DataAccessConfiguration : IStartupAction

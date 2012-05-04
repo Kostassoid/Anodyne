@@ -57,7 +57,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AnodyneSystem.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Configuration\Configured.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
     <Compile Include="Configuration\INodeInstance.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="StartupActionWrapper.cs" />
     <Compile Include="Subsystem\ISubsystem.cs" />
     <Compile Include="Subsystem\Subsystem.cs" />
-    <Compile Include="SystemState.cs" />
+    <Compile Include="InstanceState.cs" />
     <Compile Include="Configuration\NodeInstance.cs" />
     <Compile Include="Wcf\Registration\IWcfServiceConfiguration.cs" />
     <Compile Include="Wcf\Registration\Bound.cs" />

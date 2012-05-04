@@ -16,7 +16,6 @@ namespace Kostassoid.BlogNote.Host.Startup
 {
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
-    using Anodyne.System;
 
     public class CommandConsumersRegistration : IStartupAction
     {

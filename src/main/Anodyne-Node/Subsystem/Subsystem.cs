@@ -13,13 +13,12 @@
 
 namespace Kostassoid.Anodyne.Node.Subsystem
 {
-    using System;
     using global::System;
     using log4net;
 
     public abstract class Subsystem : ISubsystem
     {
-        private SystemState _state = SystemState.Stopped;
+        private InstanceState _state = InstanceState.Stopped;
         private readonly ILog _logger;
 
         protected virtual ILog Logger
@@ -32,7 +31,7 @@ namespace Kostassoid.Anodyne.Node.Subsystem
             _logger = LogManager.GetLogger(GetType());
         }
 
-        public virtual SystemState State
+        public virtual InstanceState State
         {
             get { return _state; }
             protected set { _state = value; }
@@ -40,10 +39,10 @@ namespace Kostassoid.Anodyne.Node.Subsystem
 
         public virtual void Start()
         {
-            if (_state == SystemState.Stopped)
+            if (_state == InstanceState.Stopped)
             {
                 OnStart();
-                _state = SystemState.Started;
+                _state = InstanceState.Started;
                 // ReSharper disable PolymorphicFieldLikeEventInvocation
                 Started(this);
                 // ReSharper restore PolymorphicFieldLikeEventInvocation
@@ -53,10 +52,10 @@ namespace Kostassoid.Anodyne.Node.Subsystem
 
         public virtual void Stop()
         {
-            if (this._state == SystemState.Started)
+            if (this._state == InstanceState.Started)
             {
                 OnStop();
-                this._state = SystemState.Stopped;
+                this._state = InstanceState.Stopped;
                 // ReSharper disable PolymorphicFieldLikeEventInvocation
                 Stopped(this);
                 // ReSharper restore PolymorphicFieldLikeEventInvocation

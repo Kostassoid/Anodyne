@@ -13,12 +13,11 @@
 
 namespace Kostassoid.Anodyne.Node.Subsystem
 {
-    using System;
     using global::System;
 
     public interface ISubsystem
     {
-        SystemState State { get; }
+        InstanceState State { get; }
         void Start();
         void Stop();
         event Action<ISubsystem> Started;

@@ -13,20 +13,19 @@
 
 namespace Kostassoid.Anodyne.Node
 {
-    using System;
-    using Kostassoid.Anodyne.Common.Extentions;
-    using Kostassoid.Anodyne.Node.Configuration;
+    using Common.Extentions;
+    using Configuration;
 
-    public abstract class AnodyneSystem
+    public abstract class Node
     {
         private readonly IConfiguration _configuration = new NodeInstance();
 
         private INodeInstance Cfg { get { return _configuration as INodeInstance; } }
 
-        public SystemState State { get; private set; }
+        public InstanceState State { get; private set; }
 
-        public bool CanBeStarted { get { return State != SystemState.Started; } }
-        public bool CanBeStopped { get { return State != SystemState.Stopped; } }
+        public bool CanBeStarted { get { return State != InstanceState.Started; } }
+        public bool CanBeStopped { get { return State != InstanceState.Stopped; } }
         public bool MustBeConfigured { get { return !(_configuration as IConfigurationBuilder).IsValid; } }
 
         public abstract void OnConfigure(IConfiguration configuration);
@@ -51,7 +50,7 @@ namespace Kostassoid.Anodyne.Node
 
             OnStart();
 
-            State = SystemState.Started;
+            State = InstanceState.Started;
         }
 
         public void Shutdown()
@@ -64,7 +63,7 @@ namespace Kostassoid.Anodyne.Node
 
             //_subsystems.ForEach(s => s.Stop());
 
-            State = SystemState.Stopped;
+            State = InstanceState.Stopped;
         }
 
     }

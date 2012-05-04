@@ -18,7 +18,6 @@ namespace Kostassoid.BlogNote.Host.Startup
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
     using Anodyne.Node.Wcf.Registration;
-    using Anodyne.System;
     using Contracts;
     using Service;
 

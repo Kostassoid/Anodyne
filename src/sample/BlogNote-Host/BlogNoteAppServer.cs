@@ -18,10 +18,9 @@ namespace Kostassoid.BlogNote.Host
     using Anodyne.Windsor;
     using Anodyne.Log4Net;
     using Anodyne.MongoDb;
-    using Anodyne.System;
     using Startup;
 
-    public class BlogNoteSystem : AnodyneSystem
+    public class BlogNoteAppServer : Node
     {
         public override void OnConfigure(IConfiguration c)
         {

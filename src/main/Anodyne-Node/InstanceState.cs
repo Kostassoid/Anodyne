@@ -11,9 +11,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.System
+namespace Kostassoid.Anodyne.Node
 {
-    public enum SystemState
+    public enum InstanceState
     {
         Stopped,
         Started

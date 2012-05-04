@@ -36,10 +36,10 @@ namespace Kostassoid.BlogNote.Host
                 x.AfterStartingServices(s => logger.InfoFormat("Service {0} started.", serviceName));
                 x.AfterStoppingServices(s => logger.InfoFormat("Service {0} stopped.", serviceName));
 
-                x.Service<BlogNoteSystem>(s =>
+                x.Service<BlogNoteAppServer>(s =>
                 {
                     s.SetServiceName(serviceName);
-                    s.ConstructUsing(name => new BlogNoteSystem());
+                    s.ConstructUsing(name => new BlogNoteAppServer());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Shutdown());
                 });
