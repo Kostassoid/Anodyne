@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Driver;
     using DataAccess.Operations;
     using MongoDB.Driver.Builders;
-    using global::System;
+    using System;
 
     public class MongoDataSession : DataSession, IDataSessionEx
     {

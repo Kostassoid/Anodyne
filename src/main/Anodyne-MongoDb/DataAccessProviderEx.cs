@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.MongoDb
 {
     using DataAccess;
     using MongoDB.Driver;
-    using global::System;
+    using System;
 
     public static class DataAccessProviderEx
     {

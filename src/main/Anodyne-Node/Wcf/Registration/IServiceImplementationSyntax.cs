@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf.Registration
 {
-    using Kostassoid.Anodyne.Common;
+    using Common;
 
     public interface IServiceImplementationSyntax<TService> : ISyntax
     {

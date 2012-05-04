@@ -14,8 +14,8 @@
 
 namespace Kostassoid.Anodyne.Node.Logging
 {
-    using global::System;
-    using global::System.Diagnostics;
+    using System;
+    using System.Diagnostics;
 
     public static class LogManager
     {

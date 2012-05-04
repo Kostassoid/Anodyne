@@ -13,8 +13,8 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf
 {
-    using Kostassoid.Anodyne.Node.Wcf.Registration;
-    using Kostassoid.Anodyne.Node.Wcf.Registration.Concrete;
+    using Registration;
+    using Registration.Concrete;
 
     public abstract class WcfServicePublisher : IWcfServicePublisher
     {

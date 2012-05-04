@@ -19,8 +19,8 @@ namespace Kostassoid.Anodyne.Windsor
     using Node.Dependency;
     using Node.Dependency.Registration;
     using Registration;
-    using global::System;
-    using global::System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
     public class WindsorContainerAdapter : IContainer
     {

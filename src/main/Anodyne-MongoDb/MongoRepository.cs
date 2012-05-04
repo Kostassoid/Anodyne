@@ -21,9 +21,9 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Driver.Builders;
     using MongoDB.Driver.Linq;
     using DataAccess.Operations;
-    using global::System;
-    using global::System.Linq;
-    using global::System.Linq.Expressions;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
 
     public class MongoRepository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
     {

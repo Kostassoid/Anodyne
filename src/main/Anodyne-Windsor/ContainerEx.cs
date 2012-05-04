@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Windsor
 {
     using Castle.Windsor;
     using Node.Dependency;
-    using global::System;
+    using System;
 
     public static class ContainerEx
     {

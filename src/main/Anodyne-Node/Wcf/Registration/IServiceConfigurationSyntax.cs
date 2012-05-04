@@ -13,8 +13,8 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf.Registration
 {
-    using Kostassoid.Anodyne.Common;
-    using global::System;
+    using Common;
+    using System;
 
     public interface IServiceConfigurationSyntax<TService, TImpl> : ISyntax where TImpl : class, TService
     {

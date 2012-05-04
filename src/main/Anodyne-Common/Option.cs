@@ -87,7 +87,7 @@ namespace Kostassoid.Anodyne.Common
     {
         public override T Value
         {
-            get { throw new System.NotSupportedException("There is no value"); }
+            get { throw new NotSupportedException("There is no value"); }
         }
 
         public override bool IsSome

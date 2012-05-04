@@ -23,8 +23,8 @@ namespace Kostassoid.Anodyne.DataAccess
     using Exceptions;
     using Operations;
     using Wiring;
-    using global::System;
-    using global::System.Linq;
+    using System;
+    using System.Linq;
 
     public class UnitOfWork : IDisposable
     {

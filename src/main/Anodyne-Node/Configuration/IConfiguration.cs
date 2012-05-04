@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Node.Configuration
 {
     using Common;
-    using global::System;
+    using System;
 
     public interface IConfiguration : ISyntax
     {

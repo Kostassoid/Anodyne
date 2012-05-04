@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Log4Net
 {
     using Node.Logging;
-    using global::System;
+    using System;
 
     public class Log4NetLoggerAdapter : ILoggerAdapter
     {

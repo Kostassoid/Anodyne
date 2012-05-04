@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf
 {
-    using Kostassoid.Anodyne.Node.Wcf.Registration;
+    using Registration;
 
     public interface IWcfServicePublisher
     {

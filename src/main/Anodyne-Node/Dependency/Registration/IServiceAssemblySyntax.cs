@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
-    using Kostassoid.Anodyne.Common;
+    using Common;
 
     public interface IServiceAssemblySyntax<in TService> : IBindingSyntax<TService>, ISyntax where TService : class
     {

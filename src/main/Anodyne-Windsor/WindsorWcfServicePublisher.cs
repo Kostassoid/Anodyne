@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.Windsor
     using Node.Configuration;
     using Node.Wcf;
     using Node.Wcf.Registration;
-    using global::System;
+    using System;
 
     public class WindsorWcfServicePublisher : WcfServicePublisher
     {

@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.DataAccess.Exceptions
 {
     using Domain.Base;
-    using global::System;
+    using System;
 
     public class ConcurrencyException : Exception
     {

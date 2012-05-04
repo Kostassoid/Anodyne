@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Operations
 {
-    using global::System;
+    using System;
 
     public abstract class BaseDataOperation
     {

@@ -19,10 +19,10 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
     using MongoDB.Driver.Wrappers;
-    using global::System;
-    using global::System.Collections.Generic;
-    using global::System.Linq;
-    using global::System.Reflection;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
 
     public class MongoHelper
     {

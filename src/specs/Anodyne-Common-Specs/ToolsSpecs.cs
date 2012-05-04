@@ -20,7 +20,7 @@ namespace Kostassoid.Anodyne.Common.Specs
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Kostassoid.Anodyne.Common.Tools;
+    using Tools;
 
     using NUnit.Framework;
 

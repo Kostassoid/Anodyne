@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Subsystem
 {
-    using global::System;
+    using System;
     using log4net;
 
     public abstract class Subsystem : ISubsystem

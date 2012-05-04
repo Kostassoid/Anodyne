@@ -13,12 +13,10 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
-    using Common.Reflection;
     using DataAccess;
-    using Domain.Base;
     using Node.Configuration;
     using Node.DataAccess;
-    using global::System;
+    using System;
 
     public static class ConfigurationEx
     {

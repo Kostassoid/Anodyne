@@ -16,8 +16,8 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
     using Anodyne.DataAccess;
     using Anodyne.DataAccess.Operations;
     using Domain.Base;
-    using global::System;
-    using global::System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
     public class InMemoryDataSession : DataSession
     {

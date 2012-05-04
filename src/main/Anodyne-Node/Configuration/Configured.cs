@@ -14,8 +14,8 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
-    using global::System;
-    using global::System.Configuration;
+    using System;
+    using System.Configuration;
 
     public static class Configured
     {

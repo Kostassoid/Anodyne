@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf.Registration
 {
-    using global::System.ServiceModel.Channels;
+    using System.ServiceModel.Channels;
 
     public static class Bound
     {

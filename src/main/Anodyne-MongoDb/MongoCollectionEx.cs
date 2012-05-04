@@ -15,10 +15,10 @@ namespace Kostassoid.Anodyne.MongoDb
 {
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
-    using global::System;
-    using global::System.Collections.Generic;
-    using global::System.Linq;
-    using global::System.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
 
     public static class MongoCollectionEx
     {

@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Node.Dependency
 {
     using Registration;
-    using global::System.Collections.Generic;
+    using System.Collections.Generic;
 
     public interface IContainer
     {

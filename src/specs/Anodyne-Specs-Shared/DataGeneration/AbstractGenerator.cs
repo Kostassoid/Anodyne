@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataGeneration
 {
-    using global::System;
+    using System;
 
     public abstract class AbstractGenerator
     {

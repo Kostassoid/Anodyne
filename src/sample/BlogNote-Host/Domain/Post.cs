@@ -17,7 +17,7 @@ namespace Kostassoid.BlogNote.Host.Domain
     using Anodyne.Common.CodeContracts;
     using Anodyne.Common.Tools;
     using Anodyne.Domain.Base;
-    using global::System;
+    using System;
 
     public class Post : AggregateRoot<Guid>
     {

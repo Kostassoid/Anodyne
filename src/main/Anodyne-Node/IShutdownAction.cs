@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node
 {
-    using Kostassoid.Anodyne.Node.Configuration;
+    using Configuration;
 
     public interface IShutdownAction
     {

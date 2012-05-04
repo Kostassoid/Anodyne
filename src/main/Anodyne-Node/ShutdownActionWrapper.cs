@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Node
 {
     using Configuration;
-    using global::System;
+    using System;
 
     public class ShutdownActionWrapper : IShutdownAction
     {

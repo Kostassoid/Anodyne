@@ -14,7 +14,7 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf.Registration
 {
-    using global::System.Collections.Generic;
+    using System.Collections.Generic;
 
     public class WcfServiceSpecification<TService, TImpl> : IWcfServiceConfiguration
     {

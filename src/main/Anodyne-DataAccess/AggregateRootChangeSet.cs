@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Domain.Base;
     using Domain.Events;
     using Exceptions;
-    using global::System.Collections.Generic;
+    using System.Collections.Generic;
 
     public class AggregateRootChangeSet
     {

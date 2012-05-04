@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Wcf.Registration.Concrete
 {
-    using global::System;
+    using System;
 
     internal class ServiceConfigurationSyntax<TService, TImpl> : IServiceConfigurationSyntax<TService, TImpl> where TService : class where TImpl : class, TService
     {

@@ -14,7 +14,7 @@
 
 namespace Kostassoid.Anodyne.Node.Logging
 {
-    using global::System;
+    using System;
 
     public interface ILog
     {

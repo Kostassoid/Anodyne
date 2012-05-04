@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using Dependency;
     using Logging;
     using Wcf;
-    using global::System;
+    using System;
 
     public class NodeInstance : IConfiguration, IConfigurationBuilder, INodeInstance
     {

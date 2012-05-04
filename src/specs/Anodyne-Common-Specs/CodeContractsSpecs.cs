@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 {
     using System;
 
-    using Kostassoid.Anodyne.Common.CodeContracts;
+    using CodeContracts;
 
     using NUnit.Framework;
 

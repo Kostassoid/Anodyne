@@ -16,8 +16,8 @@ namespace Kostassoid.Anodyne.DataAccess
     using Domain.Base;
     using Domain.Events;
     using Operations;
-    using global::System;
-    using global::System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
     public abstract class DataSession : IDataSession
     {

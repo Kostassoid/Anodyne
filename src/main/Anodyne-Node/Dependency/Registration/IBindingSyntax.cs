@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
     using Common;
     using Dependency;
-    using global::System;
+    using System;
 
     public interface IBindingSyntax<in TService> : ISyntax where TService : class
     {

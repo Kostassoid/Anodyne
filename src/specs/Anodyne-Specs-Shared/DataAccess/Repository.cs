@@ -18,10 +18,10 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
     using Domain.Base;
     using Anodyne.DataAccess.Exceptions;
     using Anodyne.DataAccess.Operations;
-    using global::System;
-    using global::System.Collections.Generic;
-    using global::System.Linq;
-    using global::System.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
 
     public class Repository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
     {

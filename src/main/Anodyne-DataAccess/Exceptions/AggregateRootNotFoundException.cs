@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Exceptions
 {
-    using global::System;
+    using System;
 
     public class AggregateRootNotFoundException : Exception
     {

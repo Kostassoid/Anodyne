@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Common.Specs
     using System.Collections.Generic;
     using System.Linq;
 
-    using Kostassoid.Anodyne.Common.Extentions;
+    using Extentions;
 
     using NUnit.Framework;
 

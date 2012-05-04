@@ -15,9 +15,9 @@ namespace Kostassoid.Anodyne.DataAccess.Operations
 {
     using Common;
     using Domain.Base;
-    using global::System;
-    using global::System.Linq;
-    using global::System.Linq.Expressions;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
 
     public interface IRepository<TRoot> where TRoot : class, IAggregateRoot
     {

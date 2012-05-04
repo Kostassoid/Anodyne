@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Windsor.Registration
     using Castle.Windsor;
     using Node.Dependency;
     using Node.Dependency.Registration;
-    using global::System;
+    using System;
 
     public class BindingSyntax<TService> : IBindingSyntax<TService> where TService : class
     {
