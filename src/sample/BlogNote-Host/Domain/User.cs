@@ -49,10 +49,11 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         protected void OnCreated(UserCreated @event)
         {
-            var eventData = @event.Data;
+            Id = @event.Target.Id;
 
-            Name = eventData.Name;
-            Email = eventData.Email;
+            var data = @event.Data;
+            Name = data.Name;
+            Email = data.Email;
 
             Registered = SystemTime.Now;
         }

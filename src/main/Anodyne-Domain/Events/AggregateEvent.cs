@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.Domain.Events
         public object AggregateId { get; protected set; }
 
         // should not be stored!
-        public TRoot AggregateReal { get { return _aggregate; } }
+        public TRoot Target { get { return _aggregate; } }
 
         // should not be stored!
         public IAggregateRoot Aggregate { get { return _aggregate; } }

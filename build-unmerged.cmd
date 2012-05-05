@@ -12,6 +12,7 @@ mkdir output\bin
 
 copy src\main\Anodyne-CommandBus\bin\Release\Anodyne-CommandBus.* output\bin
 copy src\main\Anodyne-Common\bin\Release\Anodyne-Common.* output\bin
+copy src\main\Anodyne-DataAccess\bin\Release\Anodyne-DataAccess.* output\bin
 copy src\main\Anodyne-Node\bin\Release\Anodyne-Node.* output\bin
 copy src\main\Anodyne-Domain\bin\Release\Anodyne-Domain.* output\bin
 copy src\main\Anodyne-Wiring\bin\Release\Anodyne-Wiring.* output\bin
