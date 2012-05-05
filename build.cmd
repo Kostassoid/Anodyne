@@ -15,7 +15,7 @@ tools\ilmerge\ILMerge.exe /target:library ^
  /targetplatform:"v4,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319" ^
  /out:"output\bin\Anodyne-Core.dll" ^
  "src\main\Anodyne-Common\bin\Release\Anodyne-Common.dll" ^
- "src\main\Anodyne-System\bin\Release\Anodyne-System.dll" ^
+ "src\main\Anodyne-Node\bin\Release\Anodyne-Node.dll" ^
  "src\main\Anodyne-Domain\bin\Release\Anodyne-Domain.dll" ^
  "src\main\Anodyne-Wiring\bin\Release\Anodyne-Wiring.dll" ^
  "src\main\Anodyne-DataAccess\bin\Release\Anodyne-DataAccess.dll" ^
