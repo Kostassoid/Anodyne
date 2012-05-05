@@ -214,24 +214,56 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             [ExpectedException(typeof(StaleDataException))]
             public void should_throw_stale_data_exception()
             {
-                Guid rootId;
-                using (var uow = new UnitOfWork())
-                {
-                    rootId = TestRoot.Create().Id;
-                }
-
                 TestRoot root;
                 using (var uow = new UnitOfWork())
                 {
-                    root = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    root = TestRoot.Create();
                     root.Update();
                 }
 
                 using (var uow = new UnitOfWork())
                 {
-                    var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     anotherRoot.Update();
-                    root.Update(); // actual mistake is here, but detected later at UoW dispose
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    root.Update();
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_updating_root_and_there_is_a_newer_version_with_ignore_policy : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_overwrite_conflicting_roots()
+            {
+                TestRoot root;
+                using (var uow = new UnitOfWork())
+                {
+                    root = TestRoot.Create();
+                    root.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
+                    anotherRoot.Update();
+                    anotherRoot.Update(); // should be version 4 at this point
+                }
+
+                using (var uow = new UnitOfWork(StaleDataPolicy.Ignore))
+                {
+                    root.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().FindOne(root.Id).Value;
+                    Assert.That(root.Version, Is.EqualTo(3));
                 }
 
             }
@@ -239,36 +271,34 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_updating_root_and_there_is_a_newer_version_with_silentlyskip_policy : UnitOfWorkScenario
+        public class when_updating_root_and_there_is_a_newer_version_with_skip_policy : UnitOfWorkScenario
         {
             [Test]
-            [Ignore("Fix it")]
             public void should_skip_conflicting_roots()
             {
-                Guid rootId;
-                using (var uow = new UnitOfWork())
-                {
-                    rootId = TestRoot.Create().Id;
-                }
-
                 TestRoot root;
                 using (var uow = new UnitOfWork())
                 {
-                    root = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    root = TestRoot.Create();
                     root.Update();
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
+                    anotherRoot.Update();
+                    anotherRoot.Update(); // should be version 4 at this point
                 }
 
                 using (var uow = new UnitOfWork(StaleDataPolicy.SilentlySkip))
                 {
-                    var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
-                    anotherRoot.Update();
                     root.Update();
                 }
 
                 using (var uow = new UnitOfWork())
                 {
-                    root = uow.Query<TestRoot>().FindOne(rootId).Value;
-                    Assert.That(root.Version, Is.EqualTo(3));
+                    root = uow.Query<TestRoot>().FindOne(root.Id).Value;
+                    Assert.That(root.Version, Is.EqualTo(4));
                 }
 
             }
