@@ -16,15 +16,24 @@ namespace Kostassoid.Anodyne.Common
     using System;
     using System.ComponentModel;
 
+    /// <summary>
+    /// Abstracts current system DateTime
+    /// </summary>
     public static class SystemTime
     {
         private static readonly ITimeController Controller = new InternalTimeController();
 
+        /// <summary>
+        /// Returns currently defined DateTime
+        /// </summary>
         public static DateTime Now
         {
             get { return Controller.CurrentDateTime; }
         }
 
+        /// <summary>
+        /// Allows to manipulate time (not really)
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static ITimeController TimeController
         {
@@ -76,10 +85,28 @@ namespace Kostassoid.Anodyne.Common
 
     public interface ITimeController
     {
+        /// <summary>
+        /// Returns currently defined DateTime
+        /// </summary>
         DateTime CurrentDateTime { get; }
+        /// <summary>
+        /// Defines current DateTime as a function
+        /// </summary>
+        /// <param name="dateFunc">DateTime function</param>
         void Customize(Func<DateTime> dateFunc);
+        /// <summary>
+        /// Sets specific date as a current date
+        /// </summary>
+        /// <param name="date">Desired date</param>
         void SetDate(DateTime date);
+        /// <summary>
+        /// Sets date to a constant value (will yield same DateTime every time)
+        /// </summary>
+        /// <param name="date">A constant date</param>
         void SetFrozenDate(DateTime date);
+        /// <summary>
+        /// Resets date to default (DateTime.Now)
+        /// </summary>
         void Reset();
     }
 }

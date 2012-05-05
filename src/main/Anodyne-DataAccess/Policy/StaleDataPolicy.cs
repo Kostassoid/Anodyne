@@ -13,11 +13,22 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Policy
 {
+    /// <summary>
+    /// Defines behavior when there's a version mismatch between stored and changed AggregateRoot.
+    /// </summary>
     public enum StaleDataPolicy
     {
+        /// <summary>
+        /// Doesn't overwrite conflicting roots. Throws StaleDataException. (default)
+        /// </summary>
         Strict,
-        //Merge,
+        /// <summary>
+        /// Skips conflicting roots without throwing exception.
+        /// </summary>
         SilentlySkip,
+        /// <summary>
+        /// Overwrites conflicting roots. Not compatible with Event Sourcing.
+        /// </summary>
         Ignore
     }
 }

@@ -18,11 +18,20 @@ namespace Kostassoid.Anodyne.Common
     using System.Linq;
     using System.Text;
 
+    /// <summary>
+    /// Issues a unique url-friendly string (a ticket) with embedded expiration date
+    /// </summary>
     public class Ticket
     {
         private const string DateTimeEncodingFormat = "yyyyMMddHHmm";
         private const int DateTimeEncodedLength = 12; // should be enough to hold a datetime as number (in hex)
 
+        /// <summary>
+        /// Generates a ticket using expiration date and unique key
+        /// </summary>
+        /// <param name="expiration">Expiration date</param>
+        /// <param name="key">Unique key</param>
+        /// <returns>A new ticket</returns>
         public static string GenerateUsing(DateTime expiration, Guid key)
         {
             var clearTicket = key.ToString("N") + Convert.ToInt64(expiration.ToString(DateTimeEncodingFormat)).ToString("x" + DateTimeEncodedLength);
@@ -32,11 +41,22 @@ namespace Kostassoid.Anodyne.Common
             return encodedTicket;
         }
 
+        /// <summary>
+        /// Generates ticket with defined lifetime
+        /// </summary>
+        /// <param name="lifeTime">Desired lifetime</param>
+        /// <returns>A new ticket</returns>
         public static string Generate(TimeSpan lifeTime)
         {
             return GenerateUsing(SystemTime.Now + lifeTime, Guid.NewGuid());
         }
 
+        /// <summary>
+        /// Checks if the ticket has expired
+        /// </summary>
+        /// <param name="ticket">A ticket to validate</param>
+        /// <param name="now">Datetime to check against (usually Now)</param>
+        /// <returns>True if expired</returns>
         public static bool HasExpired(string ticket, DateTime now)
         {
             var decodedBytes = UrlStringToByteArray(ticket);
@@ -55,6 +75,11 @@ namespace Kostassoid.Anodyne.Common
             }
         }
 
+        /// <summary>
+        /// Checks if the ticket has expired according to SystemTime.Now
+        /// </summary>
+        /// <param name="ticket">A ticket to validate</param>
+        /// <returns>True if expired</returns>
         public static bool HasExpired(string ticket)
         {
             return HasExpired(ticket, SystemTime.Now);
