@@ -37,8 +37,7 @@ namespace Kostassoid.Anodyne.Domain.Events
             Data = data;
         }
 
-        protected PersistentDomainEvent(TData data)
-            : this(SystemTime.Now, data)
+        protected PersistentDomainEvent(TData data) : this(SystemTime.Now, data)
         {
         }
     }

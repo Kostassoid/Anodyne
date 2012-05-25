@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.Domain.Base
     [Serializable]
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
-        public virtual object IdObject
+        object IAggregateRoot.IdObject
         {
             get { return Id; }
         }
