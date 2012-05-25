@@ -13,6 +13,8 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Events
 {
+    using System;
+
     using Domain.Events;
 
     public class UnitOfWorkCompletedEvent : IDomainEvent

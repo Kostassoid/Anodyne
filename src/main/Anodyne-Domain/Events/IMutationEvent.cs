@@ -13,7 +13,10 @@
 
 namespace Kostassoid.Anodyne.Domain.Events
 {
+    using System;
+
     public interface IMutationEvent : IDomainEvent
     {
+        DateTime Happened { get; }
     }
 }

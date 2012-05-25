@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Base;
 
     [Serializable]
-    public abstract class AggregateEvent<TRoot, TData> : PersistentDomainEvent<TData>, IAggregateEvent where TRoot : IAggregateRoot where TData : EventData
+    public abstract class AggregateEvent<TRoot, TData> : PersistentDomainEvent<TData>, IAggregateEvent where TRoot : IAggregateRoot where TData : EventPayload
     {
         private readonly TRoot _aggregate;
         public object AggregateId { get; protected set; }
