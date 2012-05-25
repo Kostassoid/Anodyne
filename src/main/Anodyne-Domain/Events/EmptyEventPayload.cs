@@ -13,11 +13,16 @@
 
 namespace Kostassoid.Anodyne.Domain.Events
 {
-    using System;
-    using Common;
-
-    [Serializable]
-    public abstract class EventData : SerializableValueObject
+    public class EmptyEventPayload : EventPayload
     {
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return true;
+        }
     }
 }

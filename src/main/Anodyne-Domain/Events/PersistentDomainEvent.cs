@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Base;
 
     [Serializable]
-    public abstract class PersistentDomainEvent<TData> : AggregateRoot<Guid>, IDomainEvent where TData : EventData
+    public abstract class PersistentDomainEvent<TData> : AggregateRoot<Guid>, IMutationEvent where TData : EventPayload
     {
         public DateTime Happened { get; protected set; }
         public TData Data { get; protected set; }

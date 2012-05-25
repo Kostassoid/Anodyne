@@ -39,16 +39,16 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         }
 
-        public class Change1Event : AggregateEvent<TestRoot, EmptyEventData>
+        public class Change1Event : AggregateEvent<TestRoot, EmptyEventPayload>
         {
-            public Change1Event(TestRoot aggregate) : base(aggregate, new EmptyEventData())
+            public Change1Event(TestRoot aggregate) : base(aggregate, new EmptyEventPayload())
             {
             }
         }
 
-        public class Change2Event : AggregateEvent<TestRoot, EmptyEventData>
+        public class Change2Event : AggregateEvent<TestRoot, EmptyEventPayload>
         {
-            public Change2Event(TestRoot aggregate) : base(aggregate, new EmptyEventData())
+            public Change2Event(TestRoot aggregate) : base(aggregate, new EmptyEventPayload())
             {
             }
         }
