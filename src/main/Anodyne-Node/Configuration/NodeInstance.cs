@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
 {
     using Anodyne.DataAccess;
     using Anodyne.DataAccess.Policy;
+    using Common.Tools;
     using Dependency;
     using Logging;
     using Wcf;
@@ -87,7 +88,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         public void OnStartupPerform(Action<INodeInstance> startupAction)
         {
-            _container.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction));
+            _container.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction), Lifestyle.Singleton, "Startup-" + SeqGuid.NewGuid());
         }
 
         public void OnShutdownPerform<TShutdown>() where TShutdown : IShutdownAction
@@ -97,7 +98,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         public void OnShutdownPerform(Action<INodeInstance> shutdownAction)
         {
-            _container.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction));
+            _container.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction), Lifestyle.Singleton, "Shutdown-" + SeqGuid.NewGuid());
         }
     }
 }

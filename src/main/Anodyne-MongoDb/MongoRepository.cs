@@ -16,7 +16,6 @@ namespace Kostassoid.Anodyne.MongoDb
     using Common;
     using Domain.Base;
     using DataAccess.Exceptions;
-    using MongoDB.Bson;
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
     using MongoDB.Driver.Linq;
@@ -43,7 +42,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public virtual TRoot GetOne(object key)
         {
-            var found = _collection.Value.FindOne(Query.EQ("_id", key.ToBson()));
+            var found = _collection.Value.FindOne(Query.EQ("_id", key.AsIdValue()));
             if (found == null)
                 throw new AggregateRootNotFoundException(key);
 
@@ -52,7 +51,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public virtual Option<TRoot> FindOne(object key)
         {
-            return _collection.Value.FindOne(Query.EQ("_id", key.ToBson()));
+            return _collection.Value.FindOne(Query.EQ("_id", key.AsIdValue()));
         }
 
 
