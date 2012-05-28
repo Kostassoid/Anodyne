@@ -44,7 +44,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public static TestRoot Create()
             {
                 var root = new TestRoot();
-                root.Apply(new TestRootCreated(root));
+                Apply(new TestRootCreated(root));
                 return root;
             }
 

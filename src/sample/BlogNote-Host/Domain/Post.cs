@@ -40,7 +40,7 @@ namespace Kostassoid.BlogNote.Host.Domain
             Requires.NotNull(content, "Content");
 
             var post = new Post();
-            post.Apply(new PostCreated(post, content));
+            Apply(new PostCreated(post, content));
             return post;
         }
 

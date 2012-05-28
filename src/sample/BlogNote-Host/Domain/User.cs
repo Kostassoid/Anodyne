@@ -42,7 +42,7 @@ namespace Kostassoid.BlogNote.Host.Domain
 
             var user = new User();
 
-            user.Apply(new UserCreated(user, name, email));
+            Apply(new UserCreated(user, name, email));
 
             return user;
         }

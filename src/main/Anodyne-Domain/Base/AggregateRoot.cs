@@ -50,7 +50,7 @@ namespace Kostassoid.Anodyne.Domain.Base
             return Version++;
         }
 
-        protected void Apply(IAggregateEvent @event)
+        protected static void Apply(IAggregateEvent @event)
         {
             EventBus.Publish(@event);
         }
