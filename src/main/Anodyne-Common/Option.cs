@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Common
     using System;
     using Extentions;
 
-    public abstract class Option<T> where T : class
+    public abstract class Option<T>
     {
         public static Option<T> None
         {
@@ -48,13 +48,15 @@ namespace Kostassoid.Anodyne.Common
         }
     }
 
-    public sealed class Some<T> : Option<T> where T : class
+    public sealed class Some<T> : Option<T>
     {
         private readonly T _value;
 
         public Some(T value)
         {
-            if (value == null)
+// ReSharper disable CompareNonConstrainedGenericWithNull
+            if (!typeof(T).IsValueType && value == null)
+// ReSharper restore CompareNonConstrainedGenericWithNull
             {
                 throw new ArgumentNullException("value", "Some value was null, use None instead");
             }
@@ -83,7 +85,7 @@ namespace Kostassoid.Anodyne.Common
         }
     }
 
-    public sealed class None<T> : Option<T> where T : class
+    public sealed class None<T> : Option<T>
     {
         public override T Value
         {
@@ -103,9 +105,11 @@ namespace Kostassoid.Anodyne.Common
 
     public static class OptionEx
     {
-        public static Option<T> AsOption<T>(this T value) where T : class
+        public static Option<T> AsOption<T>(this T value)
         {
-            if (value == null) return new None<T>();
+// ReSharper disable CompareNonConstrainedGenericWithNull
+            if (!typeof(T).IsValueType && value == null) return new None<T>();
+// ReSharper restore CompareNonConstrainedGenericWithNull
 
             return new Some<T>(value);
         }

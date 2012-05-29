@@ -36,6 +36,20 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_creating_none_of_value_type
+        {
+            [Test]
+            public void it_should_be_in_valid_state()
+            {
+                var option = Option<int>.None;
+
+                Assert.That(option.IsNone, Is.True);
+                Assert.That(option.IsSome, Is.False);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_creating_some
         {
             [Test]
@@ -46,6 +60,21 @@ namespace Kostassoid.Anodyne.Common.Specs
                 Assert.That(option.IsNone, Is.False);
                 Assert.That(option.IsSome, Is.True);
                 Assert.That(option.Value, Is.EqualTo("zzz"));
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_creating_some_of_value_type
+        {
+            [Test]
+            public void it_should_be_in_valid_state()
+            {
+                var option = Option<int>.Some(666);
+
+                Assert.That(option.IsNone, Is.False);
+                Assert.That(option.IsSome, Is.True);
+                Assert.That(option.Value, Is.EqualTo(666));
             }
         }
 
@@ -73,6 +102,21 @@ namespace Kostassoid.Anodyne.Common.Specs
                 var option = nullObject.AsOption();
 
                 Assert.That(option is None<string>, Is.True);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_creating_option_from_default_value_type
+        {
+            [Test]
+            public void it_should_be_some()
+            {
+                int defaultObject = default(int);
+
+                var option = defaultObject.AsOption();
+
+                Assert.That(option is None<int>, Is.False);
             }
         }
 
