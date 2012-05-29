@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Anodyne.
+﻿// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,7 +13,22 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Operations
 {
-    public interface IDataOperation
+    using System;
+
+    using Kostassoid.Anodyne.Domain;
+
+    public abstract class BaseDomainOperation : IDomainOperation
     {
+        protected UnitOfWork Owner { get; private set; }
+
+        protected BaseDomainOperation()
+        {
+            if (UnitOfWork.Current.IsNone)
+            {
+                throw new InvalidOperationException("Should be within UnitOfWork context!");
+            }
+
+            Owner = UnitOfWork.Current.Value;
+        }
     }
 }

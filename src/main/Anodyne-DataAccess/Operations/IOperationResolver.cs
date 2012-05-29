@@ -13,8 +13,10 @@
 
 namespace Kostassoid.Anodyne.DataAccess.Operations
 {
+    using Kostassoid.Anodyne.Domain;
+
     public interface IOperationResolver
     {
-        TOp Get<TOp>() where TOp : IDataOperation;
+        TOp Get<TOp>() where TOp : IDomainOperation;
     }
 }

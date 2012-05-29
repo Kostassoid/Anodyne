@@ -16,6 +16,8 @@ namespace Kostassoid.Anodyne.Node.DataAccess
     using Dependency;
     using Anodyne.DataAccess.Operations;
 
+    using Kostassoid.Anodyne.Domain;
+
     public class ContainerOperationResolver : IOperationResolver
     {
         private readonly IContainer _container;
@@ -25,7 +27,7 @@ namespace Kostassoid.Anodyne.Node.DataAccess
             _container = container;
         }
 
-        public TOp Get<TOp>() where TOp : IDataOperation
+        public TOp Get<TOp>() where TOp : IDomainOperation
         {
             return _container.Get<TOp>();
         }

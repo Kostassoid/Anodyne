@@ -11,22 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Operations
+namespace Kostassoid.Anodyne.Domain
 {
-    using System;
-
-    public abstract class BaseDataOperation
+    public interface IDomainQuery : IDomainOperation
     {
-        protected UnitOfWork Owner { get; private set; }
-
-        protected BaseDataOperation()
-        {
-            if (UnitOfWork.Current.IsNone)
-            {
-                throw new InvalidOperationException("Should be within UnitOfWork context!");
-            }
-
-            Owner = UnitOfWork.Current.Value;
-        }
+         
     }
 }

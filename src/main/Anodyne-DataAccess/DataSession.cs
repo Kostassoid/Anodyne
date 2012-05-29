@@ -15,6 +15,9 @@ namespace Kostassoid.Anodyne.DataAccess
 {
     using Domain.Base;
     using Domain.Events;
+
+    using Kostassoid.Anodyne.Domain;
+
     using Operations;
     using System;
     using System.Collections.Generic;
@@ -50,7 +53,7 @@ namespace Kostassoid.Anodyne.DataAccess
 
         public abstract IRepository<TRoot> GetRepository<TRoot>() where TRoot : class, IAggregateRoot;
 
-        public TOp GetOperation<TOp>() where TOp : class, IDataOperation
+        public TOp GetOperation<TOp>() where TOp : class, IDomainOperation
         {
             var operation = OperationResolver.Get<TOp>();
 

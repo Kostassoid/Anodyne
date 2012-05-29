@@ -21,6 +21,9 @@ namespace Kostassoid.Anodyne.DataAccess
     using Events;
     using Domain.Base;
     using Exceptions;
+
+    using Kostassoid.Anodyne.Domain;
+
     using Operations;
     using Policy;
     using Wiring;
@@ -187,7 +190,7 @@ namespace Kostassoid.Anodyne.DataAccess
             return Query<TRoot>().All();
         }
 
-        public TOp Using<TOp>() where TOp : class, IDataOperation
+        public TOp Using<TOp>() where TOp : class, IDomainOperation
         {
             AssertIfFinished();
 

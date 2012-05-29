@@ -56,6 +56,9 @@
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\IMutationEvent.cs" />
     <Compile Include="Events\PersistentDomainEvent.cs" />
+    <Compile Include="IDomainCommand.cs" />
+    <Compile Include="IDomainOperation.cs" />
+    <Compile Include="IDomainQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

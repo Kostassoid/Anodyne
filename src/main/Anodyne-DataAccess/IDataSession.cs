@@ -16,6 +16,9 @@ namespace Kostassoid.Anodyne.DataAccess
 {
     using Domain.Base;
     using Domain.Events;
+
+    using Kostassoid.Anodyne.Domain;
+
     using Operations;
     using Policy;
     using Wiring;
@@ -24,7 +27,7 @@ namespace Kostassoid.Anodyne.DataAccess
     public interface IDataSession : IDisposable, IHandlerOf<IAggregateEvent>
     {
         IRepository<TRoot> GetRepository<TRoot>() where TRoot : class, IAggregateRoot;
-        TOp GetOperation<TOp>() where TOp : class, IDataOperation;
+        TOp GetOperation<TOp>() where TOp : class, IDomainOperation;
 
         void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
 
