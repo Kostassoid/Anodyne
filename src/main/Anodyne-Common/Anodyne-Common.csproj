@@ -48,9 +48,11 @@
     <Compile Include="ExecutionContext\Context.cs" />
     <Compile Include="ExecutionContext\IContextProvider.cs" />
     <Compile Include="ExecutionContext\NormalContextProvider.cs" />
+    <Compile Include="Extentions\ArrayEx.cs" />
     <Compile Include="Extentions\DateTimeEx.cs" />
     <Compile Include="Extentions\EnumerableEx.cs" />
     <Compile Include="Extentions\ObjectEx.cs" />
+    <Compile Include="Extentions\StringEx.cs" />
     <Compile Include="ImmutableCollection.cs" />
     <Compile Include="ISyntax.cs" />
     <Compile Include="ObjectFactory.cs" />

@@ -11,17 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Node.Dependency
+namespace Kostassoid.Anodyne.Common.Extentions
 {
-    using Registration;
-    using System.Collections.Generic;
-
-    public interface IContainer
+    public static class StringEx
     {
-        IList<T> GetAll<T>();
-        T Get<T>();
-        T Get<T>(string name);
-        IBindingSyntax<TService> For<TService>() where TService : class;
-        IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class;
+        public static string FormatWith(this string str, params object[] parts)
+        {
+            return string.Format(str, parts);
+        }
     }
 }

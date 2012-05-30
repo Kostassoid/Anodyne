@@ -11,17 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Node.Dependency
+namespace Kostassoid.Anodyne.Common.Extentions
 {
-    using Registration;
-    using System.Collections.Generic;
+    using System;
 
-    public interface IContainer
+    public static class ArrayEx
     {
-        IList<T> GetAll<T>();
-        T Get<T>();
-        T Get<T>(string name);
-        IBindingSyntax<TService> For<TService>() where TService : class;
-        IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class;
+        public static T[] ForEach<T>(this T[] list, Action<T> action)
+        {
+            foreach (T item in list) action(item);
+            return list;
+        }
     }
 }

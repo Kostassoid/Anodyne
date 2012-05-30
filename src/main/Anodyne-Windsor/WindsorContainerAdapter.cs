@@ -46,6 +46,11 @@ namespace Kostassoid.Anodyne.Windsor
             return NativeContainer.Resolve<T>();
         }
 
+        public T Get<T>(string name)
+        {
+            return NativeContainer.Resolve<T>(name);
+        }
+
         public IBindingSyntax<TService> For<TService>() where TService : class
         {
             return new BindingSyntax<TService>(NativeContainer);
