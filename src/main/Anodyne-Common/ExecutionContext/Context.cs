@@ -40,13 +40,13 @@ namespace Kostassoid.Anodyne.Common.ExecutionContext
             return found;
         }
 
-        public static T GetAs<T>(string name) where T : class
+        public static T GetAs<T>(string name)
         {
             var found = Get(name);
-            if (found as T == null)
+            if (!(found is T))
                 throw new InvalidOperationException(string.Format("Value of '{0}' is of type {1}, but {2} was expected", name, found.GetType().Name, typeof (T).Name));
 
-            return found as T;
+            return (T)found;
         }
 
         public static Option<object> Find(string name)
@@ -54,12 +54,12 @@ namespace Kostassoid.Anodyne.Common.ExecutionContext
             return _provider.Find(name).AsOption();
         }
 
-        public static Option<T> FindAs<T>(string name) where T : class
+        public static Option<T> FindAs<T>(string name)
         {
             var found = Find(name);
-            if (found.IsNone) return new None<T>();
+            if (found.IsNone || !(found.Value is T)) return new None<T>();
 
-            return (found.Value as T).AsOption();
+            return (T)(found.Value).AsOption();
         }
 
         public static void Release(string name)

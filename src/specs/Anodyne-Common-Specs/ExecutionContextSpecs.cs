@@ -40,6 +40,20 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_setting_new_value_of_value_type
+        {
+            [Test]
+            public void it_should_be_stored_and_available()
+            {
+                Context.Set("test", 123);
+
+                Assert.That(Context.Get("test"), Is.EqualTo(123));
+                Assert.That(Context.GetAs<int>("test"), Is.EqualTo(123));
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_resetting_value
         {
             [Test]
@@ -82,6 +96,17 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_finding_non_existing_value_of_value_type
+        {
+            [Test]
+            public void should_return_none()
+            {
+                Assert.That(Context.FindAs<int>("testzzz").IsNone, Is.True);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_finding_existing_value
         {
             [Test]
@@ -91,6 +116,33 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 Assert.That(Context.Find("test").Value, Is.EqualTo("zzz"));
                 Assert.That(Context.FindAs<string>("test").Value, Is.EqualTo("zzz"));
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_finding_existing_value_of_value_type
+        {
+            [Test]
+            public void should_return_some()
+            {
+                Context.Set("test", 123);
+
+                Assert.That(Context.Find("test").Value, Is.EqualTo(123));
+                Assert.That(Context.FindAs<int>("test").Value, Is.EqualTo(123));
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_finding_existing_value_of_invalid_type
+        {
+            [Test]
+            public void should_return_none()
+            {
+                Context.Set("test", 123);
+
+                Assert.That(Context.FindAs<string>("test").IsNone, Is.True);
             }
         }
 
