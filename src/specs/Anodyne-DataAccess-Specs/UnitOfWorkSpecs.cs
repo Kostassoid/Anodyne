@@ -327,6 +327,49 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_updating_root_from_nested_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_update_root_version_and_correctly_dispose_unit_of_work()
+            {
+                Guid rootId;
+                using (var uow = new UnitOfWork())
+                {
+                    rootId = TestRoot.Create().Id;
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    using (var nestedUow = new UnitOfWork())
+                    {
+                        var root = nestedUow.Query<TestRoot>().FindOne(rootId).Value;
+                        root.Update();
+                    }
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    using (var nestedUow = new UnitOfWork())
+                    {
+                        var root = nestedUow.Query<TestRoot>().FindOne(rootId).Value;
+                        root.Update();
+                    }
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var updatedRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
+                    Assert.That(updatedRoot.Version, Is.EqualTo(3));
+                }
+
+                Assert.That(UnitOfWork.Current.IsNone, Is.True);
+            }
+        }
+
+
+
 
 
     }

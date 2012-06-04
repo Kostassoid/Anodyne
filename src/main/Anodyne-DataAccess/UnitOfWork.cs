@@ -43,7 +43,7 @@ namespace Kostassoid.Anodyne.DataAccess
 
         public IDataSession DataSession { get; protected set; }
 
-        private StaleDataPolicy _staleDataPolicy = StaleDataPolicy.Strict;
+        private readonly StaleDataPolicy _staleDataPolicy = StaleDataPolicy.Strict;
 
         public static Option<UnitOfWork> Current
         {
@@ -90,10 +90,9 @@ namespace Kostassoid.Anodyne.DataAccess
 
         public UnitOfWork(StaleDataPolicy? staleDataPolicy = null)
         {
-            var parentUnitOfWork = Context.FindAs<UnitOfWork>(_contextKey);
-            if (parentUnitOfWork.IsSome)
+            if (Current.IsSome)
             {
-                _parent = parentUnitOfWork.Value;
+                _parent = Current.Value;
                 DataSession = _parent.DataSession;
 
                 _contextKey = String.Format("{0}-{1}", _contextKey, Guid.NewGuid().ToString("N"));
