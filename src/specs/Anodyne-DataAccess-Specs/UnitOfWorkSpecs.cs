@@ -14,6 +14,10 @@
 namespace Kostassoid.Anodyne.DataAccess.Specs
 {
     using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using Anodyne.Specs.Shared;
     using Common.Tools;
     using Domain.Base;
@@ -368,10 +372,123 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_trying_to_save_many_roots_at_the_same_time : UnitOfWorkScenario
+        {
+            [Explicit("No need to run every time perhaps.")]
+            [Test]
+            [MaxTime(1000)]
+            public void should_save_all_roots_without_fail()
+            {
+                const int testingThreadsCount = 100;
 
+                var tasks = new List<Task>(testingThreadsCount);
 
+                var threadsToStart = testingThreadsCount;
+                while (threadsToStart-- > 0)
+                {
+                    var task = new Task(() =>
+                    {
+                        using (var unitOfWork = new UnitOfWork())
+                        {
+                            var root = TestRoot.Create();
+                        }
+                    });
 
+                    tasks.Add(task);
+                }
 
+                tasks.ForEach(t => t.Start());
+                Task.WaitAll(tasks.ToArray());
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    Assert.AreEqual(testingThreadsCount, unitOfWork.Query<TestRoot>().Count());
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_trying_to_update_root_from_one_thread_with_ignore_stale_policy : UnitOfWorkScenario
+        {
+            [Explicit("No need to run every time perhaps.")]
+            [Test]
+            [MaxTime(1000)]
+            public void should_not_fail()
+            {
+                const int testingCount = 100;
+
+                Guid id;
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    id = TestRoot.Create().Id;
+                }
+
+                var toStart = testingCount;
+                while (toStart-- > 0)
+                {
+                    using (var unitOfWork = new UnitOfWork(StaleDataPolicy.Ignore))
+                    {
+                        var root = unitOfWork.Query<TestRoot>().GetOne(id);
+                        root.Update();
+                    }
+                }
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    var root = unitOfWork.Query<TestRoot>().GetOne(id);
+                    Assert.That(root.Version, Is.EqualTo(testingCount + 1));
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_trying_to_update_root_from_many_threads_with_ignore_stale_policy : UnitOfWorkScenario
+        {
+            [Explicit("No need to run every time perhaps.")]
+            [Test]
+            [MaxTime(1000)]
+            public void should_not_fail()
+            {
+                const int testingThreadsCount = 100;
+
+                var tasks = new List<Task>(testingThreadsCount);
+
+                Guid id;
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    id = TestRoot.Create().Id;
+                }
+
+                var threadsToStart = testingThreadsCount;
+                while (threadsToStart-- > 0)
+                {
+                    var task = new Task(() =>
+                    {
+                        using (var unitOfWork = new UnitOfWork(StaleDataPolicy.Ignore))
+                        {
+                            var root = unitOfWork.Query<TestRoot>().GetOne(id);
+                            root.Update();
+                        }
+                    });
+
+                    tasks.Add(task);
+                }
+                tasks.ForEach(t => t.Start());
+                Task.WaitAll(tasks.ToArray());
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    var root = unitOfWork.Query<TestRoot>().GetOne(id);
+                    Assert.That(root.Version, Is.LessThanOrEqualTo(testingThreadsCount + 1));
+                }
+            }
+        }
     }
     // ReSharper restore InconsistentNaming
 

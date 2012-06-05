@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-// 
+//  
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,21 +11,27 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
+namespace Kostassoid.Anodyne.Web
 {
-    using System.Collections.Concurrent;
+    using System;
 
-    using Anodyne.DataAccess;
-    using Domain.Base;
-    using System.Collections.Generic;
+    using Kostassoid.Anodyne.Common.ExecutionContext;
 
-    public class InMemoryDataSessionFactory : IDataSessionFactory
+    public class OperationContextProvider : IContextProvider
     {
-        private readonly IDictionary<object, IAggregateRoot> _roots = new ConcurrentDictionary<object, IAggregateRoot>();
-
-        public IDataSession OpenSession()
+        public void Set(string name, object value)
         {
-            return new InMemoryDataSession(null, _roots);
+            throw new NotImplementedException();
+        }
+
+        public object Find(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Release(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 }
