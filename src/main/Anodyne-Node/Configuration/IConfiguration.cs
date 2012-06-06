@@ -28,6 +28,9 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
 
+        void ConfigureUsing<TConfiguration>() where TConfiguration : IConfigurationAction;
+        void ConfigureUsing(Action<INodeInstance> configurationAction);
+
         void OnStartupPerform<TStartup>() where TStartup : IStartupAction;
         void OnStartupPerform(Action<INodeInstance> startupAction);
 
