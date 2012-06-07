@@ -19,11 +19,9 @@ namespace Kostassoid.Anodyne.DataAccess
     using Common.Reflection;
     using Domain.Events;
     using Events;
+    using Domain;
     using Domain.Base;
     using Exceptions;
-
-    using Kostassoid.Anodyne.Domain;
-
     using Operations;
     using Policy;
     using Wiring;
@@ -34,6 +32,8 @@ namespace Kostassoid.Anodyne.DataAccess
     {
         private static IDataSessionFactory _dataSessionFactory;
         private static DataAccessPolicy _policy = new DataAccessPolicy();
+
+        private static bool _eventHandlersAreSet = false;
 
         private const string RootContextKey = "unit-of-work";
         private const string HeadContextKey = "head-unit-of-work";
@@ -73,26 +73,14 @@ namespace Kostassoid.Anodyne.DataAccess
             _policy = policy;
         }
 
-        static UnitOfWork()
-        {
-            EventBus
-                .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>(From.Assemblies(_ => true))
-                .With(e =>
-                          {
-                              if (_policy.ReadOnly)
-                                  throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
-
-                              if (Current.IsSome && !Current.Value.IsFinished)
-                                  ((UnitOfWork)Current).DataSession.Handle(e);
-                          });
-        }
-
         public UnitOfWork(StaleDataPolicy? staleDataPolicy = null)
         {
-            if (Current.IsSome)
+            EnsureAggregateEventHandlersAreSet();
+
+            var parentUnitOfWork = Context.FindAs<UnitOfWork>(_contextKey);
+            if (parentUnitOfWork.IsSome)
             {
-                _parent = Current.Value;
+                _parent = parentUnitOfWork.Value;
                 DataSession = _parent.DataSession;
 
                 _contextKey = String.Format("{0}-{1}", _contextKey, Guid.NewGuid().ToString("N"));
@@ -112,6 +100,24 @@ namespace Kostassoid.Anodyne.DataAccess
             Current = this;
 
             IsFinished = false;
+        }
+
+        protected static void EnsureAggregateEventHandlersAreSet()
+        {
+            if (_eventHandlersAreSet) return;
+            _eventHandlersAreSet = true;
+
+            EventBus
+                .SubscribeTo()
+                .AllBasedOn<IAggregateEvent>(From.Assemblies(_ => true))
+                .With(e =>
+                {
+                    if (_policy.ReadOnly)
+                        throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
+
+                    if (Current.IsSome && !Current.Value.IsFinished)
+                        ((UnitOfWork)Current).DataSession.Handle(e);
+                });
         }
 
         protected void AssertIfFinished()

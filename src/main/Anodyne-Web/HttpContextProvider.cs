@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Web
 {
     using System.Web;
 
-    using Kostassoid.Anodyne.Common.ExecutionContext;
+    using Common.ExecutionContext;
 
     public class HttpContextProvider : IContextProvider
     {
@@ -26,7 +26,7 @@ namespace Kostassoid.Anodyne.Web
 
         public object Find(string name)
         {
-            return HttpContext.Current.Items[name];
+            return HttpContext.Current.Items.Contains(name) ? HttpContext.Current.Items[name] : null;
         }
 
         public void Release(string name)
