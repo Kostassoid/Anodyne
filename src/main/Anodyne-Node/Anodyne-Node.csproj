@@ -59,6 +59,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IConfigurationAction.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Configuration\Configured.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />

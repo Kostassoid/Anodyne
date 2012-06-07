@@ -76,6 +76,16 @@ namespace Kostassoid.Anodyne.Node.Configuration
             UnitOfWork.EnforcePolicy(dataPolicy);
         }
 
+        public void ConfigureUsing<TConfiguration>() where TConfiguration : IConfigurationAction
+        {
+            Activator.CreateInstance<TConfiguration>().OnConfigure(this);
+        }
+
+        public void ConfigureUsing(Action<INodeInstance> configurationAction)
+        {
+            configurationAction(this);
+        }
+
         private string GetTypeUniqueName<T>(string prefix)
         {
             return prefix + "-" + typeof (T).Name;
