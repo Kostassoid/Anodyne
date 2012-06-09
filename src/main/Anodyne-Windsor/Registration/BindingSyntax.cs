@@ -28,31 +28,40 @@ namespace Kostassoid.Anodyne.Windsor.Registration
             _container = container;
         }
 
-        //TODO: DRY
+        private ComponentRegistration<TService> ApplyOptions(ComponentRegistration<TService> registration, Lifestyle lifestyle, string name)
+        {
+            registration = registration.LifeStyle.Is(GetLifestyle(lifestyle));
+
+            if (!string.IsNullOrEmpty(name))
+                registration = registration.Named(name);
+
+            return registration;
+        }
+
         public void Use<TImpl>(Lifestyle lifestyle, string name) where TImpl : TService
         {
             var componentRegistration = Component
                 .For<TService>()
-                .ImplementedBy<TImpl>()
-                .LifeStyle.Is(GetLifestyle(lifestyle));
+                .ImplementedBy<TImpl>();
 
-            if (!string.IsNullOrEmpty(name))
-                componentRegistration = componentRegistration.Named(name);
-
-            _container.Register(componentRegistration);
+            _container.Register(ApplyOptions(componentRegistration, lifestyle, name));
         }
 
         public void Use(Func<TService> bindingFunc, Lifestyle lifestyle, string name)
         {
             var componentRegistration = Component
                 .For<TService>()
-                .UsingFactoryMethod(bindingFunc)
-                .LifeStyle.Is(GetLifestyle(lifestyle));
+                .UsingFactoryMethod(bindingFunc);
 
-            if (!string.IsNullOrEmpty(name))
-                componentRegistration = componentRegistration.Named(name);
+            _container.Register(ApplyOptions(componentRegistration, lifestyle, name));
+        }
 
-            _container.Register(componentRegistration);
+        public void UseSelf(Lifestyle lifestyle = Lifestyle.Singleton, string name = null)
+        {
+            var componentRegistration = Component
+                .For<TService>();
+
+            _container.Register(ApplyOptions(componentRegistration, lifestyle, name));
         }
 
         private static Castle.Core.LifestyleType GetLifestyle(Lifestyle lifestyle)

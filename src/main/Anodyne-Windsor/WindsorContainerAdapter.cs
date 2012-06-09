@@ -32,6 +32,7 @@ namespace Kostassoid.Anodyne.Windsor
 
             NativeContainer.Kernel.ReleasePolicy = new TransientReleasePolicy(NativeContainer.Kernel);
             NativeContainer.Kernel.Resolver.AddSubResolver(new ListResolver(NativeContainer.Kernel));
+            NativeContainer.Kernel.Resolver.AddSubResolver(new AppSettingsResolver(NativeContainer.Kernel));
 
             NativeContainer.AddFacility<StartableFacility>();
         }

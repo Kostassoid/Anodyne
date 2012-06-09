@@ -21,5 +21,6 @@ namespace Kostassoid.Anodyne.Node.Dependency.Registration
     {
         void Use<TImpl>(Lifestyle lifestyle = Lifestyle.Singleton, string name = null) where TImpl : TService;
         void Use(Func<TService> bindingFunc, Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
+        void UseSelf(Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
     }
 }

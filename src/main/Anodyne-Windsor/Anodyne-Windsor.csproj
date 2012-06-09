@@ -62,6 +62,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppSettingsResolver.cs" />
     <Compile Include="ContainerEx.cs" />
     <Compile Include="Registration\BindingSyntax.cs" />
     <Compile Include="ConfigurationEx.cs" />
