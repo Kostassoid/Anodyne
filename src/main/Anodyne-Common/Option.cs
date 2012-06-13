@@ -29,6 +29,7 @@ namespace Kostassoid.Anodyne.Common
         }
 
         public abstract T Value { get; }
+        public abstract T ValueOrDefault { get; }
         public abstract bool IsSome { get; }
         public abstract bool IsNone { get; }
 
@@ -74,6 +75,11 @@ namespace Kostassoid.Anodyne.Common
             get { return _value; }
         }
 
+        public override T ValueOrDefault
+        {
+            get { return _value; }
+        }
+
         public override bool IsSome
         {
             get { return true; }
@@ -90,6 +96,11 @@ namespace Kostassoid.Anodyne.Common
         public override T Value
         {
             get { throw new NotSupportedException("There is no value"); }
+        }
+
+        public override T ValueOrDefault
+        {
+            get { return default(T); }
         }
 
         public override bool IsSome
