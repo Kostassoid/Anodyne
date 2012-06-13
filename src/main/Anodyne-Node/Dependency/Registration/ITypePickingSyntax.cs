@@ -13,10 +13,10 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
-    using System.Reflection;
+    using System;
 
-    public interface IServiceAssemblySyntax<in TService> : IBindingSyntax<TService> where TService : class
+    public interface ITypePickingSyntax<in TService> : IBindingSyntax<TService> where TService : class
     {
-        ITypePickingSyntax<TService> From(Assembly[] assemblies);
+        IBindingSyntax<TService> Where(Func<Type, bool> typePredicate);
     }
 }

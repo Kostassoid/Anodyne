@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Anodyne.
+﻿// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,10 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
-    using System.Reflection;
-
-    public interface IServiceAssemblySyntax<in TService> : IBindingSyntax<TService> where TService : class
+    public interface IDependencyOption
     {
-        ITypePickingSyntax<TService> From(Assembly[] assemblies);
     }
 }

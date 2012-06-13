@@ -25,6 +25,7 @@ namespace Kostassoid.Anodyne.MongoDb
         //TODO: rethink probably
         public static void EnsureIndex<T, U>(this MongoCollection<T> collection, Expression<Func<T, U>> index, bool isUnique, bool ascending, bool isSparse, string indexName = null)
         {
+/*
             var exp = index.Body as NewExpression;
             var keys = new HashSet<string>();
             if (exp != null)
@@ -41,6 +42,8 @@ namespace Kostassoid.Anodyne.MongoDb
             }
 
             var keysCombined = String.Join(",", keys);
+*/
+            var keysCombined = string.Join(",", ResolveIndexKeysFrom(index));
             var indexKey = ascending
                                ? IndexKeys.Ascending(keysCombined)
                                : IndexKeys.Descending(keysCombined);
@@ -48,6 +51,11 @@ namespace Kostassoid.Anodyne.MongoDb
             var indexOptions = IndexOptions.SetName(String.IsNullOrEmpty(indexName) ? keysCombined + "_" : indexName).SetUnique(isUnique);
 
             collection.EnsureIndex(indexKey, indexOptions);
+        }
+
+        private static IEnumerable<string> ResolveIndexKeysFrom<T,U>(Expression<Func<T, U>> func)
+        {
+            return new[] { GetFullPropertyName(func) };
         }
 
         public static void EnsureIndex<T, U>(this MongoCollection<T> collection, Expression<Func<T, U>> index, bool isUnique, bool ascending, string indexName = null)
@@ -60,6 +68,7 @@ namespace Kostassoid.Anodyne.MongoDb
             collection.EnsureIndex(index, isUnique, ascending, true, indexName);
         }
 
+/*
         //TODO: heavy test this
         public static string GetPropertyAlias(MemberExpression mex)
         {
@@ -73,6 +82,62 @@ namespace Kostassoid.Anodyne.MongoDb
             //retval += MongoConfiguration.GetPropertyAlias(mex.Expression.Type, mex.Member.Name);
             retval += mex.Member.Name;
             return retval;
+        }
+*/
+
+
+        // code adjusted to prevent horizontal overflow
+        static string GetFullPropertyName<T, TProperty>
+        (Expression<Func<T, TProperty>> exp)
+        {
+            MemberExpression memberExp;
+            if (!TryFindMemberExpression(exp.Body, out memberExp))
+                return string.Empty;
+
+            var memberNames = new Stack<string>();
+            do
+            {
+                memberNames.Push(memberExp.Member.Name);
+            }
+            while (TryFindMemberExpression(memberExp.Expression, out memberExp));
+
+            return string.Join(".", memberNames.ToArray());
+        }
+
+        // code adjusted to prevent horizontal overflow
+        private static bool TryFindMemberExpression(Expression exp, out MemberExpression memberExp)
+        {
+            memberExp = exp as MemberExpression;
+            if (memberExp != null)
+            {
+                // heyo! that was easy enough
+                return true;
+            }
+
+            // if the compiler created an automatic conversion,
+            // it'll look something like...
+            // obj => Convert(obj.Property) [e.g., int -> object]
+            // OR:
+            // obj => ConvertChecked(obj.Property) [e.g., int -> long]
+            // ...which are the cases checked in IsConversion
+            if (IsConversion(exp) && exp is UnaryExpression)
+            {
+                memberExp = ((UnaryExpression)exp).Operand as MemberExpression;
+                if (memberExp != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsConversion(Expression exp)
+        {
+            return (
+                exp.NodeType == ExpressionType.Convert ||
+                exp.NodeType == ExpressionType.ConvertChecked
+            );
         }
     }
 }
