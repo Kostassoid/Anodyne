@@ -54,7 +54,8 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="UnitOfWorkSpecs.cs" />
+    <Compile Include="UnitOfWorkSpecialSpecs.cs" />
+    <Compile Include="UnitOfWorkBasicSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

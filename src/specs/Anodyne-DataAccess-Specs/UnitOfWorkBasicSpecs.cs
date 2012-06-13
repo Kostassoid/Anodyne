@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
     using Policy;
 
     // ReSharper disable InconsistentNaming
-    public class UnitOfWorkSpecs
+    public class UnitOfWorkBasicSpecs
     {
         public class UnitOfWorkScenario
         {
@@ -54,7 +54,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
             protected void OnCreated(TestRootCreated @event)
             {
-                
+
             }
 
             public void Update()
@@ -66,8 +66,6 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             {
 
             }
-
-
         }
 
         public class TestRootCreated : AggregateEvent<TestRoot, EmptyEventPayload>
