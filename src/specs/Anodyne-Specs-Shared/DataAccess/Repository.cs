@@ -29,7 +29,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public Repository(IDictionary<object, IAggregateRoot> roots)
         {
-            _collection = roots.Values.Cast<TRoot>().ToList();
+            _collection = roots.Values.OfType<TRoot>().ToList();
         }
 
         public virtual TRoot GetOne(object key)
