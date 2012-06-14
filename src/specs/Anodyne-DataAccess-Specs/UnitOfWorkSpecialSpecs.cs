@@ -14,15 +14,12 @@
 namespace Kostassoid.Anodyne.DataAccess.Specs
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     using Anodyne.Specs.Shared;
     using Common.Tools;
     using Domain.Base;
     using Domain.Events;
-    using Exceptions;
+
     using NUnit.Framework;
     using Policy;
 

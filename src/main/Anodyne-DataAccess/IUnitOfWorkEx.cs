@@ -14,8 +14,12 @@
 
 namespace Kostassoid.Anodyne.DataAccess
 {
+    using Kostassoid.Anodyne.Domain.Events;
+
     public interface IUnitOfWorkEx
     {
-         
+/*
+        void Handle(IAggregateEvent ev);
+*/
     }
 }

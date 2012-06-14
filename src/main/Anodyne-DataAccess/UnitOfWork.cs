@@ -28,7 +28,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using System;
     using System.Linq;
 
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWorkEx, IDisposable
     {
         private static IDataSessionFactory _dataSessionFactory;
         private static DataAccessPolicy _policy = new DataAccessPolicy();
@@ -117,8 +117,19 @@ namespace Kostassoid.Anodyne.DataAccess
 
                     if (Current.IsSome && !Current.Value.IsFinished)
                         ((UnitOfWork)Current).DataSession.Handle(e);
-                });
+                }, Priority.Exact(1000));
         }
+
+/*
+        void IUnitOfWorkEx.Handle(IAggregateEvent ev)
+        {
+            if (_policy.ReadOnly)
+                throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
+
+            if (Current.IsSome && !Current.Value.IsFinished)
+                ((UnitOfWork)Current).DataSession.Handle(ev);
+        }
+*/
 
         protected void AssertIfFinished()
         {

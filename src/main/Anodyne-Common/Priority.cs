@@ -13,10 +13,19 @@
 
 namespace Kostassoid.Anodyne.Common
 {
-    public enum Priority
+    public class Priority
     {
-        Normal = 0,
-        High = 10,
-        Critical = 100
+        public int Level { get; private set; }
+
+        protected Priority(int level)
+        {
+            Level = level;
+        }
+
+        public static Priority Normal { get { return new Priority(0);} }
+        public static Priority High { get { return new Priority(10); } }
+        public static Priority Critical { get { return new Priority(100); } }
+
+        public static Priority Exact(int level) { return new Priority(level); }
     }
 }

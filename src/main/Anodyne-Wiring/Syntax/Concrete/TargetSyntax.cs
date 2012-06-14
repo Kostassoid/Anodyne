@@ -26,35 +26,35 @@ namespace Kostassoid.Anodyne.Wiring.Syntax.Concrete
             _specification = specification;
         }
 
-        public Action With(IHandlerOf<TEvent> handler, Priority priority = Priority.Normal)
+        public Action With(IHandlerOf<TEvent> handler, Priority priority = null)
         {
             _specification.HandlerAction = handler.Handle;
-            _specification.Priority = (int)priority;
+            _specification.Priority = (priority ?? Priority.Normal).Level;
 
             return SubscriptionPerformer.Perform(_specification);
         }
 
-        public Action With(Action<TEvent> action, Priority priority = Priority.Normal)
+        public Action With(Action<TEvent> action, Priority priority = null)
         {
             _specification.HandlerAction = action;
-            _specification.Priority = (int)priority;
+            _specification.Priority = (priority ?? Priority.Normal).Level;
 
             return SubscriptionPerformer.Perform(_specification);
         }
 
-        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching, Priority priority = Priority.Normal) where THandler : class
+        public ITargetDiscoverySyntax<TEvent, THandler> With<THandler>(EventMatching eventMatching, Priority priority = null) where THandler : class
         {
             _specification.EventMatching = eventMatching;
-            _specification.Priority = (int)priority;
+            _specification.Priority = (priority ?? Priority.Normal).Level;
 
             return new TargetDiscoverySyntax<TEvent, THandler>(_specification);
         }
 
-        public ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching, Priority priority = Priority.Normal)
+        public ITargetDiscoveryByTypeSyntax<TEvent> With(Type handlerType, EventMatching eventMatching, Priority priority = null)
         {
             _specification.EventMatching = eventMatching;
             _specification.TargetType = handlerType;
-            _specification.Priority = (int)priority;
+            _specification.Priority = (priority ?? Priority.Normal).Level;
 
             return new TargetDiscoveryByTypeSyntax<TEvent>(_specification);
         }
