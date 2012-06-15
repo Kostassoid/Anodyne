@@ -17,6 +17,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using Common;
     using System;
 
+    public delegate bool ConfigurationPredicate(INodeInstance instance);
+
     public interface IConfiguration : ISyntax
     {
 /* not sure
@@ -28,13 +30,13 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
 
-        void ConfigureUsing<TConfiguration>() where TConfiguration : IConfigurationAction;
-        void ConfigureUsing(Action<INodeInstance> configurationAction);
+        void ConfigureUsing<TConfiguration>(ConfigurationPredicate when = null) where TConfiguration : IConfigurationAction;
+        void ConfigureUsing(Action<INodeInstance> configurationAction, ConfigurationPredicate when = null);
 
-        void OnStartupPerform<TStartup>() where TStartup : IStartupAction;
-        void OnStartupPerform(Action<INodeInstance> startupAction);
+        void OnStartupPerform<TStartup>(ConfigurationPredicate when = null) where TStartup : IStartupAction;
+        void OnStartupPerform(Action<INodeInstance> startupAction, ConfigurationPredicate when = null);
 
-        void OnShutdownPerform<TShutdown>() where TShutdown : IShutdownAction;
-        void OnShutdownPerform(Action<INodeInstance> shutdownAction);
+        void OnShutdownPerform<TShutdown>(ConfigurationPredicate when = null) where TShutdown : IShutdownAction;
+        void OnShutdownPerform(Action<INodeInstance> shutdownAction, ConfigurationPredicate when = null);
     }
 }

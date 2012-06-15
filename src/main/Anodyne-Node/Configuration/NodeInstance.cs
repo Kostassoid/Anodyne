@@ -76,13 +76,20 @@ namespace Kostassoid.Anodyne.Node.Configuration
             UnitOfWork.EnforcePolicy(dataPolicy);
         }
 
-        public void ConfigureUsing<TConfiguration>() where TConfiguration : IConfigurationAction
+        private bool ConContinue(ConfigurationPredicate when)
         {
+            return when == null || when(this);
+        }
+
+        public void ConfigureUsing<TConfiguration>(ConfigurationPredicate when) where TConfiguration : IConfigurationAction
+        {
+            if (!ConContinue(when)) return;
             Activator.CreateInstance<TConfiguration>().OnConfigure(this);
         }
 
-        public void ConfigureUsing(Action<INodeInstance> configurationAction)
+        public void ConfigureUsing(Action<INodeInstance> configurationAction, ConfigurationPredicate when)
         {
+            if (!ConContinue(when)) return;
             configurationAction(this);
         }
 
@@ -91,23 +98,27 @@ namespace Kostassoid.Anodyne.Node.Configuration
             return prefix + "-" + typeof (T).Name;
         }
 
-        public void OnStartupPerform<TStartup>() where TStartup : IStartupAction
+        public void OnStartupPerform<TStartup>(ConfigurationPredicate when) where TStartup : IStartupAction
         {
+            if (!ConContinue(when)) return;
             _container.For<IStartupAction>().Use<TStartup>(Lifestyle.Singleton, GetTypeUniqueName<TStartup>("Startup"));
         }
 
-        public void OnStartupPerform(Action<INodeInstance> startupAction)
+        public void OnStartupPerform(Action<INodeInstance> startupAction, ConfigurationPredicate when)
         {
+            if (!ConContinue(when)) return;
             _container.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction), Lifestyle.Singleton, "Startup-" + SeqGuid.NewGuid());
         }
 
-        public void OnShutdownPerform<TShutdown>() where TShutdown : IShutdownAction
+        public void OnShutdownPerform<TShutdown>(ConfigurationPredicate when) where TShutdown : IShutdownAction
         {
+            if (!ConContinue(when)) return;
             _container.For<IShutdownAction>().Use<TShutdown>(Lifestyle.Singleton, GetTypeUniqueName<TShutdown>("Shutdown"));
         }
 
-        public void OnShutdownPerform(Action<INodeInstance> shutdownAction)
+        public void OnShutdownPerform(Action<INodeInstance> shutdownAction, ConfigurationPredicate when)
         {
+            if (!ConContinue(when)) return;
             _container.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction), Lifestyle.Singleton, "Shutdown-" + SeqGuid.NewGuid());
         }
     }
