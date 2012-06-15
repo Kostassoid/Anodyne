@@ -64,6 +64,14 @@ namespace Kostassoid.Anodyne.Windsor.Registration
             _container.Register(ApplyOptions(componentRegistration, lifestyle, name));
         }
 
+        public void UseInstance<TImpl>(TImpl implementation, string name = null) where TImpl : class, TService
+        {
+            var componentRegistration = Component
+                .For<TService>().Instance(implementation);
+
+            _container.Register(ApplyOptions(componentRegistration, Lifestyle.Singleton, name));
+        }
+
         private static Castle.Core.LifestyleType GetLifestyle(Lifestyle lifestyle)
         {
             switch (lifestyle)

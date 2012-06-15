@@ -21,6 +21,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
     public interface IConfiguration : ISyntax
     {
+
 /* not sure
         void ActAsApplicationServer();
         void ActAsClient();

@@ -40,6 +40,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
         public NodeInstance()
         {
             _runtimeMode = RuntimeMode.Production;
+
+            (this as IConfigurationBuilder).SetLoggerAdapter(new NullLoggerAdapter());
         }
 
         bool IConfigurationBuilder.IsValid

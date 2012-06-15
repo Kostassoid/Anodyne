@@ -11,17 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Node.Dependency.Registration
+namespace Kostassoid.Anodyne.Node.Logging
 {
-    using Common;
-    using Dependency;
     using System;
 
-    public interface IBindingSyntax<in TService> : ISyntax where TService : class
+    public class NullLoggerAdapter : ILoggerAdapter
     {
-        void Use<TImpl>(Lifestyle lifestyle = Lifestyle.Singleton, string name = null) where TImpl : TService;
-        void Use(Func<TService> bindingFunc, Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
-        void UseSelf(Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
-        void UseInstance<TImpl>(TImpl implementation, string name = null) where TImpl : class, TService;
+        public ILog GetLogger(Type type)
+        {
+            return GetLogger(type.Name);
+        }
+
+        public ILog GetLogger(string source)
+        {
+            return new NullLog(source);
+        }
     }
 }

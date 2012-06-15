@@ -62,6 +62,8 @@
     <Compile Include="Dependency\Registration\IDependencyOption.cs" />
     <Compile Include="Dependency\Registration\ITypePickingSyntax.cs" />
     <Compile Include="IConfigurationAction.cs" />
+    <Compile Include="Logging\NullLog.cs" />
+    <Compile Include="Logging\NullLoggerAdapter.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Configuration\Configured.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />

@@ -32,6 +32,11 @@ namespace Kostassoid.Anodyne.Node
         public virtual void OnStart() {}
         public virtual void OnShutdown() {}
 
+        public bool IsIn(RuntimeMode runtimeMode)
+        {
+            return Cfg.RuntimeMode == runtimeMode;
+        }
+
         //private IList<ISubsystem> _subsystems = new List<ISubsystem>();
 
         public void Start()
