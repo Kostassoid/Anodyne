@@ -174,5 +174,11 @@ namespace Kostassoid.Anodyne.Log4Net
         {
             _internalLog.Fatal(string.Format(formatProvider, format, args), exception);
         }
+
+        public bool IsDebugEnabled { get { return _internalLog.IsDebugEnabled; } }
+        public bool IsErrorEnabled { get { return _internalLog.IsErrorEnabled; } }
+        public bool IsFatalEnabled { get { return _internalLog.IsFatalEnabled; } }
+        public bool IsInfoEnabled { get { return _internalLog.IsInfoEnabled; } }
+        public bool IsWarnEnabled { get { return _internalLog.IsWarnEnabled; } }
     }
 }

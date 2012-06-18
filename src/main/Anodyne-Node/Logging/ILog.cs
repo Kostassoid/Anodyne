@@ -48,5 +48,11 @@ namespace Kostassoid.Anodyne.Node.Logging
         void FatalFormat(string format, Exception exception, params object[] args);
         void FatalFormat(IFormatProvider formatProvider, string format, params object[] args);
         void FatalFormat(IFormatProvider formatProvider, string format, Exception exception, params object[] args);
+
+        bool IsDebugEnabled { get; }
+        bool IsErrorEnabled { get; }
+        bool IsFatalEnabled { get; }
+        bool IsInfoEnabled { get; }
+        bool IsWarnEnabled { get; }
     }
 }
