@@ -20,6 +20,9 @@ namespace Kostassoid.Anodyne.MongoDb
     using System.Linq.Expressions;
     using System.Reflection;
 
+    using MongoDB.Driver.Builders;
+    using MongoDB.Driver.Wrappers;
+
     public static class MongoDatabaseEx
     {
         public static MongoCollection<TEntity> GetCollection<TEntity>(this MongoDatabase database) where TEntity : class, IAggregateRoot
@@ -46,6 +49,34 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             database.GetCollection<TRoot>().EnsureIndex(index, true, true);
         }
+
+        public static void EnsureCappedCollectionExists<T>(this MongoDatabase db, int collectionSizeMb) where T : class, IAggregateRoot
+        {
+            var collectionName = typeof(T).Name;
+            var collectionSize = collectionSizeMb * 1024 * 1024;
+
+            if (db.CollectionExists(collectionName))
+            {
+                if (!db.GetCollection<T>(collectionName).IsCapped())
+                {
+                    var result = db.RunCommand(new CommandWrapper(new { convertToCapped = collectionName, size = collectionSize }));
+                    if (!result.Ok)
+                    {
+                        throw new Exception(string.Format("Unable to convert collection {0} to capped! Result: {1}", collectionName, result.ErrorMessage));
+                    }
+                }
+            }
+
+            if (!db.CollectionExists(collectionName))
+            {
+                var options = CollectionOptions.SetCapped(true);
+                options.SetMaxSize(collectionSize);
+                db.CreateCollection(collectionName, options);
+            }
+
+        }
+
+
 
     }
 }

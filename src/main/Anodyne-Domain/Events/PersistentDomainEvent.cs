@@ -17,6 +17,8 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Common;
     using Base;
 
+    using Kostassoid.Anodyne.Common.Tools;
+
     [Serializable]
     public abstract class PersistentDomainEvent<TData> : AggregateRoot<Guid>, IMutationEvent where TData : EventPayload
     {
@@ -33,6 +35,7 @@ namespace Kostassoid.Anodyne.Domain.Events
 
         protected PersistentDomainEvent(DateTime happened, TData data)
         {
+            Id = SeqGuid.NewGuid();
             Happened = happened;
             Data = data;
         }

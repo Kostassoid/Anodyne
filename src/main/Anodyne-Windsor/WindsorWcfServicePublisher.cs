@@ -39,24 +39,24 @@ namespace Kostassoid.Anodyne.Windsor
 
         public override void Publish<TService, TImpl>(WcfServiceSpecification<TService, TImpl> specification)
         {
-            var userServiceModel = new DefaultServiceModel();
+            var serviceModel = new DefaultServiceModel();
 
             if (!string.IsNullOrEmpty(specification.BaseAddress))
-                userServiceModel = userServiceModel.AddBaseAddresses(specification.BaseAddress);
+                serviceModel = serviceModel.AddBaseAddresses(specification.BaseAddress);
 
             if (specification.PublishMetadata)
-                userServiceModel = userServiceModel.PublishMetadata(o => o.EnableHttpGet());
+                serviceModel = serviceModel.PublishMetadata(o => o.EnableHttpGet());
 
             foreach (var endpointSpecification in specification.Endpoints)
             {
                 var endpoint = WcfEndpoint.BoundTo(endpointSpecification.Binding);
-                userServiceModel =
+                serviceModel =
                     string.IsNullOrEmpty(endpointSpecification.Address)
-                    ? userServiceModel.AddEndpoints(endpoint)
-                    : userServiceModel.AddEndpoints(endpoint.At(endpointSpecification.Address));
+                    ? serviceModel.AddEndpoints(endpoint)
+                    : serviceModel.AddEndpoints(endpoint.At(endpointSpecification.Address));
             }
 
-            _container.Register(Component.For<TService>().ImplementedBy<TImpl>().AsWcfService(userServiceModel));
+            _container.Register(Component.For<TService>().ImplementedBy<TImpl>().AsWcfService(serviceModel));
         }
     }
 }
