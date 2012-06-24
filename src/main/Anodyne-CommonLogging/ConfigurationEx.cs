@@ -11,8 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System.Runtime.InteropServices;
+namespace Kostassoid.Anodyne.CommonLogging
+{
+    using Node.Configuration;
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
+    public static class ConfigurationEx
+    {
+        public static void UseCommonLogging(this IConfiguration configuration)
+        {
+            (configuration as IConfigurationBuilder).SetLoggerAdapter(new CommonLoggingLoggerAdapter());
+        }
 
-[assembly: Guid("6e37722e-0ef5-46c5-8b28-594b78b80712")]
+    }
+}

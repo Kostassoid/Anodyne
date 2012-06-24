@@ -51,7 +51,6 @@
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="Log4NetLog.cs" />
     <Compile Include="Log4NetLoggerAdapter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

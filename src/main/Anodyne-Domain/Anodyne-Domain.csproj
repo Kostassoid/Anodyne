@@ -59,7 +59,6 @@
     <Compile Include="IDomainCommand.cs" />
     <Compile Include="IDomainOperation.cs" />
     <Compile Include="IDomainQuery.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

@@ -61,7 +61,6 @@
     <Compile Include="MongoDataSession.cs" />
     <Compile Include="MongoHelper.cs" />
     <Compile Include="ObjectEx.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MongoRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -59,7 +59,6 @@
     <Compile Include="DataGeneration\Imagine.cs" />
     <Compile Include="DataGeneration\SimpleGenerator.cs" />
     <Compile Include="IntegrationContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Main\Anodyne-Common\Anodyne-Common.csproj">

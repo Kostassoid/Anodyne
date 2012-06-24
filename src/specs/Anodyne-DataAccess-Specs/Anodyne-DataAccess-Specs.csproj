@@ -56,7 +56,6 @@
     </Compile>
     <Compile Include="UnitOfWorkSpecialSpecs.cs" />
     <Compile Include="UnitOfWorkBasicSpecs.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

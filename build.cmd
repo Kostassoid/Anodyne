@@ -1,6 +1,9 @@
 @echo off
 set path=%path%;C:/Windows/Microsoft.NET/Framework/v4.0.30319;
 
+echo Under construction. Use build-unmerged.cmd instead.
+goto end
+
 echo Building project...
 msbuild src/Anodyne.sln /nologo /v:q /p:Configuration=Release /t:Clean
 msbuild src/Anodyne.sln /nologo /v:q /p:Configuration=Release /clp:ErrorsOnly
@@ -24,6 +27,9 @@ tools\ilmerge\ILMerge.exe /target:library ^
 copy src\main\Anodyne-Windsor\bin\Release\Anodyne-Windsor.* output\bin
 copy src\main\Anodyne-MongoDb\bin\Release\Anodyne-MongoDb.* output\bin
 copy src\main\Anodyne-Log4Net\bin\Release\Anodyne-Log4Net.* output\bin
+copy src\main\Anodyne-CommonLogging\bin\Release\Anodyne-CommonLogging.* output\bin
 copy src\main\Anodyne-Web\bin\Release\Anodyne-Web.* output\bin
 
 echo Done.
+
+:end

@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,8 +11,21 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System.Runtime.InteropServices;
+namespace Kostassoid.Anodyne.CommonLogging
+{
+    using Node.Logging;
+    using System;
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
+    public class CommonLoggingLoggerAdapter : ILoggerAdapter
+    {
+        public ILog GetLogger(Type type)
+        {
+            return GetLogger(type.Name);
+        }
 
-[assembly: Guid("bc0098c3-34be-4da4-b5c7-8a0fd6d57d60")]
+        public ILog GetLogger(string source)
+        {
+            return new CommonLoggingLog(source);
+        }
+    }
+}

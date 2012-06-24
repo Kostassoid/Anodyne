@@ -47,7 +47,6 @@
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="OperationContextProvider.cs" />
     <Compile Include="HttpContextProvider.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
