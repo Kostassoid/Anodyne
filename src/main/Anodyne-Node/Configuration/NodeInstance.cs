@@ -18,6 +18,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using Common.Tools;
     using Dependency;
     using Logging;
+    using Subsystem;
     using Wcf;
     using System;
 
@@ -122,6 +123,11 @@ namespace Kostassoid.Anodyne.Node.Configuration
         {
             if (!ConContinue(when)) return;
             _container.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction), Lifestyle.Singleton, "Shutdown-" + SeqGuid.NewGuid());
+        }
+
+        public void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem
+        {
+            _container.For<ISubsystem>().Use<TSubsystem>(Lifestyle.Singleton);
         }
     }
 }

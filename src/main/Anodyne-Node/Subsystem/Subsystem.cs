@@ -52,10 +52,10 @@ namespace Kostassoid.Anodyne.Node.Subsystem
 
         public virtual void Stop()
         {
-            if (this._state == InstanceState.Started)
+            if (_state == InstanceState.Started)
             {
                 OnStop();
-                this._state = InstanceState.Stopped;
+                _state = InstanceState.Stopped;
                 // ReSharper disable PolymorphicFieldLikeEventInvocation
                 Stopped(this);
                 // ReSharper restore PolymorphicFieldLikeEventInvocation
@@ -67,6 +67,6 @@ namespace Kostassoid.Anodyne.Node.Subsystem
         protected abstract void OnStop();
         
         public virtual event Action<ISubsystem> Started = s => {};
-        public virtual event Action<ISubsystem> Stopped = s => { };
+        public virtual event Action<ISubsystem> Stopped = s => {};
     }
 }

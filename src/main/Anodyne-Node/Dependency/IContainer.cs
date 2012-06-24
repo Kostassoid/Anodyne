@@ -13,6 +13,8 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency
 {
+    using System;
+    using System.Collections;
     using Registration;
     using System.Collections.Generic;
 
@@ -21,6 +23,11 @@ namespace Kostassoid.Anodyne.Node.Dependency
         IList<T> GetAll<T>();
         T Get<T>();
         T Get<T>(string name);
+
+        IList GetAll(Type type);
+        object Get(Type type);
+        object Get(Type type, string name);
+
         IBindingSyntax<TService> For<TService>() where TService : class;
         IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class;
     }

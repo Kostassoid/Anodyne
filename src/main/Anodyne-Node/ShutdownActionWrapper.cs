@@ -25,9 +25,9 @@ namespace Kostassoid.Anodyne.Node
             _shutdownAction = shutdownAction;
         }
 
-        public void OnShutdown(INodeInstance configuration)
+        public void OnShutdown(INodeInstance instance)
         {
-            _shutdownAction(configuration);
+            _shutdownAction(instance);
         }
     }
 }

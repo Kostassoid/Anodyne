@@ -13,8 +13,10 @@
 
 namespace Kostassoid.Anodyne.Node
 {
+    using System.Collections.Generic;
     using Common.Extentions;
     using Configuration;
+    using Subsystem;
 
     public abstract class Node
     {
@@ -37,7 +39,7 @@ namespace Kostassoid.Anodyne.Node
             return Cfg.RuntimeMode == runtimeMode;
         }
 
-        //private IList<ISubsystem> _subsystems = new List<ISubsystem>();
+        private IList<ISubsystem> _subsystems = new List<ISubsystem>();
 
         public void Start()
         {
@@ -48,10 +50,8 @@ namespace Kostassoid.Anodyne.Node
 
             Cfg.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Cfg));
 
-/*
             _subsystems = Cfg.Container.GetAll<ISubsystem>();
             _subsystems.ForEach(s => s.Start());
-*/
 
             OnStart();
 
@@ -66,7 +66,7 @@ namespace Kostassoid.Anodyne.Node
 
             OnShutdown();
 
-            //_subsystems.ForEach(s => s.Stop());
+            _subsystems.ForEach(s => s.Stop());
 
             State = InstanceState.Stopped;
         }

@@ -16,6 +16,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using Anodyne.DataAccess.Policy;
     using Common;
     using System;
+    using Subsystem;
 
     public delegate bool ConfigurationPredicate(INodeInstance instance);
 
@@ -39,5 +40,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         void OnShutdownPerform<TShutdown>(ConfigurationPredicate when = null) where TShutdown : IShutdownAction;
         void OnShutdownPerform(Action<INodeInstance> shutdownAction, ConfigurationPredicate when = null);
+
+        void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem;
     }
 }

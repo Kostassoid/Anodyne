@@ -37,7 +37,7 @@ namespace Kostassoid.BlogNote.Host.Startup
                 });
         }
 
-        public void OnShutdown(INodeInstance configuration)
+        public void OnShutdown(INodeInstance instance)
         {
         }
     }

@@ -13,6 +13,8 @@
 
 namespace Kostassoid.Anodyne.Windsor
 {
+    using System.Collections;
+    using System.Linq;
     using Castle.Facilities.Startable;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
@@ -50,6 +52,21 @@ namespace Kostassoid.Anodyne.Windsor
         public T Get<T>(string name)
         {
             return NativeContainer.Resolve<T>(name);
+        }
+
+        public IList GetAll(Type type)
+        {
+            return NativeContainer.ResolveAll(type);
+        }
+
+        public object Get(Type type)
+        {
+            return NativeContainer.Resolve(type);
+        }
+
+        public object Get(Type type, string name)
+        {
+            return NativeContainer.Resolve(name, type);
         }
 
         public IBindingSyntax<TService> For<TService>() where TService : class

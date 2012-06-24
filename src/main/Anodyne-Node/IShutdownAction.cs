@@ -17,6 +17,6 @@ namespace Kostassoid.Anodyne.Node
 
     public interface IShutdownAction
     {
-        void OnShutdown(INodeInstance configuration);
+        void OnShutdown(INodeInstance instance);
     }
 }
