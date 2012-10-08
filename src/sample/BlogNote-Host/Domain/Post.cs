@@ -18,6 +18,7 @@ namespace Kostassoid.BlogNote.Host.Domain
     using Anodyne.Common.Tools;
     using Anodyne.Domain.Base;
     using System;
+    using Event;
 
     public class Post : AggregateRoot<Guid>
     {

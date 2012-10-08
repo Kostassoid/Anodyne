@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using System.Reflection;
     using Anodyne.DataAccess;
     using Anodyne.DataAccess.Policy;
     using Common.Tools;
@@ -38,11 +39,21 @@ namespace Kostassoid.Anodyne.Node.Configuration
         private IWcfServicePublisher _wcfServicePublisher;
         IWcfServicePublisher INodeInstance.WcfServicePublisher { get { return _wcfServicePublisher; } }
 
+        private string _systemNamespace;
+        string INodeInstance.SystemNamespace { get { return _systemNamespace; } }
+
         public NodeInstance()
         {
             _runtimeMode = RuntimeMode.Production;
+            _systemNamespace = DetectSystemNamespace();
 
             (this as IConfigurationBuilder).SetLoggerAdapter(new NullLoggerAdapter());
+        }
+
+        private static string DetectSystemNamespace()
+        {
+            var fullName = Assembly.GetEntryAssembly().FullName;
+            return Assembly.GetEntryAssembly().FullName.Substring(0, fullName.IndexOfAny(new[] { '.', '-', '_' }));
         }
 
         bool IConfigurationBuilder.IsValid
@@ -71,6 +82,11 @@ namespace Kostassoid.Anodyne.Node.Configuration
             _runtimeMode = runtimeMode;
         }
 
+        public void DefineSystemNamespaceAs(string systemNamespace)
+        {
+            _systemNamespace = systemNamespace;
+        }
+
         public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)
         {
             var dataPolicy = new DataAccessPolicy();
@@ -79,55 +95,57 @@ namespace Kostassoid.Anodyne.Node.Configuration
             UnitOfWork.EnforcePolicy(dataPolicy);
         }
 
-        private bool ConContinue(ConfigurationPredicate when)
+        private bool CanContinue(ConfigurationPredicate when)
         {
             return when == null || when(this);
         }
 
         public void ConfigureUsing<TConfiguration>(ConfigurationPredicate when) where TConfiguration : IConfigurationAction
         {
-            if (!ConContinue(when)) return;
+            if (!CanContinue(when)) return;
             Activator.CreateInstance<TConfiguration>().OnConfigure(this);
         }
 
         public void ConfigureUsing(Action<INodeInstance> configurationAction, ConfigurationPredicate when)
         {
-            if (!ConContinue(when)) return;
+            if (!CanContinue(when)) return;
             configurationAction(this);
         }
 
-        private string GetTypeUniqueName<T>(string prefix)
+        private static string GetTypeUniqueName<T>(string prefix)
         {
             return prefix + "-" + typeof (T).Name;
         }
 
         public void OnStartupPerform<TStartup>(ConfigurationPredicate when) where TStartup : IStartupAction
         {
-            if (!ConContinue(when)) return;
+            if (!CanContinue(when)) return;
             _container.For<IStartupAction>().Use<TStartup>(Lifestyle.Singleton, GetTypeUniqueName<TStartup>("Startup"));
         }
 
         public void OnStartupPerform(Action<INodeInstance> startupAction, ConfigurationPredicate when)
         {
-            if (!ConContinue(when)) return;
+            if (!CanContinue(when)) return;
             _container.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction), Lifestyle.Singleton, "Startup-" + SeqGuid.NewGuid());
         }
 
         public void OnShutdownPerform<TShutdown>(ConfigurationPredicate when) where TShutdown : IShutdownAction
         {
-            if (!ConContinue(when)) return;
+            if (!CanContinue(when)) return;
             _container.For<IShutdownAction>().Use<TShutdown>(Lifestyle.Singleton, GetTypeUniqueName<TShutdown>("Shutdown"));
         }
 
         public void OnShutdownPerform(Action<INodeInstance> shutdownAction, ConfigurationPredicate when)
         {
-            if (!ConContinue(when)) return;
+            if (!CanContinue(when)) return;
             _container.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction), Lifestyle.Singleton, "Shutdown-" + SeqGuid.NewGuid());
         }
 
         public void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem
         {
+// ReSharper disable RedundantArgumentDefaultValue
             _container.For<ISubsystem>().Use<TSubsystem>(Lifestyle.Singleton);
+// ReSharper restore RedundantArgumentDefaultValue
         }
     }
 }

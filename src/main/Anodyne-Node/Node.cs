@@ -28,7 +28,7 @@ namespace Kostassoid.Anodyne.Node
 
         public bool CanBeStarted { get { return State != InstanceState.Started; } }
         public bool CanBeStopped { get { return State != InstanceState.Stopped; } }
-        public bool MustBeConfigured { get { return !(_configuration as IConfigurationBuilder).IsValid; } }
+        public bool MustBeConfigured { get { return !((IConfigurationBuilder) _configuration).IsValid; } }
 
         public abstract void OnConfigure(IConfiguration configuration);
         public virtual void OnStart() {}

@@ -16,21 +16,36 @@ namespace Kostassoid.Anodyne.Domain.Base
     using System;
 
     [Serializable]
-    public class Entity<TKey> : IEntity
+    public abstract class Entity : IEntity
     {
-        public TKey Id { get; protected set; }
+        //TODO: bad
+        object IEntity.IdObject { get { return null; } }
 
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
             if (obj.GetType() != GetType()) return false;
 
-            return ((Entity<TKey>) obj).Id.Equals(Id);
+            var thisEntity = this as IEntity;
+            var thatEntity = (IEntity)obj;
+
+            return thisEntity.IdObject.Equals(thatEntity.IdObject);
         }
 
         public override int GetHashCode()
         {
-            return Id.Equals(default(TKey)) ? base.GetHashCode() : Id.GetHashCode();
+            return (this as IEntity).IdObject.GetHashCode();
+        }
+    }
+
+    [Serializable]
+    public abstract class Entity<TKey> : Entity, IEntity
+    {
+        public TKey Id { get; protected set; }
+
+        object IEntity.IdObject
+        {
+            get { return Id; }
         }
     }
 }

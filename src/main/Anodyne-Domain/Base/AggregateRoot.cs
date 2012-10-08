@@ -21,11 +21,6 @@ namespace Kostassoid.Anodyne.Domain.Base
     [Serializable]
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
-        object IAggregateRoot.IdObject
-        {
-            get { return Id; }
-        }
-
         public virtual int Version { get; protected set; }
 
 // ReSharper disable StaticFieldInGenericType

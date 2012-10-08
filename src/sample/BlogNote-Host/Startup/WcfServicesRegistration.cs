@@ -21,7 +21,7 @@ namespace Kostassoid.BlogNote.Host.Startup
     using Contracts;
     using Service;
 
-    public class WcfServicesRegistration : IStartupAction, IShutdownAction
+    public class WcfServicesRegistration : IStartupAction
     {
         public void OnStartup(INodeInstance instance)
         {
@@ -35,10 +35,6 @@ namespace Kostassoid.BlogNote.Host.Startup
                     c.Endpoint(Bound.To(new BasicHttpBinding()));
                     c.PublishedMetadata();
                 });
-        }
-
-        public void OnShutdown(INodeInstance instance)
-        {
         }
     }
 }

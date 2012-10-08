@@ -11,24 +11,24 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Host.Domain
+namespace Kostassoid.BlogNote.Host.Domain.Event
 {
     using Anodyne.Domain.Events;
 
-    public class PostCreated : AggregateEvent<Post, PostCreated.Payload>
+    public class UserPostsUpdated : AggregateEvent<User, UserPostsUpdated.Payload>
     {
-        public PostCreated(Post aggregate, BasePostContent content)
-            : base(aggregate, new Payload(content))
+        public UserPostsUpdated(User aggregate, uint posts)
+            : base(aggregate, new Payload(posts))
         {
         }
 
         public class Payload : EventPayload
         {
-            public BasePostContent Content { get; protected set; }
+            public uint Posts { get; protected set; }
 
-            public Payload(BasePostContent content)
+            public Payload(uint posts)
             {
-                Content = content;
+                Posts = posts;
             }
         }
 

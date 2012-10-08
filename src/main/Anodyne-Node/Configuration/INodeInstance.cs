@@ -25,5 +25,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
         ILoggerAdapter Logger { get; }
         IWcfServicePublisher WcfServicePublisher { get; }
         IDataAccessProvider DataAccess { get; }
+        string SystemNamespace { get; }
     }
 }

@@ -32,13 +32,8 @@ namespace Kostassoid.Anodyne.Common.Extentions
         }
 
         public static T DeepClone<T>(this T obj)
-         {
-             var members = FormatterServices.GetSerializableMembers(typeof (T));
-             var data = FormatterServices.GetObjectData(obj, members);
-             var cloned =(T)FormatterServices.GetSafeUninitializedObject(typeof(T));
-             FormatterServices.PopulateObjectMembers
-                 (cloned, members, data);
-             return cloned;
+        {
+            return (T)obj.DeepClone(typeof (T));
          }
 
          public static object DeepClone(this object obj, Type type)

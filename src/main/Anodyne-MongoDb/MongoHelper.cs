@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using Common.Extentions;
     using MongoDB.Bson.Serialization;
 
     using System.Collections.Generic;
@@ -37,11 +38,9 @@ namespace Kostassoid.Anodyne.MongoDb
             var types = assemblies.SelectMany(s => s.GetTypes())
                 .Where(typeof(TBase).IsAssignableFrom).Where(t => !t.ContainsGenericParameters);
 
-            foreach (var type in types)
-            {
-                if (BsonClassMap.IsClassMapRegistered(type)) continue;
-                BsonClassMap.LookupClassMap(type);
-            }
+            types
+                .Where(t => !BsonClassMap.IsClassMapRegistered(t))
+                .ForEach(t => BsonClassMap.LookupClassMap(t));
         }
     }
 }

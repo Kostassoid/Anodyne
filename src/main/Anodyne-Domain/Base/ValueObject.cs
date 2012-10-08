@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,27 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Host.Domain
+namespace Kostassoid.Anodyne.Domain.Base
 {
-    using Anodyne.Domain.Events;
+    using System;
 
-    public class UserPostsUpdated : AggregateEvent<User, UserPostsUpdated.Payload>
+    [Serializable]
+    public abstract class ValueObject : IValueObject
     {
-        public UserPostsUpdated(User aggregate, uint posts)
-            : base(aggregate, new Payload(posts))
-        {
-        }
-
-        public class Payload : EventPayload
-        {
-            public uint Posts { get; protected set; }
-
-            public Payload(uint posts)
-            {
-                Posts = posts;
-            }
-        }
-
     }
-
 }

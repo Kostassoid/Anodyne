@@ -1,10 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Wiring", "Main\Anodyne-Wiring\Anodyne-Wiring.csproj", "{321BB928-1A81-40BF-8BA9-644F95B8CD5A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-DataAccess", "Main\Anodyne-DataAccess\Anodyne-DataAccess.csproj", "{6E6AEA6A-502C-419F-AADA-35AD702473B7}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{86F9AFD2-2287-4BD1-B2F8-9D9D379BDF36}"
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
@@ -16,19 +12,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8C3D70
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Common", "Main\Anodyne-Common\Anodyne-Common.csproj", "{2D6AC91A-29E5-4700-8E16-58D87AB98563}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{EB57F770-FD3A-401A-AD78-B27BC3A20119}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{C22E92C3-E69E-423F-A3B9-256486FF9593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Wiring", "Main\Anodyne-Wiring\Anodyne-Wiring.csproj", "{321BB928-1A81-40BF-8BA9-644F95B8CD5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-DataAccess", "Main\Anodyne-DataAccess\Anodyne-DataAccess.csproj", "{6E6AEA6A-502C-419F-AADA-35AD702473B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Common", "Main\Anodyne-Common\Anodyne-Common.csproj", "{2D6AC91A-29E5-4700-8E16-58D87AB98563}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Common-Specs", "Specs\Anodyne-Common-Specs\Anodyne-Common-Specs.csproj", "{799BD16B-9695-48DB-99D8-059FDB742F75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Specs-Shared", "Specs\Anodyne-Specs-Shared\Anodyne-Specs-Shared.csproj", "{E70CF538-55C5-4E75-BE80-FCCDF6DB3631}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Wiring-Specs", "Specs\Anodyne-Wiring-Specs\Anodyne-Wiring-Specs.csproj", "{6EEB637B-2B57-4F0F-BDC4-C816CA71834E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{C22E92C3-E69E-423F-A3B9-256486FF9593}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogNote-Host", "Sample\BlogNote-Host\BlogNote-Host.csproj", "{5A2CB7AB-5DB2-40A6-8CCC-A9781B455AEA}"
 EndProject
@@ -261,9 +261,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{321BB928-1A81-40BF-8BA9-644F95B8CD5A} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}
 		{6E6AEA6A-502C-419F-AADA-35AD702473B7} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}
 		{2D6AC91A-29E5-4700-8E16-58D87AB98563} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}
-		{321BB928-1A81-40BF-8BA9-644F95B8CD5A} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}
 		{B3E5199B-F192-497A-A3D0-80FCFA77BDD8} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}
 		{A7E60C58-D519-471E-B1FF-5CB47128C1CD} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}
 		{65B03BF7-9481-4ED6-A469-5F75EDE6B04A} = {A9DF8028-8DEF-4977-B58E-55D9A41FE2AC}

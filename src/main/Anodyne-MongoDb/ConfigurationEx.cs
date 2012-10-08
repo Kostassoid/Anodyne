@@ -13,7 +13,10 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using System.Linq;
+    using Common.Reflection;
     using DataAccess;
+    using Domain.Base;
     using Node.Configuration;
     using Node.DataAccess;
     using System;
@@ -22,12 +25,22 @@ namespace Kostassoid.Anodyne.MongoDb
     {
         public static void UseMongoDataAccess(this IConfiguration configuration, string databaseServer, string databaseName)
         {
-            var cfg = (configuration as INodeInstance);
+            var cfg = (INodeInstance)configuration;
 
             cfg.Container.For<IDataAccessProvider>()
                 .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container)));
 
             UnitOfWork.SetFactory(cfg.Container.Get<IDataAccessProvider>() as IDataSessionFactory);
+
+            RegisterClassMaps(cfg.SystemNamespace);
+        }
+
+        private static void RegisterClassMaps(string systemNamespace)
+        {
+            var assemblies = From.Assemblies(a => a.FullName.StartsWith(systemNamespace)).ToList();
+
+            MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
+            MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
         }
 
         public static void UseMongoDataAccess(this IConfiguration configuration, Tuple<string, string> databaseServerAndName)

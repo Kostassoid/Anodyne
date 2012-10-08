@@ -15,5 +15,6 @@ namespace Kostassoid.Anodyne.Domain.Base
 {
     public interface IEntity
     {
+        object IdObject { get; }
     }
 }

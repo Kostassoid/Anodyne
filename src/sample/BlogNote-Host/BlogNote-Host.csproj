@@ -83,13 +83,13 @@
     <Compile Include="Const.cs" />
     <Compile Include="Domain\UrlContent.cs" />
     <Compile Include="Domain\TextContent.cs" />
-    <Compile Include="Domain\PostUpdated.cs" />
+    <Compile Include="Domain\Event\PostUpdated.cs" />
     <Compile Include="Domain\BasePostContent.cs" />
-    <Compile Include="Domain\PostCreated.cs" />
+    <Compile Include="Domain\Event\PostCreated.cs" />
     <Compile Include="Domain\Post.cs" />
-    <Compile Include="Domain\UserPostsUpdated.cs" />
+    <Compile Include="Domain\Event\UserPostsUpdated.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="Domain\UserCreated.cs" />
+    <Compile Include="Domain\Event\UserCreated.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\UserService.cs" />

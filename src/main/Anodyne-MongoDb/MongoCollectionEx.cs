@@ -17,7 +17,6 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Driver.Builders;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
 
     public static class MongoCollectionEx
@@ -25,24 +24,6 @@ namespace Kostassoid.Anodyne.MongoDb
         //TODO: rethink probably
         public static void EnsureIndex<T, U>(this MongoCollection<T> collection, Expression<Func<T, U>> index, bool isUnique, bool ascending, bool isSparse, string indexName = null)
         {
-/*
-            var exp = index.Body as NewExpression;
-            var keys = new HashSet<string>();
-            if (exp != null)
-            {
-                foreach (var x in exp.Arguments.OfType<MemberExpression>())
-                {
-                    keys.Add(GetPropertyAlias(x));
-                }
-            }
-            else if (index.Body is MemberExpression)
-            {
-                var me = index.Body as MemberExpression;
-                keys.Add(GetPropertyAlias(me));
-            }
-
-            var keysCombined = String.Join(",", keys);
-*/
             var keysCombined = string.Join(",", ResolveIndexKeysFrom(index));
             var indexKey = ascending
                                ? IndexKeys.Ascending(keysCombined)
@@ -67,24 +48,6 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             collection.EnsureIndex(index, isUnique, ascending, true, indexName);
         }
-
-/*
-        //TODO: heavy test this
-        public static string GetPropertyAlias(MemberExpression mex)
-        {
-            var retval = "";
-            var parentEx = mex.Expression as MemberExpression;
-            if (parentEx != null)
-            {
-                //we need to recurse because we're not at the root yet.
-                retval += GetPropertyAlias(parentEx) + ".";
-            }
-            //retval += MongoConfiguration.GetPropertyAlias(mex.Expression.Type, mex.Member.Name);
-            retval += mex.Member.Name;
-            return retval;
-        }
-*/
-
 
         // code adjusted to prevent horizontal overflow
         static string GetFullPropertyName<T, TProperty>

@@ -48,6 +48,7 @@
     <Compile Include="Base\IAggregateRoot.cs" />
     <Compile Include="Base\IEntity.cs" />
     <Compile Include="Base\IValueObject.cs" />
+    <Compile Include="Base\ValueObject.cs" />
     <Compile Include="Events\AggregateEvent.cs" />
     <Compile Include="Events\EventBusEx.cs" />
     <Compile Include="Events\IAggregateEvent.cs" />

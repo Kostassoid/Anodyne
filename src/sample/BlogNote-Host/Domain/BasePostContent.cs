@@ -16,7 +16,7 @@ namespace Kostassoid.BlogNote.Host.Domain
     using Anodyne.Common.CodeContracts;
     using Anodyne.Domain.Base;
 
-    public abstract class BasePostContent : IValueObject
+    public abstract class BasePostContent : ValueObject
     {
         public string Title { get; protected set; }
         public string[] Tags { get; protected set; }
