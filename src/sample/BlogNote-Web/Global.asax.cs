@@ -8,7 +8,7 @@ namespace Kostassoid.BlogNote.Web
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
     using Castle.Windsor.Installer;
-    using Common;
+    using Code;
     using Contracts;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 

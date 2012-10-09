@@ -1,4 +1,4 @@
-namespace Kostassoid.BlogNote.Web.Common
+namespace Kostassoid.BlogNote.Web.Code
 {
     using System;
     using System.Web;

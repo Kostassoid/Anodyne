@@ -74,6 +74,9 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 Assert.That(root1.Fired2, Is.EqualTo(2));
                 Assert.That(root2.Fired1, Is.EqualTo(0));
                 Assert.That(root2.Fired2, Is.EqualTo(1));
+
+                Assert.That(root1.Version, Is.EqualTo(3));
+                Assert.That(root2.Version, Is.EqualTo(1));
             }
         }
 

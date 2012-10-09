@@ -15,7 +15,6 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Anodyne.Specs.Shared;
@@ -92,7 +91,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_save_root_and_update_version()
             {
                 Guid rootId;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     rootId = TestRoot.Create().Id;
                 }
@@ -117,7 +116,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             {
                 TestRoot root1;
                 TestRoot root2;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     root1 = TestRoot.Create();
                     root2 = TestRoot.Create();
@@ -155,7 +154,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_update_root_version()
             {
                 Guid rootId;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     rootId = TestRoot.Create().Id;
                 }
@@ -182,7 +181,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_update_root_version()
             {
                 TestRoot originalRoot;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     originalRoot = TestRoot.Create();
                     originalRoot.Update();
@@ -217,7 +216,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_throw_stale_data_exception()
             {
                 TestRoot root;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     root = TestRoot.Create();
                     root.Update();
@@ -229,7 +228,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     anotherRoot.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     root.Update();
                 }
@@ -244,7 +243,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_overwrite_conflicting_roots()
             {
                 TestRoot root;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     root = TestRoot.Create();
                     root.Update();
@@ -257,7 +256,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     anotherRoot.Update(); // should be version 4 at this point
                 }
 
-                using (var uow = new UnitOfWork(StaleDataPolicy.Ignore))
+                using (new UnitOfWork(StaleDataPolicy.Ignore))
                 {
                     root.Update();
                 }
@@ -279,7 +278,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_skip_conflicting_roots()
             {
                 TestRoot root;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     root = TestRoot.Create();
                     root.Update();
@@ -292,7 +291,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     anotherRoot.Update(); // should be version 4 at this point
                 }
 
-                using (var uow = new UnitOfWork(StaleDataPolicy.SilentlySkip))
+                using (new UnitOfWork(StaleDataPolicy.SilentlySkip))
                 {
                     root.Update();
                 }
@@ -314,7 +313,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_throw_concurrency_exception()
             {
                 Guid rootId;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     rootId = TestRoot.Create().Id;
                 }
@@ -337,12 +336,12 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_update_root_version_and_correctly_dispose_unit_of_work()
             {
                 Guid rootId;
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     using (var nestedUow = new UnitOfWork())
                     {
@@ -351,7 +350,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     }
                 }
 
-                using (var uow = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     using (var nestedUow = new UnitOfWork())
                     {
@@ -388,9 +387,9 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 {
                     var task = new Task(() =>
                     {
-                        using (var unitOfWork = new UnitOfWork())
+                        using (new UnitOfWork())
                         {
-                            var root = TestRoot.Create();
+                            TestRoot.Create();
                         }
                     });
 
@@ -420,7 +419,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 Guid id;
 
-                using (var unitOfWork = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     id = TestRoot.Create().Id;
                 }
@@ -458,7 +457,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
                 Guid id;
 
-                using (var unitOfWork = new UnitOfWork())
+                using (new UnitOfWork())
                 {
                     id = TestRoot.Create().Id;
                 }

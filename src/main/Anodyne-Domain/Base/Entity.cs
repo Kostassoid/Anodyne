@@ -19,7 +19,10 @@ namespace Kostassoid.Anodyne.Domain.Base
     public abstract class Entity : IEntity
     {
         //TODO: bad
-        object IEntity.IdObject { get { return null; } }
+        object IEntity.IdObject
+        {
+            get { throw new NotSupportedException("Not supported for Entity-derived classes. Use Entity<> instead."); }
+        }
 
         public override bool Equals(object obj)
         {

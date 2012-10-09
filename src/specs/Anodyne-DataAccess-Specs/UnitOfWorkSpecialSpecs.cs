@@ -91,7 +91,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_not_throw_and_events_order_should_be_correct()
             {
                 Guid rootId;
-                using (var uow = new UnitOfWork(StaleDataPolicy.Ignore))
+                using (new UnitOfWork(StaleDataPolicy.Ignore))
                 {
                     rootId = TestRoot.Create().Id;
                 }
@@ -115,7 +115,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             public void should_not_throw_and_events_order_should_be_correct()
             {
                 Guid rootId;
-                using (var uow = new UnitOfWork(StaleDataPolicy.Strict))
+                using (new UnitOfWork(StaleDataPolicy.Strict))
                 {
                     rootId = TestRoot.Create().Id;
                 }
