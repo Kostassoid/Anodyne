@@ -52,8 +52,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         private static string DetectSystemNamespace()
         {
-            var fullName = Assembly.GetEntryAssembly().FullName;
-            return Assembly.GetEntryAssembly().FullName.Substring(0, fullName.IndexOfAny(new[] { '.', '-', '_' }));
+            var assembly = Assembly.GetEntryAssembly(); // could be null during tests run
+            return assembly != null ? assembly.FullName.Substring(0, assembly.FullName.IndexOfAny(new[] { '.', '-', '_' })) : "";
         }
 
         bool IConfigurationBuilder.IsValid

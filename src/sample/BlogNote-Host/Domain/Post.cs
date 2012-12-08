@@ -49,7 +49,7 @@ namespace Kostassoid.BlogNote.Host.Domain
         {
             Id = @event.Target.Id;
 
-            Content = @event.Data.Content;
+            Content = @event.Content;
 
             Created = SystemTime.Now;
         }
@@ -67,7 +67,7 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         protected void OnUpdated(PostUpdated @event)
         {
-            Content = @event.Data.Content;
+            Content = @event.Content;
 
             Updated = SystemTime.Now;
         }

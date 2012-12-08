@@ -30,6 +30,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         void RunIn(RuntimeMode runtimeMode);
 
+        void DefineSystemNamespaceAs(string systemNamespace);
+
         void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
 
         void ConfigureUsing<TConfiguration>(ConfigurationPredicate when = null) where TConfiguration : IConfigurationAction;

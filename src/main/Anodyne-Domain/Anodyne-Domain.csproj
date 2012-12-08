@@ -52,11 +52,8 @@
     <Compile Include="Events\AggregateEvent.cs" />
     <Compile Include="Events\EventBusEx.cs" />
     <Compile Include="Events\IAggregateEvent.cs" />
-    <Compile Include="Events\EmptyEventPayload.cs" />
-    <Compile Include="Events\EventPayload.cs" />
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\IMutationEvent.cs" />
-    <Compile Include="Events\PersistentDomainEvent.cs" />
     <Compile Include="IDomainCommand.cs" />
     <Compile Include="IDomainOperation.cs" />
     <Compile Include="IDomainQuery.cs" />

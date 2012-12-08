@@ -52,9 +52,8 @@ namespace Kostassoid.BlogNote.Host.Domain
         {
             Id = @event.Target.Id;
 
-            var data = @event.Data;
-            Name = data.Name;
-            Email = data.Email;
+            Name = @event.Name;
+            Email = @event.Email;
 
             Registered = SystemTime.Now;
         }
@@ -72,7 +71,7 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         protected void OnPostsUpdated(UserPostsUpdated @event)
         {
-            Posts = @event.Data.Posts;
+            Posts = @event.Posts;
         }
 
         #endregion

@@ -67,18 +67,18 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             }
         }
 
-        public class TestRootCreated : AggregateEvent<TestRoot, EmptyEventPayload>
+        public class TestRootCreated : AggregateEvent<TestRoot>
         {
             public TestRootCreated(TestRoot aggregate)
-                : base(aggregate, new EmptyEventPayload())
+                : base(aggregate)
             {
             }
         }
 
-        public class TestRootUpdated : AggregateEvent<TestRoot, EmptyEventPayload>
+        public class TestRootUpdated : AggregateEvent<TestRoot>
         {
             public TestRootUpdated(TestRoot aggregate)
-                : base(aggregate, new EmptyEventPayload())
+                : base(aggregate)
             {
             }
         }

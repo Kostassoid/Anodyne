@@ -16,12 +16,21 @@ namespace Kostassoid.Anodyne.Domain.Events
     using System;
     using Common;
     using Base;
+    using Common.Tools;
 
     [Serializable]
-    public abstract class AggregateEvent<TRoot, TData> : PersistentDomainEvent<TData>, IAggregateEvent where TRoot : IAggregateRoot where TData : EventPayload
+    public abstract class AggregateEvent<TRoot> : AggregateRoot<Guid>, IAggregateEvent where TRoot : IAggregateRoot
     {
         private readonly TRoot _aggregate;
         public object AggregateId { get; protected set; }
+
+        public DateTime Happened { get; protected set; }
+
+        // we don't want version-tracking events
+        public override int Version
+        {
+            get { return 0; }
+        }
 
         // should not be stored!
         public TRoot Target { get { return _aggregate; } }
@@ -31,16 +40,28 @@ namespace Kostassoid.Anodyne.Domain.Events
 
         public int AggregateVersion { get; protected set; }
 
-        protected AggregateEvent(TRoot aggregate, DateTime happened, TData data) : base(happened, data)
+        private bool _isReplaying;
+        public bool IsReplaying { get { return _isReplaying; } }
+
+        protected AggregateEvent(TRoot aggregate, DateTime happened)
         {
+            Id = SeqGuid.NewGuid();
+
             _aggregate = aggregate;
+            Happened = happened;
+
             AggregateId = aggregate.IdObject;
             AggregateVersion = aggregate.NewVersion();
         }
 
-        protected AggregateEvent(TRoot aggregate, TData data)
-            : this(aggregate, SystemTime.Now, data)
+        protected AggregateEvent(TRoot aggregate)
+            : this(aggregate, SystemTime.Now)
         {
+        }
+
+        public void MarkAsReplaying()
+        {
+            _isReplaying = true;
         }
 
     }
