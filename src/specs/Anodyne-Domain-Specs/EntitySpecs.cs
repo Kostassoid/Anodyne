@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 {
     using System;
     using Base;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -65,7 +66,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             {
                 var entity = new SimpleEntity();
 
-                Assert.That(() => ((IEntity)entity).IdObject, Throws.InstanceOf<NotSupportedException>());
+                entity.As<IEntity>().Invoking(e => { var x = e.IdObject; }).ShouldThrow<NotSupportedException>();
             }
         }
 
@@ -79,7 +80,9 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var entity1 = new SimpleEntity();
                 var entity2 = new SimpleEntity();
 
-                Assert.That(() => entity1.Equals(entity2), Throws.InstanceOf<NotSupportedException>());
+                // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+                entity1.Invoking(e => e.Equals(entity2)).ShouldThrow<NotSupportedException>();
+                // ReSharper restore ReturnValueOfPureMethodIsNotUsed
             }
         }
 
@@ -92,7 +95,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             {
                 var entity = new SubEntity1(666, 1, 2);
 
-                Assert.That(((IEntity)entity).IdObject, Is.EqualTo(666));
+                entity.As<IEntity>().IdObject.Should().Be(666);
             }
         }
 
@@ -106,8 +109,8 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var entity1 = new SubEntity1(666, 1, 2);
                 var entity2 = new SubEntity1(666, 10, 20);
 
-                Assert.That(entity1, Is.EqualTo(entity2));
-                Assert.That(entity1.GetHashCode(), Is.EqualTo(entity2.GetHashCode()));
+                entity1.Should().Be(entity2);
+                entity1.GetHashCode().Should().Be(entity2.GetHashCode());
             }
         }
 
@@ -115,22 +118,26 @@ namespace Kostassoid.Anodyne.Domain.Specs
         [Category("Unit")]
         public class when_comparing_entities_with_same_ids_but_different_types
         {
+            SubEntity1 entity1;
+            SubEntity2 entity2;
+
+            [SetUp]
+            public void Given()
+            {
+                entity1 = new SubEntity1(666, 1, 2);
+                entity2 = new SubEntity2(666, 1, 2);
+            }
+
             [Test]
             public void should_not_be_equal()
             {
-                var entity1 = new SubEntity1(666, 1, 2);
-                var entity2 = new SubEntity2(666, 1, 2);
-
-                Assert.That(entity1, Is.Not.EqualTo(entity2));
+                entity1.Should().NotBe(entity2);
             }
 
             [Test]
             public void hash_codes_should_still_be_equal()
             {
-                var entity1 = new SubEntity1(666, 1, 2);
-                var entity2 = new SubEntity2(666, 1, 2);
-
-                Assert.That(entity1.GetHashCode(), Is.EqualTo(entity2.GetHashCode()));
+                entity1.GetHashCode().Should().Be(entity2.GetHashCode());
             }
         }
 
@@ -144,12 +151,10 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var entity1 = new SubEntity1(666, 1, 2);
                 var entity2 = new SubEntity1(333, 1, 2);
 
-                Assert.That(entity1, Is.Not.EqualTo(entity2));
-                Assert.That(entity1.GetHashCode(), Is.Not.EqualTo(entity2.GetHashCode()));
+                entity1.Should().NotBe(entity2);
+                entity1.GetHashCode().Should().NotBe(entity2.GetHashCode());
             }
         }
-
-
     }
     // ReSharper restore InconsistentNaming
 

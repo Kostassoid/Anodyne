@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Wiring.Specs
 {
     using System.Threading;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -59,11 +60,11 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.SubscribeTo<DerivedTestEvent>().WithAsync(handler);
                 EventBus.Publish(new DerivedTestEvent());
 
-                Assert.That(handler.Fired2, Is.EqualTo(0));
+                handler.Fired2.Should().Be(0);
 
                 Thread.Sleep(30);
 
-                Assert.That(handler.Fired2, Is.EqualTo(1));
+                handler.Fired2.Should().Be(1);
             }
         }
 

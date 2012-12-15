@@ -19,6 +19,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
     using Common;
     using Common.Reflection;
     using FakeItEasy;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -62,7 +63,6 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.Publish(new TestEvent());
 
                 A.CallTo(() => handler.Handle(A<TestEvent>.Ignored)).MustHaveHappened();
-
             }
         }
 
@@ -187,7 +187,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.SubscribeTo<TestEvent>().With(action);
                 EventBus.Publish(new TestEvent());
 
-                Assert.That(handled, Is.True);
+                handled.Should().BeTrue();
             }
         }
 
@@ -267,8 +267,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.Publish(new TestEvent());
                 EventBus.Publish(new DerivedTestEvent());
 
-                Assert.That(handler.Fired1, Is.EqualTo(1));
-                Assert.That(handler.Fired2, Is.EqualTo(1));
+                handler.Fired1.Should().Be(1);
+                handler.Fired2.Should().Be(1);
             }
         }
 
@@ -291,8 +291,8 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 EventBus.Publish(new TestEvent());
                 EventBus.Publish(new DerivedTestEvent());
 
-                Assert.That(handler.Fired1, Is.EqualTo(2));
-                Assert.That(handler.Fired2, Is.EqualTo(1));
+                handler.Fired1.Should().Be(2);
+                handler.Fired2.Should().Be(1);
             }
         }
 
@@ -319,7 +319,9 @@ namespace Kostassoid.Anodyne.Wiring.Specs
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                var i = 1000000;
+                const int eventsCount = 1000000;
+
+                var i = eventsCount;
                 while (i --> 0)
                 {
                     EventBus.Publish(new TestEvent());
@@ -328,12 +330,12 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
                 stopwatch.Stop();
 
-                Console.WriteLine("Elapsed: {0}", stopwatch.ElapsedMilliseconds);
+                var speed = eventsCount * 2 / stopwatch.Elapsed.TotalSeconds;
 
-                Assert.That(handler.Fired1, Is.EqualTo(1000000));
-                Assert.That(handler.Fired2, Is.EqualTo(1000000));
+                handler.Fired1.Should().Be(eventsCount);
+                handler.Fired2.Should().Be(eventsCount);
 
-                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1000)); //impossible (yet) mark by design, not an actual test
+                speed.Should().BeGreaterOrEqualTo(1000000); //impossible (yet) mark by design, not an actual test
             }
         }
 
@@ -356,7 +358,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
                 EventBus.Publish(new TestEvent());
 
-                Assert.That(builder.ToString(), Is.EqualTo("bca"));
+                builder.ToString().Should().Be("bca");
             }
         }
 

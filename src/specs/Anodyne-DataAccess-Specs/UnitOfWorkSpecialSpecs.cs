@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
     using Common.Tools;
     using Domain.Base;
     using Domain.Events;
-
+    using FluentAssertions;
     using NUnit.Framework;
     using Policy;
 
@@ -85,7 +85,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_calling_nested_apply_with_ignored_policy : UnitOfWorkScenario
+        public class when_calling_nested_apply_with_ignore_policy : UnitOfWorkScenario
         {
             [Test]
             public void should_not_throw_and_events_order_should_be_correct()
@@ -100,9 +100,9 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
 
-                    Assert.That(root.IsSome, Is.True);
-                    Assert.That(root.Value.Id, Is.EqualTo(rootId));
-                    Assert.That(root.Value.Version, Is.EqualTo(2));
+                    root.IsSome.Should().BeTrue();
+                    root.Value.Id.Should().Be(rootId);
+                    root.Value.Version.Should().Be(2);
                 }
             }
         }
@@ -124,9 +124,9 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
 
-                    Assert.That(root.IsSome, Is.True);
-                    Assert.That(root.Value.Id, Is.EqualTo(rootId));
-                    Assert.That(root.Value.Version, Is.EqualTo(2));
+                    root.IsSome.Should().BeTrue();
+                    root.Value.Id.Should().Be(rootId);
+                    root.Value.Version.Should().Be(2);
                 }
             }
         }

@@ -16,6 +16,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
     using System;
     using Base;
     using Events;
+    using FluentAssertions;
     using NUnit.Framework;
     using Wiring;
 
@@ -70,13 +71,13 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 EventBus.Publish(new Change2Event(root1));
                 EventBus.Publish(new Change2Event(root1));
 
-                Assert.That(root1.Fired1, Is.EqualTo(1));
-                Assert.That(root1.Fired2, Is.EqualTo(2));
-                Assert.That(root2.Fired1, Is.EqualTo(0));
-                Assert.That(root2.Fired2, Is.EqualTo(1));
+                root1.Fired1.Should().Be(1);
+                root1.Fired2.Should().Be(2);
+                root2.Fired1.Should().Be(0);
+                root2.Fired2.Should().Be(1);
 
-                Assert.That(root1.Version, Is.EqualTo(3));
-                Assert.That(root2.Version, Is.EqualTo(1));
+                root1.Version.Should().Be(3);
+                root2.Version.Should().Be(1);
             }
         }
 
