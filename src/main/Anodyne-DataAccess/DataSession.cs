@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.DataAccess
     using Domain.Base;
     using Domain.Events;
 
-    using Kostassoid.Anodyne.Domain;
+    using Domain;
 
     using Operations;
     using System;

@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.Specs.Shared
     {
         public static void UseInMemoryDataAccess(this IConfiguration configuration)
         {
-            var cfg = (configuration as INodeInstance);
+            var cfg = (INodeInstance)configuration;
 
             cfg.Container.For<IDataSessionFactory>()
                 .Use(() => new InMemoryDataSessionFactory());

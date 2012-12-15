@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Common.Specs
 {
     using System;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -29,8 +30,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var option = Option<string>.None;
 
-                Assert.That(option.IsNone, Is.True);
-                Assert.That(option.IsSome, Is.False);
+                option.IsNone.Should().BeTrue();
+                option.IsSome.Should().BeFalse();
             }
         }
 
@@ -43,8 +44,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var option = Option<int>.None;
 
-                Assert.That(option.IsNone, Is.True);
-                Assert.That(option.IsSome, Is.False);
+                option.IsNone.Should().BeTrue();
+                option.IsSome.Should().BeFalse();
             }
         }
 
@@ -57,9 +58,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var option = Option<string>.Some("zzz");
 
-                Assert.That(option.IsNone, Is.False);
-                Assert.That(option.IsSome, Is.True);
-                Assert.That(option.Value, Is.EqualTo("zzz"));
+                option.IsNone.Should().BeFalse();
+                option.IsSome.Should().BeTrue();
+                option.Value.Should().Be("zzz");
             }
         }
 
@@ -72,9 +73,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var option = Option<int>.Some(666);
 
-                Assert.That(option.IsNone, Is.False);
-                Assert.That(option.IsSome, Is.True);
-                Assert.That(option.Value, Is.EqualTo(666));
+                option.IsNone.Should().BeFalse();
+                option.IsSome.Should().BeTrue();
+                option.Value.Should().Be(666);
             }
         }
 
@@ -86,7 +87,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             public void should_throw()
             {
                 var option = Option<string>.None;
-                Assert.That(() => { var x = option.Value; }, Throws.TypeOf<NotSupportedException>());
+
+                option.Invoking(o => { var x = o.Value; }).ShouldThrow<NotSupportedException>();
             }
         }
 
@@ -101,7 +103,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 var option = nullObject.AsOption();
 
-                Assert.That(option is None<string>, Is.True);
+                option.Should().BeOfType<None<string>>();
             }
         }
 
@@ -112,11 +114,11 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void it_should_be_some()
             {
-                int defaultObject = default(int);
+                const int defaultObject = default(int);
 
                 var option = defaultObject.AsOption();
 
-                Assert.That(option is None<int>, Is.False);
+                option.Should().BeOfType<Some<int>>();
             }
         }
 
@@ -127,12 +129,12 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void it_should_be_some()
             {
-                var someObject = "zzz";
+                const string someObject = "zzz";
 
                 var option = someObject.AsOption();
 
-                Assert.That(option is Some<string>, Is.True);
-                Assert.That(option.Value, Is.EqualTo(someObject));
+                option.Should().BeOfType<Some<string>>();
+                option.Value.Should().Be("zzz");
             }
         }
 
@@ -143,12 +145,12 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void it_should_be_some()
             {
-                var someObject = "zzz";
+                const string someObject = "zzz";
 
                 Option<string> option = someObject;
 
-                Assert.That(option is Some<string>, Is.True);
-                Assert.That(option.Value, Is.EqualTo(someObject));
+                option.Should().BeOfType<Some<string>>();
+                option.Value.Should().Be("zzz");
             }
         }
 
@@ -163,7 +165,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 Option<string> option = nullObject;
 
-                Assert.That(option is None<string>, Is.True);
+                option.Should().BeOfType<None<string>>();
             }
         }
 
@@ -174,13 +176,13 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_assign_the_value()
             {
-                var someObject = "zzz";
+                const string someObject = "zzz";
 
                 Option<string> option = someObject;
 
                 var anotherObject = (string)option;
 
-                Assert.That(anotherObject, Is.EqualTo(someObject));
+                anotherObject.Should().Be(someObject);
             }
         }
 
@@ -195,7 +197,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 Option<string> option = someObject;
 
-                Assert.That(() => { var anotherObject = (string)option; }, Throws.TypeOf<NotSupportedException>());
+                option.Invoking(o => { var x = (string)o; }).ShouldThrow<NotSupportedException>();
             }
         }
 
@@ -208,13 +210,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var someObject = "zzz".AsOption();
 
-                Assert.That(() => { var anotherObject = someObject.AsOption(); }, Throws.TypeOf<InvalidOperationException>());
+                someObject.Invoking(o => { var x = o.AsOption(); }).ShouldThrow<InvalidOperationException>();
             }
         }
-
-
-
     }
     // ReSharper restore InconsistentNaming
-
 }

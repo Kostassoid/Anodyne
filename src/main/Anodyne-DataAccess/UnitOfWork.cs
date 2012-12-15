@@ -30,15 +30,14 @@ namespace Kostassoid.Anodyne.DataAccess
 
     public class UnitOfWork : IUnitOfWorkEx, IDisposable
     {
+        private const string HeadContextKey = "head-unit-of-work";
+
         private static IDataSessionFactory _dataSessionFactory;
         private static DataAccessPolicy _policy = new DataAccessPolicy();
 
-        private static bool _eventHandlersAreSet = false;
+        private static bool _eventHandlersAreSet;
 
-        private const string RootContextKey = "unit-of-work";
-        private const string HeadContextKey = "head-unit-of-work";
-
-        private readonly string _contextKey = RootContextKey;
+        private readonly string _contextKey = HeadContextKey;
         private readonly UnitOfWork _parent;
 
         public IDataSession DataSession { get; protected set; }
@@ -48,7 +47,7 @@ namespace Kostassoid.Anodyne.DataAccess
         public static Option<UnitOfWork> Current
         {
             get { return Context.FindAs<UnitOfWork>(HeadContextKey); }
-            protected set { Context.Set(HeadContextKey, value.IsSome ? value.Value : null); }
+            protected set { Context.Set(HeadContextKey, value.ValueOrDefault); }
         }
 
         public bool IsRoot
@@ -75,12 +74,11 @@ namespace Kostassoid.Anodyne.DataAccess
 
         public UnitOfWork(StaleDataPolicy? staleDataPolicy = null)
         {
-            EnsureAggregateEventHandlersAreSet();
+            lock (HeadContextKey) EnsureAggregateEventHandlersAreSet();
 
-            var parentUnitOfWork = Context.FindAs<UnitOfWork>(_contextKey);
-            if (parentUnitOfWork.IsSome)
+            if (Current.IsSome)
             {
-                _parent = parentUnitOfWork.Value;
+                _parent = Current.Value;
                 DataSession = _parent.DataSession;
 
                 _contextKey = String.Format("{0}-{1}", _contextKey, Guid.NewGuid().ToString("N"));
@@ -119,17 +117,6 @@ namespace Kostassoid.Anodyne.DataAccess
                         ((UnitOfWork)Current).DataSession.Handle(e);
                 }, Priority.Exact(1000));
         }
-
-/*
-        void IUnitOfWorkEx.Handle(IAggregateEvent ev)
-        {
-            if (_policy.ReadOnly)
-                throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
-
-            if (Current.IsSome && !Current.Value.IsFinished)
-                ((UnitOfWork)Current).DataSession.Handle(ev);
-        }
-*/
 
         protected void AssertIfFinished()
         {
@@ -175,14 +162,14 @@ namespace Kostassoid.Anodyne.DataAccess
             }
             finally
             {
-                Context.Release(_contextKey);
-                Current = _parent;
-
                 if (IsRoot)
                 {
                     EventBus.Publish(new UnitOfWorkDisposingEvent(this));
                     DataSession.Dispose();
                 }
+
+                Context.Release(_contextKey);
+                Current = _parent;
             }
         }
 

@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Common.Specs
 {
     using System;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -42,8 +43,8 @@ namespace Kostassoid.Anodyne.Common.Specs
                 var o1 = new Foo();
                 var o2 = ObjectFactory.Build<Foo>();
 
-                Assert.AreEqual(o1.Field1, o2.Field1);
-                Assert.AreEqual(o1.Field2, o2.Field2);
+                o1.Field1.Should().Be(o2.Field1);
+                o1.Field2.Should().Be(o2.Field2);
             }
         }
 
@@ -63,21 +64,21 @@ namespace Kostassoid.Anodyne.Common.Specs
                 var count = ObjectsCount;
                 while (count-- > 0)
                 {
-                    var newObject = new Foo();
+                    new Foo();
                 }
                 var speedNew = (DateTime.Now - started).TotalMilliseconds;
 
-                var coldStartedFoo = ObjectFactory.Build<Foo>();
+                ObjectFactory.Build<Foo>();
 
                 started = DateTime.Now;
                 count = ObjectsCount;
                 while (count-- > 0)
                 {
-                    var newObject = ObjectFactory.Build<Foo>();
+                    ObjectFactory.Build<Foo>();
                 }
                 var speedFactory = (DateTime.Now - started).TotalMilliseconds;
 
-                Assert.Less(speedFactory, speedNew * HowMuchTimesSlowerIsOk);
+                speedFactory.Should().BeLessThan(speedNew * HowMuchTimesSlowerIsOk);
             }
         }
 

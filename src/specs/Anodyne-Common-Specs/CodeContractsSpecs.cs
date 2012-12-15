@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Common.Specs
     using System;
 
     using CodeContracts;
-
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -33,7 +33,8 @@ namespace Kostassoid.Anodyne.Common.Specs
                 string value = null;
 
                 // ReSharper disable ExpressionIsAlwaysNull
-                Assert.Throws<ArgumentNullException>(() => Requires.NotNull(value, "value"));
+                Action action = () => Requires.NotNull(value, "value");
+                action.ShouldThrow<ArgumentNullException>();
                 // ReSharper restore ExpressionIsAlwaysNull
             }
         }
@@ -45,9 +46,10 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_not_throw()
             {
-                string value = "zzz";
+                var value = String.Empty;
 
-                Assert.DoesNotThrow(() => Requires.NotNull(value, "value"));
+                Action action = () => Requires.NotNull(value, "value");
+                action.ShouldNotThrow<ArgumentNullException>();
             }
         }
 
@@ -61,7 +63,8 @@ namespace Kostassoid.Anodyne.Common.Specs
                 string value = null;
 
                 // ReSharper disable ExpressionIsAlwaysNull
-                Assert.Throws<ArgumentNullException>(() => Requires.NotNullOrEmpty(value, "value"));
+                Action action = () => Requires.NotNullOrEmpty(value, "value");
+                action.ShouldThrow<ArgumentNullException>();
                 // ReSharper restore ExpressionIsAlwaysNull
             }
         }
@@ -73,8 +76,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_throw_argument_exception()
             {
-                string value = String.Empty;
-                Assert.Throws<ArgumentException>(() => Requires.NotNullOrEmpty(value, "value"));
+                var value = String.Empty;
+                Action action = () => Requires.NotNullOrEmpty(value, "value");
+                action.ShouldThrow<ArgumentException>();
             }
         }
 
@@ -85,8 +89,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_not_throw()
             {
-                string value = "zzz";
-                Assert.DoesNotThrow(() => Requires.NotNullOrEmpty(value, "value"));
+                const string value = "zzz";
+                Action action = () => Requires.NotNullOrEmpty(value, "value");
+                action.ShouldNotThrow<ArgumentException>();
             }
         }
 
@@ -97,7 +102,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_throw_internal_exception()
             {
-                Assert.Throws<Assumes.InternalErrorException>(() => Assumes.True(false, "oops"));
+                Action action = () => Assumes.True(false, "oops");
+                action.ShouldThrow<Assumes.InternalErrorException>();
             }
         }
 
@@ -108,7 +114,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_not_throw()
             {
-                Assert.DoesNotThrow(() => Assumes.True(true, "oops"));
+                Action action = () => Assumes.True(true, "oops");
+                action.ShouldNotThrow<Assumes.InternalErrorException>();
             }
         }
 
@@ -119,13 +126,10 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_throw_internal_exception()
             {
-                Assert.Throws<Assumes.InternalErrorException>(() => Assumes.Fail("oops"));
+                Action action = () => Assumes.Fail("oops");
+                action.ShouldThrow<Assumes.InternalErrorException>();
             }
         }
-
-
-
     }
     // ReSharper restore InconsistentNaming
-
 }

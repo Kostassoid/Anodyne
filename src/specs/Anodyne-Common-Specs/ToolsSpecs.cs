@@ -14,12 +14,10 @@
 namespace Kostassoid.Anodyne.Common.Specs
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Collections.Concurrent;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
-
+    using FluentAssertions;
     using Tools;
 
     using NUnit.Framework;
@@ -32,20 +30,12 @@ namespace Kostassoid.Anodyne.Common.Specs
         [Category("Unit")]
         public class when_generating_many_seq_guids
         {
-
             [Test]
-            public void they_should_be_sequental_and_unique()
+            public void they_should_be_unique()
             {
-                var generatedSet = new List<Guid>();
+                var generatedSet = Enumerable.Range(0, 100).Select(_ => SeqGuid.NewGuid()).ToList();
 
-                var i = 100;
-                while (i-- > 0)
-                {
-                    generatedSet.Add(SeqGuid.NewGuid());
-                }
-
-                Assert.That(new HashSet<Guid>(generatedSet).Count, Is.EqualTo(100));
-                Assert.That(generatedSet.OrderBy(g => g), Is.EquivalentTo(generatedSet));
+                generatedSet.Should().OnlyHaveUniqueItems();
             }
         }
 
@@ -60,7 +50,7 @@ namespace Kostassoid.Anodyne.Common.Specs
                 var now = SystemTime.Now;
                 var generatedGuid = SeqGuid.NewGuid();
 
-                Assert.That((SeqGuid.ToDateTime(generatedGuid) - now).TotalMilliseconds, Is.LessThan(20));
+                SeqGuid.ToDateTime(generatedGuid).Should().BeCloseTo(now);
             }
         }
 
@@ -69,21 +59,17 @@ namespace Kostassoid.Anodyne.Common.Specs
         public class when_generating_many_seq_guids_async
         {
             [Test]
-            [Ignore("They're not unique, and .NET Guid is not unique, life's a pain")]
             public void they_should_be_unique()
             {
-                var generatedSet = new List<Guid>();
-                var tasks = new List<Task>();
+                var generatedSet = new ConcurrentBag<Guid>();
+                var tasks = Enumerable.Range(0, 1000)
+                    .Select(_ => Task.Factory.StartNew(() => generatedSet.Add(SeqGuid.NewGuid())))
+                    .ToArray();
 
-                var i = 1000;
-                while (i --> 0)
-                {
-                    tasks.Add(Task.Factory.StartNew(() => generatedSet.Add(SeqGuid.NewGuid())));
-                }
+                Task.WaitAll(tasks);
 
-                Task.WaitAll(tasks.ToArray());
-
-                Assert.That(new HashSet<Guid>(generatedSet).Count, Is.EqualTo(1000));
+                generatedSet.Should().HaveCount(1000);
+                generatedSet.Should().OnlyHaveUniqueItems();
             }
         }
 
@@ -95,24 +81,20 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_return_cached_value()
             {
+                var counter = 0;
                 Func<int> func = () =>
                 {
-                    Thread.Sleep(50);
+                    counter++;
                     return 13;
                 };
 
                 var memoizedFunc = func.AsMemoized();
 
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
+                memoizedFunc().Should().Be(13);
+                memoizedFunc().Should().Be(13);
+                memoizedFunc().Should().Be(13);
 
-                Assert.That(memoizedFunc(), Is.EqualTo(13));
-                Assert.That(memoizedFunc(), Is.EqualTo(13));
-                Assert.That(memoizedFunc(), Is.EqualTo(13));
-
-                stopwatch.Stop();
-
-                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(100));
+                counter.Should().Be(1);
             }
         }
 
@@ -124,27 +106,23 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_return_cached_values()
             {
+                var counter = 0;
                 Func<int, int> func = x =>
                 {
-                    Thread.Sleep(30);
+                    counter++;
                     return x * x;
                 };
 
                 var memoizedFunc = func.AsMemoized();
 
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
+                memoizedFunc(5).Should().Be(25);
+                memoizedFunc(4).Should().Be(16);
+                memoizedFunc(4).Should().Be(16);
+                memoizedFunc(5).Should().Be(25);
+                memoizedFunc(4).Should().Be(16);
+                memoizedFunc(5).Should().Be(25);
 
-                Assert.That(memoizedFunc(5), Is.EqualTo(25));
-                Assert.That(memoizedFunc(4), Is.EqualTo(16));
-                Assert.That(memoizedFunc(4), Is.EqualTo(16));
-                Assert.That(memoizedFunc(5), Is.EqualTo(25));
-                Assert.That(memoizedFunc(4), Is.EqualTo(16));
-                Assert.That(memoizedFunc(5), Is.EqualTo(25));
-
-                stopwatch.Stop();
-
-                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(100));
+                counter.Should().Be(2);
             }
         }
 
@@ -156,27 +134,23 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_return_cached_values()
             {
+                var counter = 0;
                 Func<int, int, int> func = (x, y) =>
                 {
-                    Thread.Sleep(30);
+                    counter++;
                     return x * y;
                 };
 
                 var memoizedFunc = func.AsMemoized();
 
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
+                memoizedFunc(2, 3).Should().Be(6);
+                memoizedFunc(2, 5).Should().Be(10);
+                memoizedFunc(4, 3).Should().Be(12);
+                memoizedFunc(2, 3).Should().Be(6);
+                memoizedFunc(2, 5).Should().Be(10);
+                memoizedFunc(4, 3).Should().Be(12);
 
-                Assert.That(memoizedFunc(2, 3), Is.EqualTo(6));
-                Assert.That(memoizedFunc(2, 5), Is.EqualTo(10));
-                Assert.That(memoizedFunc(4, 3), Is.EqualTo(12));
-                Assert.That(memoizedFunc(2, 3), Is.EqualTo(6));
-                Assert.That(memoizedFunc(2, 5), Is.EqualTo(10));
-                Assert.That(memoizedFunc(4, 3), Is.EqualTo(12));
-
-                stopwatch.Stop();
-
-                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(120));
+                counter.Should().Be(3);
             }
         }
 
@@ -188,31 +162,25 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_return_cached_values()
             {
+                var counter = 0;
                 Func<int, int, int, int> func = (x, y, z) =>
                 {
-                    Thread.Sleep(30);
+                    counter++;
                     return x * y * z;
                 };
 
                 var memoizedFunc = func.AsMemoized();
 
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
+                memoizedFunc(2, 3, 4).Should().Be(24);
+                memoizedFunc(2, 3, 5).Should().Be(30);
+                memoizedFunc(2, 4, 3).Should().Be(24);
+                memoizedFunc(2, 3, 5).Should().Be(30);
+                memoizedFunc(2, 3, 4).Should().Be(24);
+                memoizedFunc(2, 4, 3).Should().Be(24);
 
-                Assert.That(memoizedFunc(2, 3, 4), Is.EqualTo(24));
-                Assert.That(memoizedFunc(2, 3, 5), Is.EqualTo(30));
-                Assert.That(memoizedFunc(2, 4, 3), Is.EqualTo(24));
-                Assert.That(memoizedFunc(2, 3, 5), Is.EqualTo(30));
-                Assert.That(memoizedFunc(2, 3, 4), Is.EqualTo(24));
-                Assert.That(memoizedFunc(2, 4, 3), Is.EqualTo(24));
-
-                stopwatch.Stop();
-
-                Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(120));
+                counter.Should().Be(3);
             }
         }
-
-
     }
     // ReSharper restore InconsistentNaming
 

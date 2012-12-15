@@ -14,14 +14,16 @@
 namespace Kostassoid.Anodyne.DataAccess.Specs
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Anodyne.Specs.Shared;
+    using Common.Extentions;
     using Common.Tools;
     using Domain.Base;
     using Domain.Events;
     using Exceptions;
+    using FluentAssertions;
     using NUnit.Framework;
     using Policy;
 
@@ -53,7 +55,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
 
             protected void OnCreated(TestRootCreated @event)
             {
-
+                Id = @event.Target.Id;
             }
 
             public void Update()
@@ -100,9 +102,9 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
 
-                    Assert.That(root.IsSome, Is.True);
-                    Assert.That(root.Value.Id, Is.EqualTo(rootId));
-                    Assert.That(root.Value.Version, Is.EqualTo(1));
+                    root.IsSome.Should().BeTrue();
+                    root.Value.Id.Should().Be(rootId);
+                    root.Value.Version.Should().Be(1);
                 }
             }
         }
@@ -138,10 +140,10 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     var foundRoot1 = uow.Query<TestRoot>().FindOne(root1.Id);
                     var foundRoot2 = uow.Query<TestRoot>().FindOne(root2.Id);
 
-                    Assert.That(foundRoot1.Value.Id, Is.EqualTo(root1.Id));
-                    Assert.That(foundRoot2.Value.Id, Is.EqualTo(root2.Id));
-                    Assert.That(foundRoot1.Value.Version, Is.EqualTo(3));
-                    Assert.That(foundRoot2.Value.Version, Is.EqualTo(4));
+                    foundRoot1.Value.Id.Should().Be(root1.Id);
+                    foundRoot2.Value.Id.Should().Be(root2.Id);
+                    foundRoot1.Value.Version.Should().Be(3);
+                    foundRoot2.Value.Version.Should().Be(4);
                 }
             }
         }
@@ -168,7 +170,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 using (var uow = new UnitOfWork())
                 {
                     var updatedRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
-                    Assert.That(updatedRoot.Version, Is.EqualTo(2));
+                    updatedRoot.Version.Should().Be(2);
                 }
             }
         }
@@ -187,7 +189,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     originalRoot.Update();
                 }
 
-                Assert.That(originalRoot.Version, Is.EqualTo(2));
+                originalRoot.Version.Should().Be(2);
 
                 using (var uow = new UnitOfWork())
                 {
@@ -195,15 +197,14 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     root.Update();
                     root.Update();
                     root.Update();
-                    Assert.That(root.Version, Is.EqualTo(5));
+                    root.Version.Should().Be(5);
                 }
 
                 using (var uow = new UnitOfWork())
                 {
                     var root = uow.Query<TestRoot>().FindOne(originalRoot.Id).Value;
-                    Assert.That(root.Version, Is.EqualTo(5));
+                    root.Version.Should().Be(5);
                 }
-
             }
         }
 
@@ -264,7 +265,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 using (var uow = new UnitOfWork())
                 {
                     root = uow.Query<TestRoot>().FindOne(root.Id).Value;
-                    Assert.That(root.Version, Is.EqualTo(3));
+                    root.Version.Should().Be(3);
                 }
 
             }
@@ -288,7 +289,8 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 {
                     var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     anotherRoot.Update();
-                    anotherRoot.Update(); // should be version 4 at this point
+                    anotherRoot.Update();
+                    anotherRoot.Version.Should().Be(4);
                 }
 
                 using (new UnitOfWork(StaleDataPolicy.SilentlySkip))
@@ -299,7 +301,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 using (var uow = new UnitOfWork())
                 {
                     root = uow.Query<TestRoot>().FindOne(root.Id).Value;
-                    Assert.That(root.Version, Is.EqualTo(4));
+                    root.Version.Should().Be(4);
                 }
 
             }
@@ -323,7 +325,7 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     var root = uow.Query<TestRoot>().FindOne(rootId).Value;
                     root.Update();
                     var anotherRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
-                    Assert.Throws<ConcurrencyException>(anotherRoot.Update);
+                    anotherRoot.Invoking(r => r.Update()).ShouldThrow<ConcurrencyException>();
                 }
             }
         }
@@ -362,10 +364,10 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                 using (var uow = new UnitOfWork())
                 {
                     var updatedRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
-                    Assert.That(updatedRoot.Version, Is.EqualTo(3));
+                    updatedRoot.Version.Should().Be(3);
                 }
 
-                Assert.That(UnitOfWork.Current.IsNone, Is.True);
+                UnitOfWork.Current.IsNone.Should().BeTrue();
             }
         }
 
@@ -373,35 +375,21 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
         [Category("Unit")]
         public class when_trying_to_save_many_roots_at_the_same_time : UnitOfWorkScenario
         {
-            [Explicit("No need to run every time perhaps.")]
             [Test]
             [MaxTime(1000)]
             public void should_save_all_roots_without_fail()
             {
                 const int testingThreadsCount = 100;
 
-                var tasks = new List<Task>(testingThreadsCount);
+                var tasks = Enumerable.Range(0, testingThreadsCount)
+                    .Select(_ => Task.Factory.StartNew(() => { using (new UnitOfWork()) { TestRoot.Create();} }))
+                    .ToArray();
 
-                var threadsToStart = testingThreadsCount;
-                while (threadsToStart-- > 0)
+                Task.WaitAll(tasks);
+
+                using (var uow = new UnitOfWork())
                 {
-                    var task = new Task(() =>
-                    {
-                        using (new UnitOfWork())
-                        {
-                            TestRoot.Create();
-                        }
-                    });
-
-                    tasks.Add(task);
-                }
-
-                tasks.ForEach(t => t.Start());
-                Task.WaitAll(tasks.ToArray());
-
-                using (var unitOfWork = new UnitOfWork())
-                {
-                    Assert.AreEqual(testingThreadsCount, unitOfWork.Query<TestRoot>().Count());
+                    uow.Query<TestRoot>().Count().Should().Be(testingThreadsCount);
                 }
             }
         }
@@ -410,7 +398,6 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
         [Category("Unit")]
         public class when_trying_to_update_root_from_one_thread_with_ignore_stale_policy : UnitOfWorkScenario
         {
-            [Explicit("No need to run every time perhaps.")]
             [Test]
             [MaxTime(1000)]
             public void should_not_fail()
@@ -424,20 +411,18 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     id = TestRoot.Create().Id;
                 }
 
-                var toStart = testingCount;
-                while (toStart-- > 0)
+                Enumerable.Range(0, testingCount).ForEach(_ =>
                 {
-                    using (var unitOfWork = new UnitOfWork(StaleDataPolicy.Ignore))
+                    using (var uow = new UnitOfWork(StaleDataPolicy.Ignore))
                     {
-                        var root = unitOfWork.Query<TestRoot>().GetOne(id);
-                        root.Update();
+                        uow.Query<TestRoot>().GetOne(id).Update();
                     }
-                }
+                });
 
-                using (var unitOfWork = new UnitOfWork())
+                using (var uow = new UnitOfWork())
                 {
-                    var root = unitOfWork.Query<TestRoot>().GetOne(id);
-                    Assert.That(root.Version, Is.EqualTo(testingCount + 1));
+                    var root = uow.Query<TestRoot>().GetOne(id);
+                    root.Version.Should().Be(testingCount + 1);
                 }
             }
         }
@@ -446,14 +431,11 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
         [Category("Unit")]
         public class when_trying_to_update_root_from_many_threads_with_ignore_stale_policy : UnitOfWorkScenario
         {
-            [Explicit("No need to run every time perhaps.")]
             [Test]
             [MaxTime(1000)]
             public void should_not_fail()
             {
                 const int testingThreadsCount = 100;
-
-                var tasks = new List<Task>(testingThreadsCount);
 
                 Guid id;
 
@@ -462,27 +444,19 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
                     id = TestRoot.Create().Id;
                 }
 
-                var threadsToStart = testingThreadsCount;
-                while (threadsToStart-- > 0)
-                {
-                    var task = new Task(() =>
-                    {
-                        using (var unitOfWork = new UnitOfWork(StaleDataPolicy.Ignore))
+                var tasks = Enumerable.Range(0, testingThreadsCount)
+                    .Select(_ => Task.Factory.StartNew(() =>
                         {
-                            var root = unitOfWork.Query<TestRoot>().GetOne(id);
-                            root.Update();
-                        }
-                    });
+                            using (var uow = new UnitOfWork(StaleDataPolicy.Ignore)) { uow.Query<TestRoot>().GetOne(id).Update(); }
+                        }))
+                    .ToArray();
 
-                    tasks.Add(task);
-                }
-                tasks.ForEach(t => t.Start());
-                Task.WaitAll(tasks.ToArray());
+                Task.WaitAll(tasks);
 
-                using (var unitOfWork = new UnitOfWork())
+                using (var uow = new UnitOfWork())
                 {
-                    var root = unitOfWork.Query<TestRoot>().GetOne(id);
-                    Assert.That(root.Version, Is.LessThanOrEqualTo(testingThreadsCount + 1));
+                    var root = uow.Query<TestRoot>().GetOne(id);
+                    root.Version.Should().BeLessOrEqualTo(testingThreadsCount + 1);
                 }
             }
         }

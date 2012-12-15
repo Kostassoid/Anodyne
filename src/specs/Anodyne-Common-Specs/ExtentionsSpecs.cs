@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.Common.Specs
     using System.Linq;
 
     using Extentions;
-
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -104,27 +104,27 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void cloned_should_have_the_same_values()
             {
-                Assert.That(_cloned.Int, Is.EqualTo(_source.Int));
-                Assert.That(_cloned.String, Is.EqualTo(_source.String));
-                Assert.That(_cloned.Nested, Is.EqualTo(_source.Nested));
-                Assert.That(_cloned.Array, Is.EqualTo(_source.Array));
+                _cloned.Int.Should().Be(_source.Int);
+                _cloned.String.Should().Be(_source.String);
+                _cloned.Nested.Should().Be(_source.Nested);
+                _cloned.Array.Should().Equal(_source.Array);
 
                 var sourceNested = (ISomeNestedTypeAccessor)_source.Nested;
                 var clonedNested = (ISomeNestedTypeAccessor)_cloned.Nested;
-                Assert.That(clonedNested.AnotherString, Is.EqualTo(sourceNested.AnotherString));
-                Assert.That(clonedNested.AnotherNested, Is.EqualTo(sourceNested.AnotherNested));
+                clonedNested.AnotherString.Should().Be(sourceNested.AnotherString);
+                clonedNested.AnotherNested.Should().Be(sourceNested.AnotherNested);
             }
 
             [Test]
             public void cloned_should_not_have_the_same_hash_code()
             {
-                Assert.That(_cloned.GetHashCode(), Is.Not.EqualTo(_source.GetHashCode()));
+                _cloned.GetHashCode().Should().NotBe(_source.GetHashCode());
             }
 
             [Test]
             public void cloned_should_not_be_equal_to_the_source()
             {
-                Assert.That(_cloned.Equals(_source), Is.False);
+                _cloned.Should().NotBe(_source);
             }
         }
 
@@ -137,7 +137,7 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var some = new Something();
 
-                Assert.That(some.AsEnumerable().Count(), Is.EqualTo(1));
+                some.AsEnumerable().Should().HaveCount(1);
             }
         }
 
@@ -150,7 +150,7 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var some = new Something();
 
-                Assert.That(some.AsEnumerable<SomethingElse>().Count(), Is.EqualTo(0));
+                some.AsEnumerable<SomethingElse>().Should().BeEmpty();
             }
         }
 
@@ -163,20 +163,20 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var some = new[] { new Something(), new Something(), new Something() };
 
-                Assert.That(some.AsEnumerable().Count(), Is.EqualTo(1));
+                some.AsEnumerable().Should().HaveCount(1);
             }
         }
 
         [TestFixture]
         [Category("Unit")]
-        public class when_converting_struct_to_enumerable
+        public class when_converting_simple_value_to_enumerable
         {
             [Test]
             public void should_return_one_element()
             {
-                var some = 13;
+                const int some = 13;
 
-                Assert.That(some.AsEnumerable().Count(), Is.EqualTo(1));
+                some.AsEnumerable().Should().HaveCount(1);
             }
         }
 
@@ -193,7 +193,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 some.ForEach(i => result.Add(i * i));
 
-                Assert.That(result, Is.EquivalentTo(new[] { 4, 9, 16, 25 }));
+                result.ShouldBeEquivalentTo(new[] { 4, 9, 16, 25 });
             }
         }
 
@@ -237,7 +237,7 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 var sum = graph.Children.SelectDeep(g => g.Children).Sum(n => n.Value);
 
-                Assert.That(sum, Is.EqualTo(100));
+                sum.Should().Be(100);
             }
         }
 

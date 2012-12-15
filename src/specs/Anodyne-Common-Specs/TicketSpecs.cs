@@ -14,7 +14,8 @@
 namespace Kostassoid.Anodyne.Common.Specs
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -30,14 +31,13 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var ticket = Ticket.Generate(TimeSpan.FromHours(2));
 
-                Assert.IsTrue(ticket.Length > 15);
+                ticket.Length.Should().BeGreaterThan(15);
 
-                Assert.IsFalse(Ticket.HasExpired(ticket));
+                Ticket.HasExpired(ticket).Should().BeFalse();
 
                 SystemTime.TimeController.SetDate(SystemTime.Now.AddMinutes(121));
 
-                Assert.IsTrue(Ticket.HasExpired(ticket));
-
+                Ticket.HasExpired(ticket).Should().BeTrue();
             }
         }
 
@@ -48,17 +48,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void generated_tickets_should_be_unique()
             {
-                const int ticketsCount = 1000;
-                ISet<string> tickets = new HashSet<string>();
+                var tickets = Enumerable.Range(0, 1000).Select(_ => Ticket.Generate(TimeSpan.FromHours(2)));
 
-                var ticketIndex = ticketsCount;
-                while (ticketIndex-- > 0)
-                {
-                    tickets.Add(Ticket.Generate(TimeSpan.FromHours(2)));
-                }
-
-                Assert.AreEqual(ticketsCount, tickets.Count);
-
+                tickets.Should().OnlyHaveUniqueItems();
             }
         }
     }

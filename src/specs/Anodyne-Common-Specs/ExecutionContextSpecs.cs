@@ -13,11 +13,13 @@
 
 namespace Kostassoid.Anodyne.Common.Specs
 {
+    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Anodyne.Specs.Shared.DataGeneration;
     using ExecutionContext;
+    using FluentAssertions;
     using NUnit.Framework;
 
     // ReSharper disable InconsistentNaming
@@ -26,29 +28,29 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_setting_new_value
+        public class when_getting_existing_value_of_object
         {
             [Test]
-            public void it_should_be_stored_and_available()
+            public void should_return_stored_value()
             {
                 Context.Set("test", "zzz");
 
-                Assert.That(Context.Get("test"), Is.EqualTo("zzz"));
-                Assert.That(Context.GetAs<string>("test"), Is.EqualTo("zzz"));
+                Context.Get("test").Should().Be("zzz");
+                Context.GetAs<string>("test").Should().Be("zzz");
             }
         }
 
         [TestFixture]
         [Category("Unit")]
-        public class when_setting_new_value_of_value_type
+        public class when_getting_existing_value_of_value_type
         {
             [Test]
-            public void it_should_be_stored_and_available()
+            public void should_return_stored_value()
             {
                 Context.Set("test", 123);
 
-                Assert.That(Context.Get("test"), Is.EqualTo(123));
-                Assert.That(Context.GetAs<int>("test"), Is.EqualTo(123));
+                Context.Get("test").Should().Be(123);
+                Context.GetAs<int>("test").Should().Be(123);
             }
         }
 
@@ -62,7 +64,7 @@ namespace Kostassoid.Anodyne.Common.Specs
                 Context.Set("test", "zzz");
                 Context.Set("test", 123);
 
-                Assert.That((int)Context.Get("test"), Is.EqualTo(123));
+                Context.Get("test").Should().Be(123);
             }
         }
 
@@ -75,8 +77,11 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 Context.Set("test", "zzz");
 
-                Assert.That(() => Context.Get("testzzz"), Throws.InvalidOperationException);
-                Assert.That(() => Context.GetAs<string>("testzzz"), Throws.InvalidOperationException);
+                Action action = () => Context.Get("testzzz");
+                action.ShouldThrow<InvalidOperationException>();
+
+                action = () => Context.GetAs<string>("testzzz");
+                action.ShouldThrow<InvalidOperationException>();
             }
         }
 
@@ -89,8 +94,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 Context.Set("test", "zzz");
 
-                Assert.That(Context.Find("testzzz").IsNone, Is.True);
-                Assert.That(Context.FindAs<string>("testzzz").IsNone, Is.True);
+                Context.Find("testzzz").IsNone.Should().BeTrue();
+                Context.FindAs<string>("testzzz").IsNone.Should().BeTrue();
             }
         }
 
@@ -101,7 +106,7 @@ namespace Kostassoid.Anodyne.Common.Specs
             [Test]
             public void should_return_none()
             {
-                Assert.That(Context.FindAs<int>("testzzz").IsNone, Is.True);
+                Context.FindAs<int>("testzzz").IsNone.Should().BeTrue();
             }
         }
 
@@ -114,8 +119,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 Context.Set("test", "zzz");
 
-                Assert.That(Context.Find("test").Value, Is.EqualTo("zzz"));
-                Assert.That(Context.FindAs<string>("test").Value, Is.EqualTo("zzz"));
+                Context.Find("test").Value.Should().Be("zzz");
+                Context.FindAs<string>("test").Value.Should().Be("zzz");
             }
         }
 
@@ -128,8 +133,8 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 Context.Set("test", 123);
 
-                Assert.That(Context.Find("test").Value, Is.EqualTo(123));
-                Assert.That(Context.FindAs<int>("test").Value, Is.EqualTo(123));
+                Context.Find("test").Value.Should().Be(123);
+                Context.FindAs<int>("test").Value.Should().Be(123);
             }
         }
 
@@ -142,7 +147,7 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 Context.Set("test", 123);
 
-                Assert.That(Context.FindAs<string>("test").IsNone, Is.True);
+                Context.FindAs<string>("test").IsNone.Should().BeTrue();
             }
         }
 
@@ -151,12 +156,13 @@ namespace Kostassoid.Anodyne.Common.Specs
         public class when_getting_released_value
         {
             [Test]
-            public void should_return_some()
+            public void should_throw()
             {
                 Context.Set("test", "zzz");
                 Context.Release("test");
 
-                Assert.That(() => Context.Get("test"), Throws.InvalidOperationException);
+                Action action = () => Context.Get("test");
+                action.ShouldThrow<InvalidOperationException>();
             }
         }
 
@@ -176,17 +182,14 @@ namespace Kostassoid.Anodyne.Common.Specs
                                 Thread.Sleep(Imagine.Any.Int(0, 20)); // a little bit of chaos
 
                                 var foundValue = (int) Context.Get("test");
-                                Assert.That(foundValue, Is.EqualTo(randomValue));
+
+                                foundValue.Should().Be(randomValue);
                             }))
                     .ToArray();
 
                 Task.WaitAll(tasks);
             }
         }
-
-
-
-
     }
     // ReSharper restore InconsistentNaming
 
