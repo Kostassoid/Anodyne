@@ -1,0 +1,52 @@
+﻿// Copyright 2011-2012 Anodyne.
+//   
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+//  
+//      http://www.apache.org/licenses/LICENSE-2.0 
+//  
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
+
+using System;
+using Kostassoid.Anodyne.Common.Tools;
+using Kostassoid.Anodyne.MongoDb.Specs.Domain.Events;
+
+namespace Kostassoid.Anodyne.MongoDb.Specs.Domain
+{
+    [Serializable]
+    public class DerivedTestRoot : TestRoot
+    {
+        protected DerivedTestRoot()
+        {
+            Id = SeqGuid.NewGuid();
+        }
+
+        public static new DerivedTestRoot Create()
+        {
+            var root = new DerivedTestRoot();
+            Apply(new DerivedTestRootCreated(root));
+            return root;
+        }
+
+        protected void OnCreated(DerivedTestRootCreated @event)
+        {
+            Update();
+        }
+
+        override public void Update()
+        {
+            Apply(new DerivedTestRootUpdated(this));
+        }
+
+        protected void OnUpdated(DerivedTestRootUpdated @event)
+        {
+
+        }
+
+
+    }
+}

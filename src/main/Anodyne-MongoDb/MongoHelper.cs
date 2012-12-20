@@ -26,13 +26,14 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             if (!typeof(TBase).IsInterface)
             {
-                BsonClassMap.RegisterClassMap<TBase>(
-                    cm =>
-                        {
-                            cm.AutoMap();
-                            cm.SetDiscriminatorIsRequired(true);
-                            cm.SetIsRootClass(true);
-                        });
+                if (!BsonClassMap.IsClassMapRegistered(typeof(TBase)))
+                    BsonClassMap.RegisterClassMap<TBase>(
+                        cm =>
+                            {
+                                cm.AutoMap();
+                                cm.SetDiscriminatorIsRequired(true);
+                                cm.SetIsRootClass(true);
+                            });
             }
 
             var types = assemblies.SelectMany(s => s.GetTypes())

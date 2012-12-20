@@ -27,12 +27,28 @@ namespace Kostassoid.Anodyne.MongoDb
     {
         public static MongoCollection<TEntity> GetCollection<TEntity>(this MongoDatabase database) where TEntity : class, IAggregateRoot
         {
-            return database.GetCollection<TEntity>(typeof (TEntity).Name);
+            return database.GetCollection<TEntity>(GetCollectionNameFor(typeof(TEntity)));
         }
 
         public static MongoCollection GetCollection(this MongoDatabase database, Type type)
         {
-            return database.GetCollection(type, type.Name);
+            return database.GetCollection(type, GetCollectionNameFor(type));
+        }
+
+        private static string GetCollectionNameFor(Type type)
+        {
+            var collectionType = type;
+
+            //TODO: should be using reflection
+            while (collectionType != null && !collectionType.BaseType.Name.Contains("AggregateRoot"))
+            {
+                collectionType = collectionType.BaseType;
+            }
+
+            if (collectionType == null)
+                throw new ArgumentException(string.Format("Type {0} is not derived from AggregateRoot", type.Name));
+
+            return collectionType.Name;
         }
 
         public static void MapAllClassesBasedOn<T>(this MongoDatabase database, IEnumerable<Assembly> assemblies)

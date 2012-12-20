@@ -29,10 +29,11 @@ namespace Kostassoid.Anodyne.Domain.Base
 
         protected AggregateRoot()
         {
-            EnsureAggregateEventsAreBindedFor(GetType());
+            //TODO: extract
+            lock(Binded) EnsureAggregateEventsAreBindedFor(GetType());
         }
 
-        private void EnsureAggregateEventsAreBindedFor(Type aggregateType)
+        private static void EnsureAggregateEventsAreBindedFor(Type aggregateType)
         {
             if (Binded.Contains(aggregateType)) return;
 
