@@ -11,10 +11,23 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.CommandBus
+namespace Kostassoid.Anodyne.Bus
 {
-    public interface ICommandResult
+    public class NullMessageBus : IMessageBus
     {
-         
+        public void Initialize()
+        {
+            // nop
+        }
+
+        public void Shutdown()
+        {
+            // nop
+        }
+
+        public void Publish(IMessage message)
+        {
+            // nop
+        }
     }
 }

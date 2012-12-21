@@ -22,7 +22,7 @@ tools\ilmerge\ILMerge.exe /target:library ^
  "src\main\Anodyne-Domain\bin\Release\Anodyne-Domain.dll" ^
  "src\main\Anodyne-Wiring\bin\Release\Anodyne-Wiring.dll" ^
  "src\main\Anodyne-DataAccess\bin\Release\Anodyne-DataAccess.dll" ^
- "src\main\Anodyne-CommandBus\bin\Release\Anodyne-CommandBus.dll"
+ "src\main\Anodyne-Bus\bin\Release\Anodyne-Bus.dll"
 
 copy src\main\Anodyne-Windsor\bin\Release\Anodyne-Windsor.* output\bin
 copy src\main\Anodyne-MongoDb\bin\Release\Anodyne-MongoDb.* output\bin

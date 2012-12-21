@@ -10,7 +10,7 @@ if exist output rmdir /s /q output
 mkdir output
 mkdir output\bin
 
-copy src\main\Anodyne-CommandBus\bin\Release\Anodyne-CommandBus.* output\bin
+copy src\main\Anodyne-Bus\bin\Release\Anodyne-Bus.* output\bin
 copy src\main\Anodyne-Common\bin\Release\Anodyne-Common.* output\bin
 copy src\main\Anodyne-DataAccess\bin\Release\Anodyne-DataAccess.* output\bin
 copy src\main\Anodyne-Node\bin\Release\Anodyne-Node.* output\bin
