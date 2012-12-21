@@ -28,13 +28,13 @@ namespace Kostassoid.Anodyne.MongoDb
             DatabaseName = databaseName;
             OperationResolver = operationResolver;
 
-            Server = MongoServer.Create(connectionString);
+            Server = new MongoClient(connectionString).GetServer();
         }
 
         public virtual IDataSession OpenSession()
         {
             //reusing database connection (ref: http://www.mongodb.org/display/DOCS/CSharp+Driver+Tutorial#CSharpDriverTutorial-Threadsafety)
-            return new MongoDataSession(Server.GetDatabase(DatabaseName, SafeMode.True), OperationResolver);
+            return new MongoDataSession(Server.GetDatabase(DatabaseName), OperationResolver);
         }
     }
 }

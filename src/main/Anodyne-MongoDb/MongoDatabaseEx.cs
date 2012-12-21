@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using Common.Reflection;
     using Domain.Base;
     using MongoDB.Driver;
     using System;
@@ -39,8 +40,7 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             var collectionType = type;
 
-            //TODO: should be using reflection
-            while (collectionType != null && !collectionType.BaseType.Name.Contains("AggregateRoot"))
+            while (collectionType != null && !collectionType.BaseType.IsRawGeneric(typeof(AggregateRoot<>)))
             {
                 collectionType = collectionType.BaseType;
             }
@@ -68,7 +68,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public static void EnsureCappedCollectionExists<T>(this MongoDatabase db, int collectionSizeMb) where T : class, IAggregateRoot
         {
-            var collectionName = typeof(T).Name;
+            var collectionName = GetCollectionNameFor(typeof(T));
             var collectionSize = collectionSizeMb * 1024 * 1024;
 
             if (db.CollectionExists(collectionName))

@@ -26,7 +26,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             public override void OnConfigure(IConfiguration c)
             {
                 c.UseWindsorContainer();
-                c.UseMongoDataAccess("localhost:27301", "Anodyne-Testing");
+                c.UseMongoDataAccess("localhost:27001", "Anodyne-Testing");
                 c.OnStartupPerform(i => i.DataAccess.OnNative(d => d.Drop()));
             }
         }

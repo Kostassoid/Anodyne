@@ -22,17 +22,17 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
     // ReSharper disable InconsistentNaming
     public class MongoDbAdapterSpecs
     {
-        public class UnitOfWorkScenario
+        public class MongoDbScenario
         {
-            public UnitOfWorkScenario()
+            public MongoDbScenario()
             {
                 IntegrationContext.Init();
             }
         }
 
         [TestFixture]
-        [Category("Unit")]
-        public class when_getting_collection_by_base_root_type : UnitOfWorkScenario
+        [Category("Integration")]
+        public class when_getting_collection_by_base_root_type : MongoDbScenario
         {
             [Test]
             public void should_return_collection_with_name_as_type_name()
@@ -49,8 +49,8 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
         }
 
         [TestFixture]
-        [Category("Unit")]
-        public class when_getting_collection_by_derived_root_type : UnitOfWorkScenario
+        [Category("Integration")]
+        public class when_getting_collection_by_derived_root_type : MongoDbScenario
         {
             [Test]
             public void should_return_collection_with_name_as_base_root_name()
@@ -67,8 +67,8 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
         }
 
         [TestFixture]
-        [Category("Unit")]
-        public class when_getting_saved_root_by_id : UnitOfWorkScenario
+        [Category("Integration")]
+        public class when_getting_saved_root_by_id : MongoDbScenario
         {
             [Test]
             public void should_return_valid_object()
@@ -85,6 +85,64 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
                     foundRoot.Id.Should().Be(createdRoot.Id);
                     foundRoot.Data.Should().Be(createdRoot.Data);
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Integration")]
+        public class when_creating_capped_collection_from_nothing : MongoDbScenario
+        {
+            [Test]
+            public void should_create_valid_capped_collection()
+            {
+                const int mb10 = 10 * 1024 * 1024;
+
+                using (var uow = new UnitOfWork())
+                {
+                    var database = (MongoDatabase)((IDataSessionEx)uow.DataSession).NativeSession;
+
+                    database.CollectionExists("TestRoot").Should().BeFalse();
+
+                    database.EnsureCappedCollectionExists<TestRoot>(10);
+
+                    database.CollectionExists("TestRoot").Should().BeTrue();
+
+                    var stats = database.GetCollection<TestRoot>().GetStats();
+
+                    stats.IsCapped.Should().BeTrue();
+                    stats.StorageSize.Should().BeInRange(mb10, mb10 + 8192); //TODO: get exact metadata size?
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Integration")]
+        public class when_creating_capped_collection_from_existing_collection : MongoDbScenario
+        {
+            [Test]
+            public void should_convert_collection_to_capped()
+            {
+                const int mb10 = 10 * 1024 * 1024;
+
+                using (new UnitOfWork())
+                {
+                    TestRoot.Create("boo");
+                    TestRoot.Create("hoo");
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var database = (((IDataSessionEx)uow.DataSession).NativeSession as MongoDatabase);
+
+                    database.EnsureCappedCollectionExists<TestRoot>(10);
+
+                    var stats = database.GetCollection<TestRoot>().GetStats();
+
+                    stats.IsCapped.Should().BeTrue();
+                    stats.StorageSize.Should().BeInRange(mb10, mb10 + 8192); //TODO: get exact metadata size?
+
+                    uow.Query<TestRoot>().Count().Should().Be(2);
                 }
             }
         }

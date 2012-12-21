@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-namespace Kostassoid.Anodyne.Common.Extentions
+namespace Kostassoid.Anodyne.Common.Reflection
 {
     using System;
 
@@ -31,6 +31,12 @@ namespace Kostassoid.Anodyne.Common.Extentions
             }
             return false;
         }
-         
+
+        public static bool IsRawGeneric(this Type type, Type generic)
+        {
+            if (type == null || generic == null) return false;
+
+            return type.IsGenericType && type.GetGenericTypeDefinition() == generic;
+        }
     }
 }

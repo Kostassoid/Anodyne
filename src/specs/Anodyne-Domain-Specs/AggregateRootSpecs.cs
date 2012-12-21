@@ -14,7 +14,11 @@
 namespace Kostassoid.Anodyne.Domain.Specs
 {
     using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Base;
+    using Common.Extentions;
     using Events;
     using FluentAssertions;
     using NUnit.Framework;
@@ -27,6 +31,13 @@ namespace Kostassoid.Anodyne.Domain.Specs
         {
             public int Fired1 { get; set; }
             public int Fired2 { get; set; }
+
+            public static TestRoot Create()
+            {
+                var root = new TestRoot();
+                Apply(new Change1Event(root));
+                return root;
+            }
 
             private void Handle(Change1Event ev)
             {
@@ -78,6 +89,28 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 root1.Version.Should().Be(3);
                 root2.Version.Should().Be(1);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class creating_aggregate_roots
+        {
+            [Test]
+            [MaxTime(1000)]
+            [Explicit("For performance tuning")]
+            public void should_be_fast()
+            {
+                const int tasksCount = 100000;
+
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                Enumerable.Range(0, tasksCount).ForEach(_ => TestRoot.Create());
+
+                stopwatch.Stop();
+
+                stopwatch.Elapsed.TotalMilliseconds.Should().BeLessThan(10);
             }
         }
 

@@ -14,7 +14,7 @@ namespace Kostassoid.BlogNote.Web.Installers
             var databaseName = ConfigurationManager.AppSettings["DatabaseName"];
             container.Register(
                 Component.For<MongoDatabase>()
-                .UsingFactoryMethod(t => MongoServer.Create(BuildConnectionString(databaseServer))
+                .UsingFactoryMethod(t => new MongoClient(BuildConnectionString(databaseServer)).GetServer()
                     .GetDatabase(databaseName)).LifeStyle.Singleton);
         }
 

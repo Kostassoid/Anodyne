@@ -25,7 +25,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs.Domain
             Id = SeqGuid.NewGuid();
         }
 
-        public static new DerivedTestRoot Create()
+        public static DerivedTestRoot Create()
         {
             var root = new DerivedTestRoot();
             Apply(new DerivedTestRootCreated(root));
