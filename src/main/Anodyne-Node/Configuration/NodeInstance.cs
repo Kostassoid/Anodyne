@@ -63,6 +63,9 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         void IConfigurationBuilder.SetContainerAdapter(IContainer container)
         {
+            if (_container != null)
+                throw new InvalidOperationException("Container adapter is already set to " + _container.GetType().Name);
+
             _container = container;
         }
 

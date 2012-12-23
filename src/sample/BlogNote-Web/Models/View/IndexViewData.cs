@@ -15,15 +15,15 @@
 namespace Kostassoid.BlogNote.Web.Models.View
 {
     using System.Collections.Generic;
-    using Domain;
     using Forms;
+    using Persistent;
 
     public class IndexViewData
     {
-        public IList<UserSnapshot> Users { get; protected set; }
+        public IList<User> Users { get; protected set; }
         public UserForm UserForm { get; protected set; }
 
-        public IndexViewData(IList<UserSnapshot> users, UserForm userForm)
+        public IndexViewData(IList<User> users, UserForm userForm)
         {
             Users = users;
             UserForm = userForm;

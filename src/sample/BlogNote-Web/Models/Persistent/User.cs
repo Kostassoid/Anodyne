@@ -11,16 +11,23 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Log4Net
+namespace Kostassoid.BlogNote.Web.Models.Persistent
 {
-    using Node.Configuration;
+    using System;
 
-    public static class ConfigurationEx
+    public class User
     {
-        public static void UseLog4Net(this IConfiguration configuration)
-        {
-            ((IConfigurationBuilder)configuration).SetLoggerAdapter(new Log4NetLoggerAdapter());
-        }
+        public Guid Id { get; protected set; }
+        public int Version { get; protected set; }
 
+        public string Name { get; protected set; }
+        public string Email { get; protected set; }
+
+        public DateTime Registered { get; protected set; }
+
+        public uint Posts { get; protected set; }
+
+        protected User()
+        {}
     }
 }

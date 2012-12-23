@@ -28,9 +28,23 @@ namespace Kostassoid.Anodyne.Windsor.Registration
             _container = container;
         }
 
-        private ComponentRegistration<TService> ApplyOptions(ComponentRegistration<TService> registration, Lifestyle lifestyle, string name)
+        private static ComponentRegistration<TService> ApplyLifestyle(ComponentRegistration<TService> registration, Lifestyle lifestyle)
         {
-            registration = registration.LifeStyle.Is(GetLifestyle(lifestyle));
+            switch (lifestyle)
+            {
+                case Lifestyle.Singleton: return registration.LifestyleSingleton();
+                case Lifestyle.Transient: return registration.LifestyleTransient();
+                case Lifestyle.PerWebRequest: return registration.LifestylePerWebRequest();
+                case Lifestyle.Unmanaged: return registration.LifestyleCustom<UnmanagedLifestyleManager>();
+                case Lifestyle.ProviderDefault: return registration;
+                default:
+                    throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
+            }
+        }
+
+        private static ComponentRegistration<TService> ApplyOptions(ComponentRegistration<TService> registration, Lifestyle lifestyle, string name)
+        {
+            registration = ApplyLifestyle(registration, lifestyle);
 
             if (!string.IsNullOrEmpty(name))
                 registration = registration.Named(name);
@@ -70,18 +84,6 @@ namespace Kostassoid.Anodyne.Windsor.Registration
                 .For<TService>().Instance(implementation);
 
             _container.Register(ApplyOptions(componentRegistration, Lifestyle.Singleton, name));
-        }
-
-        private static Castle.Core.LifestyleType GetLifestyle(Lifestyle lifestyle)
-        {
-            switch (lifestyle)
-            {
-                case Lifestyle.Singleton: return Castle.Core.LifestyleType.Singleton;
-                case Lifestyle.Transient: return Castle.Core.LifestyleType.Transient;
-                case Lifestyle.PerWebRequest: return Castle.Core.LifestyleType.PerWebRequest;
-                default:
-                    throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
-            }
         }
     }
 }

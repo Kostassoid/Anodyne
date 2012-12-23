@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Windsor
 {
     using System.Collections;
-    using System.Linq;
+    using System.Reflection;
     using Castle.Facilities.Startable;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
@@ -32,7 +32,7 @@ namespace Kostassoid.Anodyne.Windsor
         {
             NativeContainer = container;
 
-            NativeContainer.Kernel.ReleasePolicy = new TransientReleasePolicy(NativeContainer.Kernel);
+            NativeContainer.Kernel.ReleasePolicy = new UnmanagedReleasePolicy(NativeContainer.Kernel);
             NativeContainer.Kernel.Resolver.AddSubResolver(new ListResolver(NativeContainer.Kernel));
             NativeContainer.Kernel.Resolver.AddSubResolver(new AppSettingsResolver(NativeContainer.Kernel));
 
@@ -69,14 +69,29 @@ namespace Kostassoid.Anodyne.Windsor
             return NativeContainer.Resolve(name, type);
         }
 
+        public void Release(object instance)
+        {
+            NativeContainer.Release(instance);
+        }
+
         public IBindingSyntax<TService> For<TService>() where TService : class
         {
             return new BindingSyntax<TService>(NativeContainer);
         }
 
-        public IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class
+        public ITypePickingSyntax<TService> ForAllBasedOn<TService>(IEnumerable<Assembly> assemblies) where TService : class
         {
             throw new NotImplementedException();
+        }
+
+        public bool Has<T>()
+        {
+            return NativeContainer.Kernel.HasComponent(typeof (T));
+        }
+
+        public bool Has(Type type)
+        {
+            return NativeContainer.Kernel.HasComponent(type);
         }
     }
 }

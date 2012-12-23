@@ -11,16 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Log4Net
+namespace Kostassoid.Anodyne.Web.Mvc
 {
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public abstract class MvcNode : Node.Node
     {
-        public static void UseLog4Net(this IConfiguration configuration)
+        protected MvcNode()
         {
-            ((IConfigurationBuilder)configuration).SetLoggerAdapter(new Log4NetLoggerAdapter());
-        }
+            
 
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Node.DataAccess
     using Dependency;
     using Anodyne.DataAccess.Operations;
 
-    using Kostassoid.Anodyne.Domain;
+    using Domain;
 
     public class ContainerOperationResolver : IOperationResolver
     {

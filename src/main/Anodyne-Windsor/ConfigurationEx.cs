@@ -21,17 +21,17 @@ namespace Kostassoid.Anodyne.Windsor
     {
         public static void UseWindsorContainer(this IConfiguration configuration, Func<IWindsorContainer> containerProvider)
         {
-            (configuration as IConfigurationBuilder).SetContainerAdapter(new WindsorContainerAdapter(containerProvider()));
+            ((IConfigurationBuilder)configuration).SetContainerAdapter(new WindsorContainerAdapter(containerProvider()));
         }
 
         public static void UseWindsorContainer(this IConfiguration configuration)
         {
-            (configuration as IConfigurationBuilder).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
+            ((IConfigurationBuilder)configuration).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
         }
 
         public static void UseWindsorWcfServicePublisher(this IConfiguration configuration)
         {
-            (configuration as IConfigurationBuilder).SetWcfServiceProvider(new WindsorWcfServicePublisher(configuration));
+            ((IConfigurationBuilder)configuration).SetWcfServiceProvider(new WindsorWcfServicePublisher(configuration));
         }
 
     }

@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Node.Dependency
 {
     using System;
     using System.Collections;
+    using System.Reflection;
     using Registration;
     using System.Collections.Generic;
 
@@ -28,7 +29,12 @@ namespace Kostassoid.Anodyne.Node.Dependency
         object Get(Type type);
         object Get(Type type, string name);
 
+        void Release(object instance);
+
         IBindingSyntax<TService> For<TService>() where TService : class;
-        IServiceAssemblySyntax<TService> ForAll<TService>() where TService : class;
+        ITypePickingSyntax<TService> ForAllBasedOn<TService>(IEnumerable<Assembly> assemblies) where TService : class;
+
+        bool Has<T>();
+        bool Has(Type type);
     }
 }

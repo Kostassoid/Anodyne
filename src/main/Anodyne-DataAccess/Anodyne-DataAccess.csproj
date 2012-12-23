@@ -45,6 +45,7 @@
     </Compile>
     <Compile Include="AggregateRootChangeSet.cs" />
     <Compile Include="IDataAccessProvider.cs" />
+    <Compile Include="IDataQueryContext.cs" />
     <Compile Include="IUnitOfWorkEx.cs" />
     <Compile Include="Operations\BaseDomainOperation.cs" />
     <Compile Include="DataSession.cs" />

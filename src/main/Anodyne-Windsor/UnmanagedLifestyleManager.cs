@@ -11,23 +11,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Web.Models.Domain
+namespace Kostassoid.Anodyne.Windsor
 {
-    using System;
+    using Castle.MicroKernel.Lifestyle;
 
-    public class UserSnapshot
+    public class UnmanagedLifestyleManager : TransientLifestyleManager
     {
-        public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
-
-        public string Name { get; protected set; }
-        public string Email { get; protected set; }
-
-        public DateTime Registered { get; protected set; }
-
-        public uint Posts { get; protected set; }
-
-        protected UserSnapshot()
-        {}
     }
 }

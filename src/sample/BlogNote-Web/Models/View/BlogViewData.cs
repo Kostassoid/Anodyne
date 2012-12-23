@@ -13,13 +13,13 @@
 
 namespace Kostassoid.BlogNote.Web.Models.View
 {
-    using Domain;
+    using Persistent;
 
     public class BlogViewData
     {
-        public UserSnapshot User { get; protected set; }
+        public User User { get; protected set; }
 
-        public BlogViewData(UserSnapshot user)
+        public BlogViewData(User user)
         {
             User = user;
         }

@@ -18,21 +18,22 @@ namespace Kostassoid.Anodyne.Windsor
     using Castle.MicroKernel.Releasers;
     using Castle.Windsor.Diagnostics;
 
-    public class TransientReleasePolicy : LifecycledComponentsReleasePolicy
+    public class UnmanagedReleasePolicy : LifecycledComponentsReleasePolicy
     {
-        public TransientReleasePolicy(IKernel kernel)
+        public UnmanagedReleasePolicy(IKernel kernel)
             : base(kernel)
         {
         }
 
-        public TransientReleasePolicy(ITrackedComponentsDiagnostic trackedComponentsDiagnostic, ITrackedComponentsPerformanceCounter trackedComponentsPerformanceCounter)
+        public UnmanagedReleasePolicy(ITrackedComponentsDiagnostic trackedComponentsDiagnostic, ITrackedComponentsPerformanceCounter trackedComponentsPerformanceCounter)
             : base(trackedComponentsDiagnostic, trackedComponentsPerformanceCounter)
         {
         }
 
         public override void Track(object instance, Burden burden)
         {
-            if (burden.Model.LifestyleType == LifestyleType.Transient)
+            if (burden.Model.LifestyleType == LifestyleType.Custom
+                && burden.Model.CustomLifestyle == typeof(UnmanagedLifestyleManager))
                 return;
 
             base.Track(instance, burden);

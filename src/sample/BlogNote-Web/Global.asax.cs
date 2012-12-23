@@ -3,19 +3,15 @@ using System.Web.Routing;
 
 namespace Kostassoid.BlogNote.Web
 {
-    using System.ServiceModel;
-    using Castle.Facilities.WcfIntegration;
-    using Castle.MicroKernel.Registration;
-    using Castle.Windsor;
-    using Castle.Windsor.Installer;
     using Code;
-    using Contracts;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private readonly BlogNoteWebNode _node = new BlogNoteWebNode();
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -40,10 +36,12 @@ namespace Kostassoid.BlogNote.Web
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            var container = new WindsorContainer();
-            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container.Kernel));
+            _node.Start();
+        }
 
-            container.Install(FromAssembly.This());
+        protected void Application_End()
+        {
+            _node.Shutdown();
         }
     }
 }

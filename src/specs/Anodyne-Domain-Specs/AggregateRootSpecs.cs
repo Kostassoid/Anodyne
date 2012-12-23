@@ -101,7 +101,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [Explicit("For performance tuning")]
             public void should_be_fast()
             {
-                const int tasksCount = 100000;
+                const int tasksCount = 1000000;
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();

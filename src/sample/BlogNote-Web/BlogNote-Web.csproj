@@ -95,16 +95,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Installers\ControllersInstaller.cs" />
-    <Compile Include="Installers\QueryInstaller.cs" />
+    <Compile Include="Code\BlogNoteWebNode.cs" />
+    <Compile Include="Code\WcfClientsRegistration.cs" />
     <Compile Include="Installers\WcfClientsInstaller.cs" />
-    <Compile Include="Installers\PersistanceInstaller.cs" />
-    <Compile Include="Code\WindsorControllerFactory.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Domain\UserSnapshot.cs" />
+    <Compile Include="Models\Persistent\User.cs" />
     <Compile Include="Models\Forms\UserForm.cs" />
     <Compile Include="Models\View\BlogViewData.cs" />
     <Compile Include="Models\View\IndexViewData.cs" />
@@ -212,6 +210,34 @@
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Main\Anodyne-DataAccess\Anodyne-DataAccess.csproj">
+      <Project>{6e6aea6a-502c-419f-aada-35ad702473b7}</Project>
+      <Name>Anodyne-DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\main\Anodyne-Domain\Anodyne-Domain.csproj">
+      <Project>{dc5c4bf4-8efa-46e8-9542-191ac05b35f9}</Project>
+      <Name>Anodyne-Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\Anodyne-MongoDb\Anodyne-MongoDb.csproj">
+      <Project>{a7e60c58-d519-471e-b1ff-5cb47128c1cd}</Project>
+      <Name>Anodyne-MongoDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\Anodyne-Node\Anodyne-Node.csproj">
+      <Project>{f29a2af0-fa6e-4172-983b-ae7729447cfc}</Project>
+      <Name>Anodyne-Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\main\Anodyne-Web-Mvc\Anodyne-Web-Mvc.csproj">
+      <Project>{6203cab3-e221-4620-b07c-a33e19046345}</Project>
+      <Name>Anodyne-Web-Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\main\Anodyne-Web\Anodyne-Web.csproj">
+      <Project>{62f26db0-4f2d-4280-90e5-559f85358724}</Project>
+      <Name>Anodyne-Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\Anodyne-Windsor\Anodyne-Windsor.csproj">
+      <Project>{b3e5199b-f192-497a-a3d0-80fcfa77bdd8}</Project>
+      <Name>Anodyne-Windsor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BlogNote-Contracts\BlogNote-Contracts.csproj">
       <Project>{20B9EE59-59E5-4577-A937-61371685DA3E}</Project>
       <Name>BlogNote-Contracts</Name>
@@ -223,6 +249,7 @@
   <ItemGroup>
     <Content Include="Views\Home\SignIn.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -7,7 +7,7 @@
     using Castle.MicroKernel;
     using Castle.MicroKernel.Context;
 
-    using Kostassoid.Anodyne.Common.Extentions;
+    using Common.Extentions;
 
     public class AppSettingsResolver : ISubDependencyResolver
     {

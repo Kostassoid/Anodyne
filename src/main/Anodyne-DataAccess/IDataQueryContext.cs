@@ -11,16 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Log4Net
+namespace Kostassoid.Anodyne.DataAccess
 {
-    using Node.Configuration;
+    using System.Linq;
+    using Domain;
+    using Domain.Base;
+    using Operations;
 
-    public static class ConfigurationEx
+    public interface IDataQueryContext
     {
-        public static void UseLog4Net(this IConfiguration configuration)
-        {
-            ((IConfigurationBuilder)configuration).SetLoggerAdapter(new Log4NetLoggerAdapter());
-        }
+        IRepository<TRoot> Query<TRoot>() where TRoot : class, IAggregateRoot;
 
+        IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot;
+
+        TOp Using<TOp>() where TOp : class, IDomainOperation;
     }
 }

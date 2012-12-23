@@ -22,7 +22,7 @@ namespace Kostassoid.Anodyne.Node
     {
         private readonly IConfiguration _configuration = new NodeInstance();
 
-        private INodeInstance Cfg { get { return _configuration as INodeInstance; } }
+        public INodeInstance Instance { get { return _configuration as INodeInstance; } }
 
         public InstanceState State { get; private set; }
 
@@ -36,7 +36,7 @@ namespace Kostassoid.Anodyne.Node
 
         public bool IsIn(RuntimeMode runtimeMode)
         {
-            return Cfg.RuntimeMode == runtimeMode;
+            return Instance.RuntimeMode == runtimeMode;
         }
 
         private IList<ISubsystem> _subsystems = new List<ISubsystem>();
@@ -45,12 +45,13 @@ namespace Kostassoid.Anodyne.Node
         {
             if (!CanBeStarted) return;
 
+            //TODO: move
             if (MustBeConfigured)
                 OnConfigure(_configuration);
 
-            Cfg.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Cfg));
+            Instance.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Instance));
 
-            _subsystems = Cfg.Container.GetAll<ISubsystem>();
+            _subsystems = Instance.Container.GetAll<ISubsystem>();
             _subsystems.ForEach(s => s.Start());
 
             OnStart();
@@ -62,7 +63,7 @@ namespace Kostassoid.Anodyne.Node
         {
             if (!CanBeStopped) return;
 
-            Cfg.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Cfg));
+            Instance.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Instance));
 
             OnShutdown();
 

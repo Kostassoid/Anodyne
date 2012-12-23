@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B3E5199B-F192-497A-A3D0-80FCFA77BDD8}</ProjectGuid>
+    <ProjectGuid>{D637A462-7402-417C-B2E2-5391E27191CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kostassoid.Anodyne.Windsor</RootNamespace>
-    <AssemblyName>Anodyne-Windsor</AssemblyName>
+    <RootNamespace>Kostassoid.Anodyne.Windsor.Specs</RootNamespace>
+    <AssemblyName>Anodyne-Windsor-Specs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -36,22 +36,17 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Facilities.WcfIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.WcfIntegrationFacility.3.0.0.4001\lib\net40\Castle.Facilities.WcfIntegration.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.0.0.4001\lib\net40\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\packages\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Services" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Activation" />
-    <Reference Include="System.ServiceModel.Discovery" />
-    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,29 +57,33 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AppSettingsResolver.cs" />
-    <Compile Include="ContainerEx.cs" />
-    <Compile Include="Registration\BindingSyntax.cs" />
-    <Compile Include="ConfigurationEx.cs" />
-    <Compile Include="UnmanagedReleasePolicy.cs" />
-    <Compile Include="UnmanagedLifestyleManager.cs" />
-    <Compile Include="WindsorContainerAdapter.cs" />
-    <Compile Include="WindsorWcfServicePublisher.cs" />
+    <Compile Include="WindsorAdaptorSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
-      <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
+    <ProjectReference Include="..\..\Main\Anodyne-Common\Anodyne-Common.csproj">
+      <Project>{2d6ac91a-29e5-4700-8e16-58d87ab98563}</Project>
       <Name>Anodyne-Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Anodyne-Node\Anodyne-Node.csproj">
-      <Project>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</Project>
+    <ProjectReference Include="..\..\Main\Anodyne-Node\Anodyne-Node.csproj">
+      <Project>{f29a2af0-fa6e-4172-983b-ae7729447cfc}</Project>
       <Name>Anodyne-Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\Anodyne-Windsor\Anodyne-Windsor.csproj">
+      <Project>{b3e5199b-f192-497a-a3d0-80fcfa77bdd8}</Project>
+      <Name>Anodyne-Windsor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\Anodyne-Wiring\Anodyne-Wiring.csproj">
+      <Project>{321bb928-1a81-40bf-8ba9-644f95b8cd5a}</Project>
+      <Name>Anodyne-Wiring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Anodyne-Specs-Shared\Anodyne-Specs-Shared.csproj">
+      <Project>{e70cf538-55c5-4e75-be80-fccdf6db3631}</Project>
+      <Name>Anodyne-Specs-Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
