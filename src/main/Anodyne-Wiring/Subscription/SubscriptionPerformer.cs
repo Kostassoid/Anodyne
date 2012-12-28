@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Common.Reflection;
+
 namespace Kostassoid.Anodyne.Wiring.Subscription
 {
     using System;
@@ -128,9 +130,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
         private static IEnumerable<Type> FindTypes(Type baseEventType, IEnumerable<Assembly> assemblies, Predicate<Type> typePredicate)
         {
-            return assemblies
-                .SelectMany(a => a.GetTypes())
-                .Where(t => baseEventType.IsAssignableFrom(t) && typePredicate(t));
+            return Types.BasedOn(baseEventType, assemblies).Where(t => typePredicate(t));
         }
     }
 }

@@ -11,31 +11,27 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
 namespace Kostassoid.Anodyne.Common.Reflection
 {
-    using System;
-
-    public static class TypeEx
+    public class Types
     {
-        public static bool IsSubclassOfRawGeneric(this Type type, Type generic)
+        public static IEnumerable<Type> BasedOn<T>(IEnumerable<Assembly> from = null)
         {
-            while (type != null & type != typeof(object))
-            {
-                var intermediate = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
-                if (generic == intermediate)
-                {
-                    return true;
-                }
-                type = type.BaseType;
-            }
-            return false;
+            return BasedOn(typeof (T), from);
         }
 
-        public static bool IsRawGeneric(this Type type, Type generic)
+        public static IEnumerable<Type> BasedOn(Type baseType, IEnumerable<Assembly> from = null)
         {
-            if (type == null || generic == null) return false;
+            var lookinAssemblies = from ?? From.Assemblies(_ => true);
 
-            return type.IsGenericType && type.GetGenericTypeDefinition() == generic;
+            return lookinAssemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(baseType.IsAssignableFrom);
         }
     }
 }
