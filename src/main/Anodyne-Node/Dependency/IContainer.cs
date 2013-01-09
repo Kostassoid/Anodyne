@@ -31,6 +31,8 @@ namespace Kostassoid.Anodyne.Node.Dependency
 
         void Release(object instance);
 
+        void Put(Binding binding);
+
         IBindingSyntax<TService> For<TService>() where TService : class;
         ITypePickingSyntax<TService> ForAllBasedOn<TService>(IEnumerable<Assembly> assemblies) where TService : class;
 

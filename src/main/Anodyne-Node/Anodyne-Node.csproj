@@ -59,8 +59,13 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dependency\DynamicResolver.cs" />
+    <Compile Include="Dependency\ImplementationResolver.cs" />
+    <Compile Include="Dependency\InstanceBinding.cs" />
     <Compile Include="Dependency\Registration\IDependencyOption.cs" />
+    <Compile Include="Dependency\Binding.cs" />
     <Compile Include="Dependency\Registration\ITypePickingSyntax.cs" />
+    <Compile Include="Dependency\StaticResolver.cs" />
     <Compile Include="IConfigurationAction.cs" />
     <Compile Include="Logging\NullLog.cs" />
     <Compile Include="Logging\NullLoggerAdapter.cs" />
@@ -75,7 +80,6 @@
     <Compile Include="Dependency\Lifestyle.cs" />
     <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
     <Compile Include="Dependency\IContainer.cs" />
-    <Compile Include="Dependency\Registration\IServiceAssemblySyntax.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILoggerAdapter.cs" />
     <Compile Include="Logging\LogLevel.cs" />

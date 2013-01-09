@@ -74,6 +74,11 @@ namespace Kostassoid.Anodyne.Windsor
             NativeContainer.Release(instance);
         }
 
+        public void Put(Binding binding)
+        {
+            throw new NotImplementedException();
+        }
+
         public IBindingSyntax<TService> For<TService>() where TService : class
         {
             return new BindingSyntax<TService>(NativeContainer);
