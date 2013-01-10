@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Anodyne")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCopyright("Copyright © Konstantin Alexandroff 2011-2012")]
+[assembly: AssemblyCopyright("Copyright © Konstantin Alexandroff 2011-2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
