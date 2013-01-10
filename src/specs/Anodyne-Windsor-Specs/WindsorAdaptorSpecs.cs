@@ -11,6 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Common.Reflection;
 using Kostassoid.Anodyne.Node.Dependency.Registration;
 
 namespace Kostassoid.Anodyne.Windsor.Specs
@@ -43,6 +44,15 @@ namespace Kostassoid.Anodyne.Windsor.Specs
         }
 
         public class Boo : IBoo
+        {
+            public bool IsDisposed { get; private set; }
+            public void Dispose()
+            {
+                IsDisposed = true;
+            }
+        }
+
+        public class AnotherBoo : IBoo
         {
             public bool IsDisposed { get; private set; }
             public void Dispose()
@@ -113,6 +123,41 @@ namespace Kostassoid.Anodyne.Windsor.Specs
                 boo.IsDisposed.Should().BeFalse();
             }
         }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_registering_multiple_types_as_is : WindsorScenario
+        {
+            [Test]
+            public void each_type_should_be_available_from_container_by_its_type()
+            {
+                Container.Put(Binding.Use(AllTypes.BasedOn<IBoo>()));
+
+                Container.Has<IBoo>().Should().BeFalse();
+                Container.Has<Boo>().Should().BeTrue();
+                Container.Has<AnotherBoo>().Should().BeTrue();
+                Container.Get<AnotherBoo>().Should().BeOfType<AnotherBoo>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_registering_multiple_types_as_base_interface : WindsorScenario
+        {
+            [Test]
+            public void each_type_should_be_available_from_container_by_base_interface()
+            {
+                Container.Put(Binding.Use(AllTypes.BasedOn<IBoo>()).As<IBoo>());
+
+                Container.Has<IBoo>().Should().BeTrue();
+                Container.Has<Boo>().Should().BeFalse();
+                Container.Has<AnotherBoo>().Should().BeFalse();
+                Container.Get<IBoo>().Should().BeOfType<Boo>();
+                Container.GetAll<IBoo>().Should().HaveCount(2);
+            }
+        }
+
+
 
     }
     // ReSharper restore InconsistentNaming

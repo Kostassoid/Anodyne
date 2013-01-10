@@ -15,7 +15,6 @@ using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Kostassoid.Anodyne.Node.Dependency;
-using Kostassoid.Anodyne.Node.Dependency.Registration;
 
 namespace Kostassoid.Anodyne.Windsor
 {
@@ -36,10 +35,10 @@ namespace Kostassoid.Anodyne.Windsor
 
         public static void Register(IWindsorContainer container, MultipleBinding binding)
         {
-            ComponentRegistration<object> registration = Component.For(binding.Services);
+            var registration = AllTypes.From(binding.Services).Pick();
 
             if (binding.BindTo.Count > 0)
-                registration = registration.Forward(binding.BindTo);
+                registration = registration.WithServices(binding.BindTo);
 
             registration = ApplyLifestyle(registration, binding.Lifestyle);
 
@@ -61,7 +60,22 @@ namespace Kostassoid.Anodyne.Windsor
             return registration.UsingFactoryMethod(resolver.FactoryFunc);
         }
 
+        //TODO: dry
         private static ComponentRegistration<object> ApplyLifestyle(ComponentRegistration<object> registration, Lifestyle lifestyle)
+        {
+            switch (lifestyle)
+            {
+                case Lifestyle.Singleton: return registration.LifestyleSingleton();
+                case Lifestyle.Transient: return registration.LifestyleTransient();
+                case Lifestyle.PerWebRequest: return registration.LifestylePerWebRequest();
+                case Lifestyle.Unmanaged: return registration.LifestyleCustom<UnmanagedLifestyleManager>();
+                case Lifestyle.ProviderDefault: return registration;
+                default:
+                    throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
+            }
+        }
+
+        private static BasedOnDescriptor ApplyLifestyle(BasedOnDescriptor registration, Lifestyle lifestyle)
         {
             switch (lifestyle)
             {
