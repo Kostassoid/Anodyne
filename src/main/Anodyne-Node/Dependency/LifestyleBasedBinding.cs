@@ -11,26 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Node.Dependency.Registration;
-
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Node.Dependency
 {
-    using Anodyne.DataAccess;
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public abstract class LifestyleBasedBinding : IBinding
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public Lifestyle Lifestyle { get; protected set; }
+
+        protected LifestyleBasedBinding()
         {
-            var cfg = (INodeInstance)configuration;
-
-            cfg.Container.Put(Binding.For<IDataSessionFactory>()
-                .Use(() => new InMemoryDataSessionFactory()));
-
-            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
+            Lifestyle = Lifestyle.ProviderDefault;
         }
 
+        public void SetLifestyle(Lifestyle lifestyle)
+        {
+            Lifestyle = lifestyle;
+        }
     }
-
 }

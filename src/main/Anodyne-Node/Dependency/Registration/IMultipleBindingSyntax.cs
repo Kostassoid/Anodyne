@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2012 Anodyne.
+// Copyright 2011-2012 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,17 +11,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-
-namespace Kostassoid.Anodyne.Node.Dependency
+namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
-    public class StaticResolver : IImplementationResolver
+    public interface IMultipleBindingSyntax : IBindingSyntax
     {
-        public Type Target { get; protected set; }
-
-        public StaticResolver(Type target)
-        {
-            Target = target;
-        }
+        IMultipleBindingSyntax As<TService>() where TService : class;
+        IMultipleBindingSyntax With(Lifestyle lifestyle);
     }
 }

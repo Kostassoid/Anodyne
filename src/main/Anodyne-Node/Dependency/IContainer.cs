@@ -11,12 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Node.Dependency.Registration;
+
 namespace Kostassoid.Anodyne.Node.Dependency
 {
     using System;
     using System.Collections;
-    using System.Reflection;
-    using Registration;
     using System.Collections.Generic;
 
     public interface IContainer
@@ -31,10 +31,13 @@ namespace Kostassoid.Anodyne.Node.Dependency
 
         void Release(object instance);
 
-        void Put(Binding binding);
+        // container.Put(Binding.For<IFoo>().AsSelf().Named("Ololo").WithLifestyle(Lifestyle.Singleton))
+        // container.Put(Binding.For(AllTypes.BasedOn<IFoo>()))
+        void Put(IBindingSyntax binding);
 
-        IBindingSyntax<TService> For<TService>() where TService : class;
-        ITypePickingSyntax<TService> ForAllBasedOn<TService>(IEnumerable<Assembly> assemblies) where TService : class;
+        //ISingleBindingSyntax<TService> For<TService>() where TService : class;
+        //ISingleBindingSyntax For(Type type);
+        //IMultipleBindingSyntax For(IEnumerable<Type> types);
 
         bool Has<T>();
         bool Has(Type type);

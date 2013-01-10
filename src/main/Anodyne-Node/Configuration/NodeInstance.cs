@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Node.Dependency.Registration;
+
 namespace Kostassoid.Anodyne.Node.Configuration
 {
     using System.Reflection;
@@ -123,32 +125,30 @@ namespace Kostassoid.Anodyne.Node.Configuration
         public void OnStartupPerform<TStartup>(ConfigurationPredicate when) where TStartup : IStartupAction
         {
             if (!CanContinue(when)) return;
-            _container.For<IStartupAction>().Use<TStartup>(Lifestyle.Singleton, GetTypeUniqueName<TStartup>("Startup"));
+            _container.Put(Binding.For<IStartupAction>().Use<TStartup>().With(Lifestyle.Singleton).Named(GetTypeUniqueName<TStartup>("Startup")));
         }
 
         public void OnStartupPerform(Action<INodeInstance> startupAction, ConfigurationPredicate when)
         {
             if (!CanContinue(when)) return;
-            _container.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction), Lifestyle.Singleton, "Startup-" + SeqGuid.NewGuid());
+            _container.Put(Binding.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction)).With(Lifestyle.Singleton).Named("Startup-" + SeqGuid.NewGuid()));
         }
 
         public void OnShutdownPerform<TShutdown>(ConfigurationPredicate when) where TShutdown : IShutdownAction
         {
             if (!CanContinue(when)) return;
-            _container.For<IShutdownAction>().Use<TShutdown>(Lifestyle.Singleton, GetTypeUniqueName<TShutdown>("Shutdown"));
+            _container.Put(Binding.For<IShutdownAction>().Use<TShutdown>().With(Lifestyle.Singleton).Named(GetTypeUniqueName<TShutdown>("Shutdown")));
         }
 
         public void OnShutdownPerform(Action<INodeInstance> shutdownAction, ConfigurationPredicate when)
         {
             if (!CanContinue(when)) return;
-            _container.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction), Lifestyle.Singleton, "Shutdown-" + SeqGuid.NewGuid());
+            _container.Put(Binding.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction)).With(Lifestyle.Singleton).Named("Shutdown-" + SeqGuid.NewGuid()));
         }
 
         public void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem
         {
-// ReSharper disable RedundantArgumentDefaultValue
-            _container.For<ISubsystem>().Use<TSubsystem>(Lifestyle.Singleton);
-// ReSharper restore RedundantArgumentDefaultValue
+            _container.Put(Binding.For<ISubsystem>().Use<TSubsystem>().With(Lifestyle.Singleton));
         }
     }
 }

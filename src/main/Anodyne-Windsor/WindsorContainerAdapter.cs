@@ -14,13 +14,11 @@
 namespace Kostassoid.Anodyne.Windsor
 {
     using System.Collections;
-    using System.Reflection;
     using Castle.Facilities.Startable;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
     using Node.Dependency;
     using Node.Dependency.Registration;
-    using Registration;
     using System;
     using System.Collections.Generic;
 
@@ -74,19 +72,9 @@ namespace Kostassoid.Anodyne.Windsor
             NativeContainer.Release(instance);
         }
 
-        public void Put(Binding binding)
+        public void Put(IBindingSyntax binding)
         {
-            throw new NotImplementedException();
-        }
-
-        public IBindingSyntax<TService> For<TService>() where TService : class
-        {
-            return new BindingSyntax<TService>(NativeContainer);
-        }
-
-        public ITypePickingSyntax<TService> ForAllBasedOn<TService>(IEnumerable<Assembly> assemblies) where TService : class
-        {
-            throw new NotImplementedException();
+            WindsorContainerRegistrator.Register(NativeContainer, (dynamic)binding.Binding);
         }
 
         public bool Has<T>()

@@ -61,7 +61,7 @@
     <Compile Include="Priority.cs" />
     <Compile Include="Reflection\From.cs" />
     <Compile Include="Reflection\TypeEx.cs" />
-    <Compile Include="Reflection\Types.cs" />
+    <Compile Include="Reflection\AllTypes.cs" />
     <Compile Include="SerializableValueObject.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Ticket.cs" />

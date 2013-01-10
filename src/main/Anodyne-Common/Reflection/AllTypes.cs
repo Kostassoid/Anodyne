@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-//  
+// 
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,26 +11,27 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Node.Dependency.Registration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Common.Reflection
 {
-    using Anodyne.DataAccess;
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public class AllTypes
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public static IEnumerable<Type> BasedOn<T>(IEnumerable<Assembly> from = null)
         {
-            var cfg = (INodeInstance)configuration;
-
-            cfg.Container.Put(Binding.For<IDataSessionFactory>()
-                .Use(() => new InMemoryDataSessionFactory()));
-
-            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
+            return BasedOn(typeof (T), from);
         }
 
-    }
+        public static IEnumerable<Type> BasedOn(Type baseType, IEnumerable<Assembly> from = null)
+        {
+            var lookinAssemblies = from ?? From.Assemblies(_ => true);
 
+            return lookinAssemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(baseType.IsAssignableFrom);
+        }
+    }
 }

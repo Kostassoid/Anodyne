@@ -130,7 +130,7 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
         private static IEnumerable<Type> FindTypes(Type baseEventType, IEnumerable<Assembly> assemblies, Predicate<Type> typePredicate)
         {
-            return Types.BasedOn(baseEventType, assemblies).Where(t => typePredicate(t));
+            return AllTypes.BasedOn(baseEventType, assemblies).Where(t => typePredicate(t));
         }
     }
 }

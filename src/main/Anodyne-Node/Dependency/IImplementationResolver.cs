@@ -11,12 +11,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Node.Dependency.Registration
+namespace Kostassoid.Anodyne.Node.Dependency
 {
-    using System;
-
-    public interface ITypePickingSyntax<in TService> : IBindingSyntax<TService> where TService : class
+    public interface IImplementationResolver
     {
-        IBindingSyntax<TService> Where(Func<Type, bool> typePredicate);
     }
 }

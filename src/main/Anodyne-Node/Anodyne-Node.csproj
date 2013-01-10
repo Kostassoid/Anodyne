@@ -59,12 +59,18 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dependency\IBinding.cs" />
+    <Compile Include="Dependency\Registration\Binding.cs" />
+    <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
+    <Compile Include="Dependency\Registration\IMultipleBindingSyntax.cs" />
+    <Compile Include="Dependency\Registration\MultipleBindingSyntax.cs" />
+    <Compile Include="Dependency\Registration\SingleBindingSyntax.cs" />
+    <Compile Include="Dependency\SingleBinding.cs" />
+    <Compile Include="Dependency\MultipleBinding.cs" />
     <Compile Include="Dependency\DynamicResolver.cs" />
-    <Compile Include="Dependency\ImplementationResolver.cs" />
-    <Compile Include="Dependency\InstanceBinding.cs" />
-    <Compile Include="Dependency\Registration\IDependencyOption.cs" />
-    <Compile Include="Dependency\Binding.cs" />
-    <Compile Include="Dependency\Registration\ITypePickingSyntax.cs" />
+    <Compile Include="Dependency\IImplementationResolver.cs" />
+    <Compile Include="Dependency\InstanceResolver.cs" />
+    <Compile Include="Dependency\LifestyleBasedBinding.cs" />
     <Compile Include="Dependency\StaticResolver.cs" />
     <Compile Include="IConfigurationAction.cs" />
     <Compile Include="Logging\NullLog.cs" />
@@ -78,7 +84,7 @@
     <Compile Include="DataAccess\ContainerOperationResolver.cs" />
     <Compile Include="IShutdownAction.cs" />
     <Compile Include="Dependency\Lifestyle.cs" />
-    <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
+    <Compile Include="Dependency\Registration\ISingleBindingSyntax.cs" />
     <Compile Include="Dependency\IContainer.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILoggerAdapter.cs" />

@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-// 
+//  
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -12,26 +12,28 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
-namespace Kostassoid.Anodyne.Common.Reflection
+namespace Kostassoid.Anodyne.Node.Dependency
 {
-    public class Types
+    public class SingleBinding : LifestyleBasedBinding
     {
-        public static IEnumerable<Type> BasedOn<T>(IEnumerable<Assembly> from = null)
+        public Type Service { get; protected set; }
+        public IImplementationResolver Resolver { get; protected set; }
+        public string Named { get; protected set; }
+
+        public SingleBinding(Type service)
         {
-            return BasedOn(typeof (T), from);
+            Service = service;
         }
 
-        public static IEnumerable<Type> BasedOn(Type baseType, IEnumerable<Assembly> from = null)
+        public void SetResolver(IImplementationResolver resolver)
         {
-            var lookinAssemblies = from ?? From.Assemblies(_ => true);
+            Resolver = resolver;
+        }
 
-            return lookinAssemblies
-                .SelectMany(a => a.GetTypes())
-                .Where(baseType.IsAssignableFrom);
+        public void SetName(string name)
+        {
+            Named = name;
         }
     }
 }

@@ -1,27 +1,9 @@
-// Copyright 2011-2012 Anodyne.
-//   
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
-// this file except in compliance with the License. You may obtain a copy of the 
-// License at 
-//  
-//      http://www.apache.org/licenses/LICENSE-2.0 
-//  
-// Unless required by applicable law or agreed to in writing, software distributed 
-// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
-// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
-// specific language governing permissions and limitations under the License.
+﻿using Kostassoid.Anodyne.Common;
 
 namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
-    using Common;
-    using Dependency;
-    using System;
-
-    public interface IBindingSyntax<in TService> : ISyntax where TService : class
+    public interface IBindingSyntax : ISyntax
     {
-        void Use<TImpl>(Lifestyle lifestyle = Lifestyle.Singleton, string name = null) where TImpl : TService;
-        void Use(Func<TService> bindingFunc, Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
-        void UseSelf(Lifestyle lifestyle = Lifestyle.Singleton, string name = null);
-        void UseInstance<TImpl>(TImpl implementation, string name = null) where TImpl : class, TService;
+        IBinding Binding { get; } 
     }
 }

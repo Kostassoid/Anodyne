@@ -64,11 +64,11 @@
     </Compile>
     <Compile Include="AppSettingsResolver.cs" />
     <Compile Include="ContainerEx.cs" />
-    <Compile Include="Registration\BindingSyntax.cs" />
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="UnmanagedReleasePolicy.cs" />
     <Compile Include="UnmanagedLifestyleManager.cs" />
     <Compile Include="WindsorContainerAdapter.cs" />
+    <Compile Include="WindsorContainerRegistrator.cs" />
     <Compile Include="WindsorWcfServicePublisher.cs" />
   </ItemGroup>
   <ItemGroup>

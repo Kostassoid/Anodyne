@@ -11,6 +11,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Common.Reflection;
+using Kostassoid.Anodyne.Node.Dependency.Registration;
+
 namespace Kostassoid.Anodyne.Web.Mvc
 {
     using System.Collections.Generic;
@@ -33,7 +36,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
         {
             var node = (INodeInstance)configuration;
 
-            node.Container.ForAllBasedOn<IController>(assemblies).UseSelf(Lifestyle.Transient);
+            node.Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).As<IController>().With(Lifestyle.Transient));
         }
     }
 }

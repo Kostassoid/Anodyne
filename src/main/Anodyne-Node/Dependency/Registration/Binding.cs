@@ -11,26 +11,26 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Node.Dependency.Registration;
+using System;
+using System.Collections.Generic;
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
-    using Anodyne.DataAccess;
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public static class Binding
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public static ISingleBindingSyntax<TService> For<TService>() where TService : class
         {
-            var cfg = (INodeInstance)configuration;
-
-            cfg.Container.Put(Binding.For<IDataSessionFactory>()
-                .Use(() => new InMemoryDataSessionFactory()));
-
-            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
+            return new SingleBindingSyntax<TService>();
         }
 
-    }
+        public static ISingleBindingSyntax For(Type service)
+        {
+            return new SingleBindingSyntax(service);
+        }
 
+        public static IMultipleBindingSyntax Use(IEnumerable<Type> services)
+        {
+            return new MultipleBindingSyntax(services);
+        }
+    }
 }

@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Node.Dependency.Registration;
+
 namespace Kostassoid.Anodyne.MongoDb
 {
     using System.Linq;
@@ -27,8 +29,8 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             var cfg = (INodeInstance)configuration;
 
-            cfg.Container.For<IDataAccessProvider>()
-                .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container)));
+            cfg.Container.Put(Binding.For<IDataAccessProvider>()
+                .Use(() => new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName, new ContainerOperationResolver(cfg.Container))));
 
             UnitOfWork.SetFactory(cfg.Container.Get<IDataAccessProvider>() as IDataSessionFactory);
 

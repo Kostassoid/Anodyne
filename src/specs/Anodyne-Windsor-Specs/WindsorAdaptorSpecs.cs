@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.Node.Dependency.Registration;
+
 namespace Kostassoid.Anodyne.Windsor.Specs
 {
     using System;
@@ -56,7 +58,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_be_available_from_container_by_interface()
             {
-                Container.For<IBoo>().Use<Boo>();
+                Container.Put(Binding.For<IBoo>().Use<Boo>());
 
                 Container.Has<IBoo>().Should().BeTrue();
                 Container.Get<IBoo>().Should().BeOfType<Boo>();
@@ -70,7 +72,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_be_registered_as_transient()
             {
-                Container.For<IBoo>().Use<Boo>(Lifestyle.Transient);
+                Container.Put(Binding.For<IBoo>().Use<Boo>().With(Lifestyle.Transient));
 
                 Container.OnNative(c => c.Kernel.GetHandler(typeof(IBoo))
                                          .ComponentModel.LifestyleType.Should()
@@ -85,7 +87,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_release()
             {
-                Container.For<IBoo>().Use<Boo>(Lifestyle.Transient);
+                Container.Put(Binding.For<IBoo>().Use<Boo>().With(Lifestyle.Transient));
 
                 var boo = Container.Get<IBoo>();
 
@@ -102,7 +104,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_no_nothing()
             {
-                Container.For<IBoo>().Use<Boo>(Lifestyle.Unmanaged);
+                Container.Put(Binding.For<IBoo>().Use<Boo>().With(Lifestyle.Unmanaged));
 
                 var boo = Container.Get<IBoo>();
 

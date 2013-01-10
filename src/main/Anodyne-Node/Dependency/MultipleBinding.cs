@@ -12,16 +12,30 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 
 namespace Kostassoid.Anodyne.Node.Dependency
 {
-    public class StaticResolver : IImplementationResolver
+    public class MultipleBinding : LifestyleBasedBinding
     {
-        public Type Target { get; protected set; }
+        public IEnumerable<Type> Services { get; protected set; }
+        public bool? BindAsSelf { get; protected set; }
+        public ISet<Type> BindTo { get; protected set; }
 
-        public StaticResolver(Type target)
+        public MultipleBinding(IEnumerable<Type> services)
         {
-            Target = target;
+            Services = services;
+            BindTo = new HashSet<Type>();
+        }
+
+        public void AsSelf()
+        {
+            BindAsSelf = true;
+        }
+
+        public void ForwardTo<TService>() where TService : class
+        {
+            BindTo.Add(typeof(TService));
         }
     }
 }
