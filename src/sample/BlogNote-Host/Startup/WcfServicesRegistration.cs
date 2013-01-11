@@ -26,7 +26,7 @@ namespace Kostassoid.BlogNote.Host.Startup
         public void OnStartup(INodeInstance instance)
         {
             instance
-                .WcfServicePublisher
+                .WcfProxyProvider
                 .Start<IUserService>()
                 .ImplementedBy<UserService>()
                 .ConfiguredWith(c =>

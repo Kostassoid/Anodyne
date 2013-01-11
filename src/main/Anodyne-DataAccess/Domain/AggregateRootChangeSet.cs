@@ -11,13 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
-{
-    using Domain.Base;
-    using Domain.Events;
-    using Exceptions;
-    using System.Collections.Generic;
+using Kostassoid.Anodyne.DataAccess.Domain.Exceptions;
+using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.Events;
+using System.Collections.Generic;
 
+namespace Kostassoid.Anodyne.DataAccess.Domain
+{
     public class AggregateRootChangeSet
     {
         public IAggregateRoot Aggregate { get; protected set; }

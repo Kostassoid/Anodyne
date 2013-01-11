@@ -14,39 +14,37 @@
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
     using Anodyne.DataAccess;
-    using Anodyne.DataAccess.Operations;
     using Domain.Base;
     using System;
     using System.Collections.Generic;
 
-    public class InMemoryDataSession : DataSession
+    public class InMemoryDataSession : IDataSession
     {
-        private readonly IDictionary<object, IAggregateRoot> _roots;
+        public IDictionary<object, object> Roots { get; private set; }
 
-        public InMemoryDataSession(IOperationResolver operationResolver, IDictionary<object, IAggregateRoot> roots)
-            : base(operationResolver)
+        public InMemoryDataSession(IDictionary<object, object> roots)
         {
-            _roots = roots;
+            Roots = roots;
         }
 
-        public override IRepository<TRoot> GetRepository<TRoot>()
+        public object FindOne(Type type, object id)
         {
-            return new Repository<TRoot>(_roots);
+            return Roots.ContainsKey(id) ? Roots[id] : null;
         }
 
-        protected override IAggregateRoot FindOne(Type type, object id)
+        public void SaveOne(Type type, object o)
         {
-            return _roots.ContainsKey(id) ? _roots[id] : null;
+            Roots[((IAggregateRoot)o).IdObject] = o;
         }
 
-        protected override void SaveOne(Type type, IAggregateRoot root)
+        public void RemoveOne(Type type, object id)
         {
-            _roots[root.IdObject] = root;
+            Roots.Remove(id);
         }
 
-        protected override void RemoveOne(Type type, object id)
-        {
-            _roots.Remove(id);
-        }
+        public object NativeSession { get { throw new InvalidOperationException("InMemoryDataSession doesn't need any native session");} }
+
+        public void Dispose()
+        { }
     }
 }

@@ -11,13 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.DataAccess.Domain.Policy;
 using Kostassoid.Anodyne.Node.Dependency.Registration;
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
     using System.Reflection;
     using Anodyne.DataAccess;
-    using Anodyne.DataAccess.Policy;
     using Common.Tools;
     using Dependency;
     using Logging;
@@ -38,8 +39,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         IDataAccessProvider INodeInstance.DataAccess { get { return _container.Get<IDataAccessProvider>(); } }
 
-        private IWcfServicePublisher _wcfServicePublisher;
-        IWcfServicePublisher INodeInstance.WcfServicePublisher { get { return _wcfServicePublisher; } }
+        private IWcfProxyProvider _wcfProxyProvider;
+        IWcfProxyProvider INodeInstance.WcfProxyProvider { get { return _wcfProxyProvider; } }
 
         private string _systemNamespace;
         string INodeInstance.SystemNamespace { get { return _systemNamespace; } }
@@ -77,9 +78,9 @@ namespace Kostassoid.Anodyne.Node.Configuration
             LogManager.Adapter = loggerAdapter;
         }
 
-        void IConfigurationBuilder.SetWcfServiceProvider(IWcfServicePublisher wcfServicePublisher)
+        void IConfigurationBuilder.SetWcfServiceProvider(IWcfProxyProvider wcfProxyProvider)
         {
-            _wcfServicePublisher = wcfServicePublisher;
+            _wcfProxyProvider = wcfProxyProvider;
         }
 
         public void RunIn(RuntimeMode runtimeMode)

@@ -11,19 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+using Kostassoid.Anodyne.Domain.Events;
+
+namespace Kostassoid.Anodyne.DataAccess.Domain.Events
 {
-    using System.Linq;
-    using Domain;
-    using Domain.Base;
-    using Operations;
-
-    public interface IDataQueryContext
+    public class UnitOfWorkCompletingEvent : IDomainEvent
     {
-        IRepository<TRoot> Query<TRoot>() where TRoot : class, IAggregateRoot;
+        public UnitOfWork UnitOfWork { get; protected set; }
 
-        IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot;
-
-        TOp Using<TOp>() where TOp : class, IDomainOperation;
+        public UnitOfWorkCompletingEvent(UnitOfWork unitOfWork)
+        {
+            UnitOfWork = unitOfWork;
+        }
     }
 }

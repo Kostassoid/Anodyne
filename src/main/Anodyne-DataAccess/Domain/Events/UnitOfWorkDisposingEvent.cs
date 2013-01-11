@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Anodyne.
+﻿// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,10 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+using Kostassoid.Anodyne.Domain.Events;
+
+namespace Kostassoid.Anodyne.DataAccess.Domain.Events
 {
-    public interface IDataSessionFactory
+    public class UnitOfWorkDisposingEvent : IDomainEvent
     {
-        IDataSession Open();
+        public UnitOfWork UnitOfWork { get; protected set; }
+
+        public UnitOfWorkDisposingEvent(UnitOfWork unitOfWork)
+        {
+            UnitOfWork = unitOfWork;
+        }
     }
 }

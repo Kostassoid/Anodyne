@@ -23,7 +23,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         RuntimeMode RuntimeMode { get; }
         IContainer Container { get; }
         ILoggerAdapter Logger { get; }
-        IWcfServicePublisher WcfServicePublisher { get; }
+        IWcfProxyProvider WcfProxyProvider { get; }
         IDataAccessProvider DataAccess { get; }
         string SystemNamespace { get; }
     }

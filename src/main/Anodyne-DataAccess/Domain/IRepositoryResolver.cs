@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2013 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,17 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Exceptions
+using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using Kostassoid.Anodyne.Domain.Base;
+
+namespace Kostassoid.Anodyne.DataAccess.Domain
 {
-    using System;
-
-    public class AggregateRootNotFoundException : Exception
+    public interface IRepositoryResolver
     {
-        public object Key { get; protected set; }
-
-        public AggregateRootNotFoundException(object key)
-        {
-            Key = key;
-        }
+        IRepository<TRoot> Get<TRoot>(IDataSession dataSession) where TRoot : class, IAggregateRoot;
     }
 }

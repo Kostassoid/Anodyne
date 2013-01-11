@@ -11,11 +11,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Node.Dependency.Registration;
+using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.Node.DataAccess;
 
 namespace Kostassoid.Anodyne.Specs.Shared
 {
-    using Anodyne.DataAccess;
     using DataAccess;
     using Node.Configuration;
 
@@ -25,10 +25,7 @@ namespace Kostassoid.Anodyne.Specs.Shared
         {
             var cfg = (INodeInstance)configuration;
 
-            cfg.Container.Put(Binding.For<IDataSessionFactory>()
-                .Use(() => new InMemoryDataSessionFactory()));
-
-            UnitOfWork.SetFactory(cfg.Container.Get<IDataSessionFactory>()); //TODO: move it
+            UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
         }
 
     }

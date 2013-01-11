@@ -10,7 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-// 
+
+using Kostassoid.Anodyne.DataAccess;
 
 namespace Kostassoid.BlogNote.Web.Query
 {
@@ -24,9 +25,9 @@ namespace Kostassoid.BlogNote.Web.Query
     {
         private readonly MongoDatabase _database;
 
-        public UserQuery(MongoDatabase database)
+        public UserQuery(IDataAccessProvider dataAccessProvider)
         {
-            _database = database;
+            _database = (MongoDatabase)dataAccessProvider.SessionFactory.Open().NativeSession; //TODO: make more dbms-agnostic
         }
 
         public IList<User> GetAll()

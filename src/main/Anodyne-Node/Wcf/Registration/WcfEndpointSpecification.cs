@@ -25,7 +25,7 @@ namespace Kostassoid.Anodyne.Node.Wcf.Registration
             Binding = binding;
         }
 
-        public WcfEndpointSpecification At(string address)
+        public WcfEndpointSpecification AtUrl(string address)
         {
             Address = address;
             return this;

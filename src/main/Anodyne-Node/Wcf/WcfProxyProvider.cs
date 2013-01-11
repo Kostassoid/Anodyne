@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-//  
+// 
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,19 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Exceptions
+namespace Kostassoid.Anodyne.Node.Wcf
 {
-    using Domain.Base;
-    using System;
-    using System.Collections.Generic;
+    using Registration;
+    using Registration.Concrete;
 
-    public class StaleDataException : Exception
+    public abstract class WcfProxyProvider : IWcfProxyProvider
     {
-        public IList<IAggregateRoot> StaleData { get; protected set; }
-
-        public StaleDataException(IList<IAggregateRoot> staleData, string message):base(message)
+        public IServiceImplementationSyntax<TService> Start<TService>() where TService : class
         {
-            StaleData = staleData;
+            return new ServiceImplementationSyntax<TService>(this);
         }
+
+        public abstract void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
+
+        public abstract void Publish<TService, TImpl>(WcfServiceSpecification<TService, TImpl> specification)
+            where TService : class
+            where TImpl : TService;
     }
 }

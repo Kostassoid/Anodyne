@@ -55,11 +55,13 @@
     </Compile>
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="DataAccessProviderEx.cs" />
+    <Compile Include="MongoDataAccessProvider.cs" />
     <Compile Include="MongoDataSessionFactory.cs" />
     <Compile Include="MongoCollectionEx.cs" />
     <Compile Include="MongoDatabaseEx.cs" />
     <Compile Include="MongoDataSession.cs" />
     <Compile Include="MongoHelper.cs" />
+    <Compile Include="MongoRepositoryResolver.cs" />
     <Compile Include="ObjectEx.cs" />
     <Compile Include="MongoRepository.cs" />
   </ItemGroup>

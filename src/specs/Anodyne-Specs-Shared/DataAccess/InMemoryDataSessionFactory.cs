@@ -16,16 +16,15 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
     using System.Collections.Concurrent;
 
     using Anodyne.DataAccess;
-    using Domain.Base;
     using System.Collections.Generic;
 
     public class InMemoryDataSessionFactory : IDataSessionFactory
     {
-        private readonly IDictionary<object, IAggregateRoot> _roots = new ConcurrentDictionary<object, IAggregateRoot>();
+        private readonly IDictionary<object, object> _roots = new ConcurrentDictionary<object, object>();
 
-        public IDataSession OpenSession()
+        public IDataSession Open()
         {
-            return new InMemoryDataSession(null, _roots);
+            return new InMemoryDataSession(_roots);
         }
     }
 }

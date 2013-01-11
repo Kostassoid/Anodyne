@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System.Linq;
+
 namespace Kostassoid.Anodyne.Windsor
 {
     using Castle.Facilities.WcfIntegration;
@@ -21,13 +23,13 @@ namespace Kostassoid.Anodyne.Windsor
     using Node.Wcf.Registration;
     using System;
 
-    public class WindsorWcfServicePublisher : WcfServicePublisher
+    public class WindsorWcfProxyProvider : WcfProxyProvider
     {
         private readonly IWindsorContainer _container;
 
-        public WindsorWcfServicePublisher(IConfiguration configuration)
+        public WindsorWcfProxyProvider(IConfiguration configuration)
         {
-            var containerAdapter = (configuration as INodeInstance).Container;
+            var containerAdapter = ((INodeInstance)configuration).Container;
 
             if (!(containerAdapter is WindsorContainerAdapter))
                 throw new InvalidOperationException("WindsorWcfServicePublisher requires Windsor Container");
@@ -35,6 +37,21 @@ namespace Kostassoid.Anodyne.Windsor
             _container = (containerAdapter as WindsorContainerAdapter).NativeContainer;
 
             _container.AddFacility<WcfFacility>();
+        }
+
+        private static IWcfEndpoint GetBindingEndpointModelFrom(WcfEndpointSpecification endpointSpecification)
+        {
+            var endpoint = WcfEndpoint.BoundTo(endpointSpecification.Binding);
+
+            if (!string.IsNullOrEmpty(endpointSpecification.Address))
+                return endpoint.At(endpointSpecification.Address);
+
+            return endpoint;
+        }
+
+        public override void Consume<TService>(WcfEndpointSpecification endpoint)
+        {
+            _container.Register(Component.For<TService>().AsWcfClient(GetBindingEndpointModelFrom(endpoint)));
         }
 
         public override void Publish<TService, TImpl>(WcfServiceSpecification<TService, TImpl> specification)
@@ -47,14 +64,7 @@ namespace Kostassoid.Anodyne.Windsor
             if (specification.PublishMetadata)
                 serviceModel = serviceModel.PublishMetadata(o => o.EnableHttpGet());
 
-            foreach (var endpointSpecification in specification.Endpoints)
-            {
-                var endpoint = WcfEndpoint.BoundTo(endpointSpecification.Binding);
-                serviceModel =
-                    string.IsNullOrEmpty(endpointSpecification.Address)
-                    ? serviceModel.AddEndpoints(endpoint)
-                    : serviceModel.AddEndpoints(endpoint.At(endpointSpecification.Address));
-            }
+            serviceModel = serviceModel.AddEndpoints(specification.Endpoints.Select(GetBindingEndpointModelFrom).ToArray());
 
             _container.Register(Component.For<TService>().ImplementedBy<TImpl>().AsWcfService(serviceModel));
         }

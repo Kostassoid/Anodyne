@@ -31,7 +31,7 @@ namespace Kostassoid.Anodyne.Windsor
 
         public static void UseWindsorWcfServicePublisher(this IConfiguration configuration)
         {
-            ((IConfigurationBuilder)configuration).SetWcfServiceProvider(new WindsorWcfServicePublisher(configuration));
+            ((IConfigurationBuilder)configuration).SetWcfServiceProvider(new WindsorWcfProxyProvider(configuration));
         }
 
     }

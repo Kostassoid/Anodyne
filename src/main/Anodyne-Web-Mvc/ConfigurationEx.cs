@@ -36,7 +36,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
         {
             var node = (INodeInstance)configuration;
 
-            node.Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).As<IController>().With(Lifestyle.Transient));
+            node.Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).With(Lifestyle.Transient));
         }
     }
 }

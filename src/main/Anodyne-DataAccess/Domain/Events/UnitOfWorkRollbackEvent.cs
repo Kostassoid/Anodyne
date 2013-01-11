@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Anodyne.
+﻿// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,22 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Operations
-{
-    using Common;
-    using Domain.Base;
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
+using Kostassoid.Anodyne.Domain.Events;
 
-    public interface IRepository<TRoot> where TRoot : class, IAggregateRoot
+namespace Kostassoid.Anodyne.DataAccess.Domain.Events
+{
+    public class UnitOfWorkRollbackEvent : IDomainEvent
     {
-        TRoot this[object key] { get; }
-        TRoot GetOne(object key);
-        Option<TRoot> FindOne(object key);
-        IQueryable<TRoot> All();
-        bool Exists(object key);
-        long Count(Expression<Func<TRoot, bool>> criteria);
-        long Count();
+        public UnitOfWork UnitOfWork { get; protected set; }
+
+        public UnitOfWorkRollbackEvent(UnitOfWork unitOfWork)
+        {
+            UnitOfWork = unitOfWork;
+        }
     }
 }

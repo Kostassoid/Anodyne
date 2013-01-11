@@ -15,26 +15,23 @@ namespace Kostassoid.Anodyne.MongoDb
 {
     using DataAccess;
     using MongoDB.Driver;
-    using DataAccess.Operations;
 
     public class MongoDataSessionFactory : IDataSessionFactory
     {
         protected string DatabaseName { get; private set; }
         protected MongoServer Server { get; private set; }
-        protected IOperationResolver OperationResolver { get; private set; }
 
-        public MongoDataSessionFactory(string connectionString, string databaseName, IOperationResolver operationResolver)
+        public MongoDataSessionFactory(string connectionString, string databaseName)
         {
             DatabaseName = databaseName;
-            OperationResolver = operationResolver;
 
             Server = new MongoClient(connectionString).GetServer();
         }
 
-        public virtual IDataSession OpenSession()
+        public virtual IDataSession Open()
         {
             //reusing database connection (ref: http://www.mongodb.org/display/DOCS/CSharp+Driver+Tutorial#CSharpDriverTutorial-Threadsafety)
-            return new MongoDataSession(Server.GetDatabase(DatabaseName), OperationResolver);
+            return new MongoDataSession(Server.GetDatabase(DatabaseName));
         }
     }
 }

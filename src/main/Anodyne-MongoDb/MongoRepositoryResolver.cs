@@ -11,17 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Events
+using Kostassoid.Anodyne.DataAccess;
+using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using Kostassoid.Anodyne.Domain.Base;
+using MongoDB.Driver;
+
+namespace Kostassoid.Anodyne.MongoDb
 {
-    using Domain.Events;
-
-    public class UnitOfWorkCompletingEvent : IDomainEvent
+    public class MongoRepositoryResolver : IRepositoryResolver
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
-
-        public UnitOfWorkCompletingEvent(UnitOfWork unitOfWork)
+        public IRepository<TRoot> Get<TRoot>(IDataSession dataSession) where TRoot : class, IAggregateRoot
         {
-            UnitOfWork = unitOfWork;
+            return new MongoRepository<TRoot>((MongoDatabase)dataSession.NativeSession);
         }
     }
 }

@@ -1,9 +1,9 @@
-// Copyright 2011-2013 Anodyne.
+﻿// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-//  
+// 
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,20 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Exceptions
+namespace Kostassoid.Anodyne.Node.Wcf
 {
-    using Domain.Base;
-    using System;
+    using Registration;
 
-    public class ConcurrencyException : Exception
+    public interface IWcfProxyProvider
     {
-        public IAggregateRoot Aggregate { get; protected set; }
-
-        public ConcurrencyException(IAggregateRoot aggregate)
-            :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
-                        aggregate.IdObject, aggregate.GetType().Name))
-        {
-            Aggregate = aggregate;
-        }
+        IServiceImplementationSyntax<TService> Start<TService>() where TService : class;
+        void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
     }
 }

@@ -16,11 +16,10 @@ namespace Kostassoid.Anodyne.MongoDb
     using DataAccess;
     using Domain.Base;
     using MongoDB.Driver;
-    using DataAccess.Operations;
     using MongoDB.Driver.Builders;
     using System;
 
-    public class MongoDataSession : DataSession, IDataSessionEx
+    public class MongoDataSession : IDataSession
     {
         private readonly MongoDatabase _nativeSession;
 
@@ -29,33 +28,30 @@ namespace Kostassoid.Anodyne.MongoDb
             get { return _nativeSession; }
         }
 
-        public MongoDataSession(MongoDatabase dataContext, IOperationResolver operationResolver) : base(operationResolver)
+        public MongoDataSession(MongoDatabase dataContext)
         {
             _nativeSession = dataContext;
         }
 
-        public override IRepository<TRoot> GetRepository<TRoot>()
-        {
-            return new MongoRepository<TRoot>(_nativeSession);
-        }
-
-        protected override IAggregateRoot FindOne(Type type, object id)
+        public object FindOne(Type type, object id)
         {
             var collection = _nativeSession.GetCollection(type);
             return collection.FindOneByIdAs(type, id.AsIdValue()) as IAggregateRoot;
         }
 
-        protected override void SaveOne(Type type, IAggregateRoot root)
+        public void SaveOne(Type type, object o)
         {
             var collection = _nativeSession.GetCollection(type);
-            collection.Save(root);
+            collection.Save(o);
         }
 
-        protected override void RemoveOne(Type type, object id)
+        public void RemoveOne(Type type, object id)
         {
             var collection = _nativeSession.GetCollection(type);
             collection.Remove(Query.EQ("_id", id.AsIdValue()));
         }
 
+        public void Dispose()
+        { }
     }
 }

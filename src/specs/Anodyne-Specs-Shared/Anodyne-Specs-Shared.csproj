@@ -57,7 +57,8 @@
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="DataAccess\InMemoryDataSession.cs" />
     <Compile Include="DataAccess\InMemoryDataSessionFactory.cs" />
-    <Compile Include="DataAccess\Repository.cs" />
+    <Compile Include="DataAccess\InMemoryRepository.cs" />
+    <Compile Include="DataAccess\InMemoryRepositoryResolver.cs" />
     <Compile Include="DataGeneration\AbstractGenerator.cs" />
     <Compile Include="DataGeneration\Imagine.cs" />
     <Compile Include="DataGeneration\SimpleGenerator.cs" />

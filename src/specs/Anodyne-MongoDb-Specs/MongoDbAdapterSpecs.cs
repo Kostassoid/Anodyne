@@ -11,8 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess;
 using FluentAssertions;
+using Kostassoid.Anodyne.DataAccess.Domain;
 using Kostassoid.Anodyne.MongoDb.Specs.Domain;
 using MongoDB.Driver;
 using NUnit.Framework;
@@ -39,12 +39,11 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 using (var uow = new UnitOfWork())
                 {
-                    var collection = ((MongoDatabase)uow.DataSession.As<IDataSessionEx>().NativeSession).GetCollection<TestRoot>();
+                    var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<TestRoot>();
 
                     collection.Should().NotBeNull();
                     collection.Name.Should().Be(typeof(TestRoot).Name);
                 }
-
             }
         }
 
@@ -57,7 +56,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 using (var uow = new UnitOfWork())
                 {
-                    var collection = ((MongoDatabase)uow.DataSession.As<IDataSessionEx>().NativeSession).GetCollection<DerivedTestRoot>();
+                    var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<DerivedTestRoot>();
 
                     collection.Should().NotBeNull();
                     collection.Name.Should().Be(typeof(TestRoot).Name);
@@ -100,7 +99,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var database = (MongoDatabase)((IDataSessionEx)uow.DataSession).NativeSession;
+                    var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
 
                     database.CollectionExists("TestRoot").Should().BeFalse();
 
@@ -133,7 +132,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
                 using (var uow = new UnitOfWork())
                 {
-                    var database = (((IDataSessionEx)uow.DataSession).NativeSession as MongoDatabase);
+                    var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
 
                     database.EnsureCappedCollectionExists<TestRoot>(10);
 

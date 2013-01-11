@@ -11,23 +11,24 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.DataAccess.Domain.Exceptions;
+using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
     using Common;
     using Common.Extentions;
     using Domain.Base;
-    using Anodyne.DataAccess.Exceptions;
-    using Anodyne.DataAccess.Operations;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
 
-    public class Repository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
+    public class InMemoryRepository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
         private readonly IList<TRoot> _collection;
 
-        public Repository(IDictionary<object, IAggregateRoot> roots)
+        public InMemoryRepository(IDictionary<object, object> roots)
         {
             _collection = roots.Values.OfType<TRoot>().ToList();
         }

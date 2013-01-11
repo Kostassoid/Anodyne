@@ -18,7 +18,6 @@ namespace Kostassoid.BlogNote.Web.Code
     using Anodyne.Web.Mvc;
     using Anodyne.Windsor;
     using Anodyne.MongoDb;
-    using Castle.Windsor.Installer;
 
     public class BlogNoteWebNode : MvcNode
     {
@@ -31,8 +30,7 @@ namespace Kostassoid.BlogNote.Web.Code
             c.ResolveControllersFromContainer();
             c.RegisterControllers(From.ThisAssembly);
 
-            c.ConfigureUsing(n => n.Container.OnNative(container => container.Install(FromAssembly.This())));
-
+            c.OnStartupPerform<QueryRegistration>();
             c.OnStartupPerform<WcfClientsRegistration>();
         }
     }

@@ -11,17 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Events
+using System;
+
+namespace Kostassoid.Anodyne.DataAccess.Domain.Exceptions
 {
-    using Domain.Events;
-
-    public class UnitOfWorkRollbackEvent : IDomainEvent
+    public class AggregateRootNotFoundException : Exception
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
+        public object Key { get; protected set; }
 
-        public UnitOfWorkRollbackEvent(UnitOfWork unitOfWork)
+        public AggregateRootNotFoundException(object key)
         {
-            UnitOfWork = unitOfWork;
+            Key = key;
         }
     }
 }

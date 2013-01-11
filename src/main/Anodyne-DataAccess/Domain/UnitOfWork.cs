@@ -11,28 +11,30 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
-{
-    using Common;
-    using Common.CodeContracts;
-    using Common.ExecutionContext;
-    using Common.Reflection;
-    using Domain.Events;
-    using Events;
-    using Domain;
-    using Domain.Base;
-    using Exceptions;
-    using Operations;
-    using Policy;
-    using Wiring;
-    using System;
-    using System.Linq;
+using Kostassoid.Anodyne.Common;
+using Kostassoid.Anodyne.Common.CodeContracts;
+using Kostassoid.Anodyne.Common.ExecutionContext;
+using Kostassoid.Anodyne.Common.Reflection;
+using Kostassoid.Anodyne.DataAccess.Domain.Events;
+using Kostassoid.Anodyne.DataAccess.Domain.Exceptions;
+using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using Kostassoid.Anodyne.DataAccess.Domain.Policy;
+using Kostassoid.Anodyne.Domain.Events;
+using Kostassoid.Anodyne.Domain;
+using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Wiring;
+using System;
+using System.Linq;
 
+namespace Kostassoid.Anodyne.DataAccess.Domain
+{
     public class UnitOfWork : IUnitOfWorkEx, IDisposable
     {
         private const string HeadContextKey = "head-unit-of-work";
 
         private static IDataSessionFactory _dataSessionFactory;
+        private static IOperationResolver _operationResolver;
+        private static IRepositoryResolver _repositoryResolver;
         private static DataAccessPolicy _policy = new DataAccessPolicy();
 
         private static bool _eventHandlersAreSet;
@@ -40,7 +42,7 @@ namespace Kostassoid.Anodyne.DataAccess
         private readonly string _contextKey = HeadContextKey;
         private readonly UnitOfWork _parent;
 
-        public IDataSession DataSession { get; protected set; }
+        public IDomainDataSession DomainDataSession { get; protected set; }
 
         private readonly StaleDataPolicy _staleDataPolicy = StaleDataPolicy.Strict;
 
@@ -62,9 +64,11 @@ namespace Kostassoid.Anodyne.DataAccess
             get { return Context.Find(_contextKey).IsNone; }
         }
 
-        public static void SetFactory(IDataSessionFactory dataSessionFactory)
+        public static void SetDependencyResolvers(IDataSessionFactory dataSessionFactory, IOperationResolver operationResolver, IRepositoryResolver repositoryResolver)
         {
             _dataSessionFactory = dataSessionFactory;
+            _operationResolver = operationResolver;
+            _repositoryResolver = repositoryResolver;
         }
 
         public static void EnforcePolicy(DataAccessPolicy policy)
@@ -79,14 +83,14 @@ namespace Kostassoid.Anodyne.DataAccess
             if (Current.IsSome)
             {
                 _parent = Current.Value;
-                DataSession = _parent.DataSession;
+                DomainDataSession = _parent.DomainDataSession;
 
                 _contextKey = String.Format("{0}-{1}", _contextKey, Guid.NewGuid().ToString("N"));
             }
             else
             {
-                DataSession = _dataSessionFactory.OpenSession();
-                if (DataSession == null)
+                DomainDataSession = new DomainDataSession(_dataSessionFactory.Open());
+                if (DomainDataSession == null)
                     throw new Exception("Unable to create IDataSession (bad configuration?)");
             }
 
@@ -114,7 +118,7 @@ namespace Kostassoid.Anodyne.DataAccess
                         throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
 
                     if (Current.IsSome && !Current.Value.IsFinished)
-                        ((UnitOfWork)Current).DataSession.Handle(e);
+                        ((UnitOfWork)Current).DomainDataSession.Handle(e);
                 }, Priority.Exact(1000));
         }
 
@@ -132,7 +136,7 @@ namespace Kostassoid.Anodyne.DataAccess
             if (!IsRoot) return;
 
             EventBus.Publish(new UnitOfWorkCompletingEvent(this));
-            var changeSet = DataSession.SaveChanges(_staleDataPolicy);
+            var changeSet = DomainDataSession.SaveChanges(_staleDataPolicy);
             EventBus.Publish(new UnitOfWorkCompletedEvent(this, changeSet));
 
             if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
@@ -147,7 +151,7 @@ namespace Kostassoid.Anodyne.DataAccess
 
             if (!IsRoot) return;
 
-            DataSession.Rollback();
+            DomainDataSession.Rollback();
             EventBus.Publish(new UnitOfWorkRollbackEvent(this));
         }
 
@@ -165,7 +169,7 @@ namespace Kostassoid.Anodyne.DataAccess
                 if (IsRoot)
                 {
                     EventBus.Publish(new UnitOfWorkDisposingEvent(this));
-                    DataSession.Dispose();
+                    DomainDataSession.Dispose();
                 }
 
                 Context.Release(_contextKey);
@@ -183,7 +187,7 @@ namespace Kostassoid.Anodyne.DataAccess
         {
             AssertIfFinished();
 
-            return DataSession.GetRepository<TRoot>();
+            return _repositoryResolver.Get<TRoot>(DomainDataSession.DataSession);
         }
 
         public IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot
@@ -197,14 +201,14 @@ namespace Kostassoid.Anodyne.DataAccess
         {
             AssertIfFinished();
 
-            return DataSession.GetOperation<TOp>();
+            return _operationResolver.Get<TOp>();
         }
 
         public void MarkAsDeleted<TRoot>(TRoot entity) where TRoot : class, IAggregateRoot
         {
             AssertIfFinished();
 
-            DataSession.MarkAsDeleted(entity);
+            DomainDataSession.MarkAsDeleted(entity);
         }
 
     }

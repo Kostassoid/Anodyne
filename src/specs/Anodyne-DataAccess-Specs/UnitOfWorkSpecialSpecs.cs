@@ -11,17 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.DataAccess.Domain.Policy;
+using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.Events;
+
 namespace Kostassoid.Anodyne.DataAccess.Specs
 {
     using System;
 
     using Anodyne.Specs.Shared;
     using Common.Tools;
-    using Domain.Base;
-    using Domain.Events;
     using FluentAssertions;
     using NUnit.Framework;
-    using Policy;
 
     // ReSharper disable InconsistentNaming
     public class UnitOfWorkSpecialSpecs

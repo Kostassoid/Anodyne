@@ -17,11 +17,11 @@ namespace Kostassoid.Anodyne.Node.Wcf.Registration.Concrete
 
     internal class ServiceConfigurationSyntax<TService, TImpl> : IServiceConfigurationSyntax<TService, TImpl> where TService : class where TImpl : class, TService
     {
-        private readonly WcfServicePublisher _wcfServicePublisher;
+        private readonly WcfProxyProvider _wcfProxyProvider;
 
-        public ServiceConfigurationSyntax(WcfServicePublisher wcfServicePublisher)
+        public ServiceConfigurationSyntax(WcfProxyProvider wcfProxyProvider)
         {
-            _wcfServicePublisher = wcfServicePublisher;
+            _wcfProxyProvider = wcfProxyProvider;
         }
 
         public void ConfiguredWith(Action<IWcfServiceConfiguration> configurationAction)
@@ -30,7 +30,7 @@ namespace Kostassoid.Anodyne.Node.Wcf.Registration.Concrete
 
             configurationAction(specification);
 
-            _wcfServicePublisher.Publish(specification);
+            _wcfProxyProvider.Publish(specification);
         }
     }
 }

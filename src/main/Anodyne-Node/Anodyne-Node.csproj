@@ -101,12 +101,12 @@
     <Compile Include="Wcf\Registration\Bound.cs" />
     <Compile Include="Wcf\Registration\IServiceConfigurationSyntax.cs" />
     <Compile Include="Wcf\Registration\IServiceImplementationSyntax.cs" />
-    <Compile Include="Wcf\IWcfServicePublisher.cs" />
+    <Compile Include="Wcf\IWcfProxyProvider.cs" />
     <Compile Include="Wcf\Registration\Concrete\ServiceConfigurationSyntax.cs" />
     <Compile Include="Wcf\Registration\Concrete\ServiceImplementationSyntax.cs" />
     <Compile Include="Wcf\Registration\WcfEndpointSpecification.cs" />
     <Compile Include="Wcf\Registration\WcfServiceSpecification.cs" />
-    <Compile Include="Wcf\WcfServicePublisher.cs" />
+    <Compile Include="Wcf\WcfProxyProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

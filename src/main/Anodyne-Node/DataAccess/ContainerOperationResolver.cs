@@ -11,11 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System;
+using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+
 namespace Kostassoid.Anodyne.Node.DataAccess
 {
     using Dependency;
-    using Anodyne.DataAccess.Operations;
-
     using Domain;
 
     public class ContainerOperationResolver : IOperationResolver
@@ -27,9 +28,16 @@ namespace Kostassoid.Anodyne.Node.DataAccess
             _container = container;
         }
 
-        public TOp Get<TOp>() where TOp : IDomainOperation
+        public TOp Get<TOp>() where TOp : class, IDomainOperation
         {
-            return _container.Get<TOp>();
+            var operation = _container.Get<TOp>();
+
+            if (operation == null)
+            {
+                throw new ArgumentException(String.Format("Operation {0} wasn't found. Check your configuration.", typeof(TOp).Name));
+            }
+
+            return operation;
         }
     }
 }

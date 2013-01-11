@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2013 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,21 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess.Events
+using Kostassoid.Anodyne.Common;
+using Kostassoid.Anodyne.Domain.Base;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace Kostassoid.Anodyne.DataAccess.Domain.Operations
 {
-    using System;
-
-    using Domain.Events;
-
-    public class UnitOfWorkCompletedEvent : IDomainEvent
+    public interface IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
-        public DataChangeSet ChangeSet { get; protected set; }
-
-        public UnitOfWorkCompletedEvent(UnitOfWork unitOfWork, DataChangeSet changeSet)
-        {
-            UnitOfWork = unitOfWork;
-            ChangeSet = changeSet;
-        }
+        TRoot this[object key] { get; }
+        TRoot GetOne(object key);
+        Option<TRoot> FindOne(object key);
+        IQueryable<TRoot> All();
+        bool Exists(object key);
+        long Count(Expression<Func<TRoot, bool>> criteria);
+        long Count();
     }
 }

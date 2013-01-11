@@ -11,27 +11,23 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.DataAccess
+using Kostassoid.Anodyne.DataAccess.Domain.Policy;
+using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.Events;
+using System.Collections.Generic;
+
+namespace Kostassoid.Anodyne.DataAccess.Domain
 {
-    using Domain.Base;
-    using Domain.Events;
-
-    using Domain;
-
-    using Operations;
-    using System;
-    using System.Collections.Generic;
-    using Policy;
-
-    public abstract class DataSession : IDataSession
+    public class DomainDataSession : IDomainDataSession
     {
+        private readonly IDataSession _dataSession;
         protected IDictionary<object, AggregateRootChangeSet> ChangeSets = new Dictionary<object, AggregateRootChangeSet>();
 
-        protected IOperationResolver OperationResolver { get; private set; }
+        public IDataSession DataSession { get { return _dataSession; } }
 
-        protected DataSession(IOperationResolver operationResolver)
+        public DomainDataSession(IDataSession dataSession)
         {
-            OperationResolver = operationResolver;
+            _dataSession = dataSession;
         }
 
         protected AggregateRootChangeSet GetChangeSetFor(IAggregateRoot aggregate)
@@ -51,20 +47,6 @@ namespace Kostassoid.Anodyne.DataAccess
             GetChangeSetFor(@event.Aggregate).Register(@event);
         }
 
-        public abstract IRepository<TRoot> GetRepository<TRoot>() where TRoot : class, IAggregateRoot;
-
-        public TOp GetOperation<TOp>() where TOp : class, IDomainOperation
-        {
-            var operation = OperationResolver.Get<TOp>();
-
-            if (operation == null)
-            {
-                throw new Exception(String.Format("Operation {0} wasn't found. Check your configuration.", typeof(TOp).Name));
-            }
-
-            return operation;
-        }
-
         public void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot
         {
             GetChangeSetFor(aggregate).MarkAsDeleted();
@@ -74,7 +56,7 @@ namespace Kostassoid.Anodyne.DataAccess
         {
             var type = changeSet.Aggregate.GetType();
 
-            var storedAggregate = FindOne(type, changeSet.Aggregate.IdObject);
+            var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, changeSet.Aggregate.IdObject);
 
             if (!ignoreConflicts)
             {
@@ -85,10 +67,10 @@ namespace Kostassoid.Anodyne.DataAccess
                     return false;
             }
 
-            SaveOne(type, changeSet.Aggregate);
+            _dataSession.SaveOne(type, changeSet.Aggregate);
 
             if (changeSet.IsDeleted)
-                RemoveOne(type, changeSet.Aggregate.IdObject);
+                _dataSession.RemoveOne(type, changeSet.Aggregate.IdObject);
 
             return true;
         }
@@ -121,11 +103,9 @@ namespace Kostassoid.Anodyne.DataAccess
             ChangeSets.Clear();
         }
 
-        public void Dispose() {}
-
-        protected abstract IAggregateRoot FindOne(Type type, object id);
-        protected abstract void SaveOne(Type type, IAggregateRoot root);
-        protected abstract void RemoveOne(Type type, object id);
-
+        public void Dispose()
+        {
+            _dataSession.Dispose();
+        }
     }
 }

@@ -23,18 +23,9 @@ namespace Kostassoid.BlogNote.Web.Code
     {
         public void OnStartup(INodeInstance instance)
         {
-/*
             instance
-                .WcfServicePublisher
-                .Start<IUserService>()
-                .ImplementedBy<UserService>()
-                .ConfiguredWith(c =>
-                {
-                    c.BaseAddress(Configured.From.AppSettings("UserServiceUrl"));
-                    c.Endpoint(Bound.To(new BasicHttpBinding()));
-                    c.PublishedMetadata();
-                });
-*/
+                .WcfProxyProvider
+                .Consume<IUserService>(Bound.To(new BasicHttpBinding()).AtUrl(Configured.From.AppSettings("UserServiceUrl")));
         }
     }
 }
