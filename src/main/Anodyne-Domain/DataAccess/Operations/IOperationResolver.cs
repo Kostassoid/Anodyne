@@ -11,17 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Events;
-
-namespace Kostassoid.Anodyne.DataAccess.Domain.Events
+namespace Kostassoid.Anodyne.Domain.DataAccess.Operations
 {
-    public class UnitOfWorkRollbackEvent : IDomainEvent
+    public interface IOperationResolver
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
-
-        public UnitOfWorkRollbackEvent(UnitOfWork unitOfWork)
-        {
-            UnitOfWork = unitOfWork;
-        }
+        TOp Get<TOp>() where TOp : class, IDomainOperation;
     }
 }

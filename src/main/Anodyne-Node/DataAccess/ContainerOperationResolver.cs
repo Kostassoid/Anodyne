@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 
 namespace Kostassoid.Anodyne.Node.DataAccess
 {

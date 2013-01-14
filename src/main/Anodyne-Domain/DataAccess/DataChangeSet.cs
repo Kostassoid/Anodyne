@@ -11,23 +11,23 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Node.DataAccess;
+using System.Collections.Generic;
+using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.Events;
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Domain.DataAccess
 {
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public class DataChangeSet
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public IList<IAggregateEvent> AppliedEvents { get; protected set; }
+        public IList<IAggregateRoot> StaleData { get; protected set; }
+
+        public bool StaleDataDetected { get { return StaleData.Count > 0; } }
+
+        public DataChangeSet(IList<IAggregateEvent> appliedEvents, IList<IAggregateRoot> staleData)
         {
-            var cfg = (INodeInstance)configuration;
-
-            UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
+            AppliedEvents = appliedEvents;
+            StaleData = staleData;
         }
-
     }
-
 }

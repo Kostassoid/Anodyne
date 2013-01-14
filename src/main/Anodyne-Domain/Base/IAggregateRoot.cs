@@ -13,7 +13,9 @@
 
 namespace Kostassoid.Anodyne.Domain.Base
 {
-    public interface IAggregateRoot : IEntity
+    using Anodyne.DataAccess;
+
+    public interface IAggregateRoot : IEntity, IPersistableRoot
     {
         int Version { get; }
 

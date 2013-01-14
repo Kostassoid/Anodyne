@@ -13,28 +13,38 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
+    using System.Linq;
     using Anodyne.DataAccess;
-    using Domain.Base;
     using System;
     using System.Collections.Generic;
 
     public class InMemoryDataSession : IDataSession
     {
-        public IDictionary<object, object> Roots { get; private set; }
+        public IDictionary<object, IPersistableRoot> Roots { get; private set; }
 
-        public InMemoryDataSession(IDictionary<object, object> roots)
+        public InMemoryDataSession(IDictionary<object, IPersistableRoot> roots)
         {
             Roots = roots;
         }
 
-        public object FindOne(Type type, object id)
+        public IQueryable<T> Query<T>() where T : class, IPersistableRoot
+        {
+            return Roots.Values.OfType<T>().AsQueryable();
+        }
+
+        public T FindOne<T>(object id) where T : class, IPersistableRoot
+        {
+            return (T)FindOne(typeof (T), id);
+        }
+
+        public IPersistableRoot FindOne(Type type, object id)
         {
             return Roots.ContainsKey(id) ? Roots[id] : null;
         }
 
-        public void SaveOne(Type type, object o)
+        public void SaveOne(IPersistableRoot o)
         {
-            Roots[((IAggregateRoot)o).IdObject] = o;
+            Roots[o.Identity] = o;
         }
 
         public void RemoveOne(Type type, object id)

@@ -11,7 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess.Domain.Policy;
+using Kostassoid.Anodyne.Domain.DataAccess.Policy;
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
@@ -23,12 +23,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
     public interface IConfiguration : ISyntax
     {
-
-/* not sure
-        void ActAsApplicationServer();
-        void ActAsClient();
-*/
-
         void RunIn(RuntimeMode runtimeMode);
 
         void DefineSystemNamespaceAs(string systemNamespace);

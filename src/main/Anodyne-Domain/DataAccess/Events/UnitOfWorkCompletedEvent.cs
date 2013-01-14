@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Anodyne.
+﻿// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,20 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Base;
-using System;
+using Kostassoid.Anodyne.Domain.Events;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain.Exceptions
+namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
-    public class ConcurrencyException : Exception
+    public class UnitOfWorkCompletedEvent : IDomainEvent
     {
-        public IAggregateRoot Aggregate { get; protected set; }
+        public UnitOfWork UnitOfWork { get; protected set; }
+        public DataChangeSet ChangeSet { get; protected set; }
 
-        public ConcurrencyException(IAggregateRoot aggregate)
-            :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
-                        aggregate.IdObject, aggregate.GetType().Name))
+        public UnitOfWorkCompletedEvent(UnitOfWork unitOfWork, DataChangeSet changeSet)
         {
-            Aggregate = aggregate;
+            UnitOfWork = unitOfWork;
+            ChangeSet = changeSet;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2013 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,19 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Events;
+using System;
+using System.Collections.Generic;
+using Kostassoid.Anodyne.Domain.Base;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain.Events
+namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
 {
-    public class UnitOfWorkCompletedEvent : IDomainEvent
+    public class StaleDataException : Exception
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
-        public DataChangeSet ChangeSet { get; protected set; }
+        public IList<IAggregateRoot> StaleData { get; protected set; }
 
-        public UnitOfWorkCompletedEvent(UnitOfWork unitOfWork, DataChangeSet changeSet)
+        public StaleDataException(IList<IAggregateRoot> staleData, string message):base(message)
         {
-            UnitOfWork = unitOfWork;
-            ChangeSet = changeSet;
+            StaleData = staleData;
         }
     }
 }

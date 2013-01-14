@@ -14,7 +14,6 @@
 using System.Linq;
 using Kostassoid.Anodyne.Common.Reflection;
 using Kostassoid.Anodyne.DataAccess;
-using Kostassoid.Anodyne.Domain.Base;
 
 namespace Kostassoid.Anodyne.MongoDb
 {
@@ -38,8 +37,11 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             var assemblies = From.Assemblies(a => a.FullName.StartsWith(systemNamespace)).ToList();
 
+            MongoHelper.CreateMapForAllClassesBasedOn<IPersistable>(assemblies);
+/*
             MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
             MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
+*/
         }
 
         private static string NormalizeConnectionString(string connectionString)

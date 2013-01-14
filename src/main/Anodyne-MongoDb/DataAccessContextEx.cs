@@ -3,31 +3,31 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-//  
+// 
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+// 
 
-using System;
-using Kostassoid.Anodyne.Domain;
-
-namespace Kostassoid.Anodyne.DataAccess.Domain.Operations
+namespace Kostassoid.Anodyne.MongoDb
 {
-    public abstract class BaseDomainOperation : IDomainOperation
+    using DataAccess;
+    using MongoDB.Driver;
+    using System;
+
+    public static class DataAccessContextEx
     {
-        protected UnitOfWork Owner { get; private set; }
-
-        protected BaseDomainOperation()
+        public static void OnNative(this IDataAccessContext dataAccessContext, Action<MongoDatabase> nativeAction)
         {
-            if (UnitOfWork.Current.IsNone)
-            {
-                throw new InvalidOperationException("Should be within UnitOfWork context!");
-            }
+            nativeAction((MongoDatabase)dataAccessContext.GetCurrentSession().NativeSession);
+        }
 
-            Owner = UnitOfWork.Current.Value;
+        public static TResult OnNative<TResult>(this IDataAccessContext dataAccessContext, Func<MongoDatabase, TResult> nativeFunc)
+        {
+            return nativeFunc((MongoDatabase)dataAccessContext.GetCurrentSession().NativeSession);
         }
     }
 }

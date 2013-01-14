@@ -50,7 +50,7 @@ namespace Kostassoid.Anodyne.Domain.Events
             _aggregate = aggregate;
             Happened = happened;
 
-            AggregateId = aggregate.IdObject;
+            AggregateId = ((IEntity) aggregate).IdObject;
             AggregateVersion = aggregate.NewVersion();
         }
 

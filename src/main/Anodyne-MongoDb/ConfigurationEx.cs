@@ -11,7 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.Domain.DataAccess;
 using Kostassoid.Anodyne.Node.Dependency.Registration;
 
 namespace Kostassoid.Anodyne.MongoDb
@@ -28,6 +28,7 @@ namespace Kostassoid.Anodyne.MongoDb
             var cfg = (INodeInstance)configuration;
 
             cfg.Container.Put(Binding.For<IDataAccessProvider>().UseInstance(new MongoDataAccessProvider(cfg.SystemNamespace, databaseServer, databaseName)));
+            cfg.Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
 
             UnitOfWork.SetDependencyResolvers(cfg.Container.Get<IDataAccessProvider>().SessionFactory, new ContainerOperationResolver(cfg.Container), new MongoRepositoryResolver());
         }

@@ -13,7 +13,9 @@
 
 namespace Kostassoid.Anodyne.Domain.Base
 {
-    public interface IValueObject
+    using Anodyne.DataAccess;
+
+    public interface IValueObject : IPersistable
     {
     }
 }

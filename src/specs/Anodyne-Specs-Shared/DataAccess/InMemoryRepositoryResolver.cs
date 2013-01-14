@@ -1,7 +1,7 @@
 ﻿using Kostassoid.Anodyne.DataAccess;
-using Kostassoid.Anodyne.DataAccess.Domain;
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
 using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.DataAccess;
+using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {

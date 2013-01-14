@@ -14,9 +14,12 @@
 namespace Kostassoid.BlogNote.Web.Models.Persistent
 {
     using System;
+    using Anodyne.DataAccess;
 
-    public class User
+    public class User : IPersistableRoot
     {
+        public object Identity { get { return Id; } }
+
         public Guid Id { get; protected set; }
         public int Version { get; protected set; }
 

@@ -11,12 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess.Domain.Policy;
-using Kostassoid.Anodyne.Domain.Base;
-using Kostassoid.Anodyne.Domain.Events;
 using System.Collections.Generic;
+using Kostassoid.Anodyne.DataAccess;
+using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.DataAccess.Policy;
+using Kostassoid.Anodyne.Domain.Events;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain
+namespace Kostassoid.Anodyne.Domain.DataAccess
 {
     public class DomainDataSession : IDomainDataSession
     {
@@ -33,10 +34,10 @@ namespace Kostassoid.Anodyne.DataAccess.Domain
         protected AggregateRootChangeSet GetChangeSetFor(IAggregateRoot aggregate)
         {
             AggregateRootChangeSet changeSet;
-            if (!ChangeSets.TryGetValue(aggregate.IdObject, out changeSet))
+            if (!ChangeSets.TryGetValue(((IEntity) aggregate).IdObject, out changeSet))
             {
                 changeSet = new AggregateRootChangeSet(aggregate);
-                ChangeSets.Add(aggregate.IdObject, changeSet);
+                ChangeSets.Add(((IEntity) aggregate).IdObject, changeSet);
             }
 
             return changeSet;
@@ -56,7 +57,7 @@ namespace Kostassoid.Anodyne.DataAccess.Domain
         {
             var type = changeSet.Aggregate.GetType();
 
-            var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, changeSet.Aggregate.IdObject);
+            var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, ((IEntity) changeSet.Aggregate).IdObject);
 
             if (!ignoreConflicts)
             {
@@ -67,10 +68,10 @@ namespace Kostassoid.Anodyne.DataAccess.Domain
                     return false;
             }
 
-            _dataSession.SaveOne(type, changeSet.Aggregate);
+            _dataSession.SaveOne(changeSet.Aggregate);
 
             if (changeSet.IsDeleted)
-                _dataSession.RemoveOne(type, changeSet.Aggregate.IdObject);
+                _dataSession.RemoveOne(type, ((IEntity) changeSet.Aggregate).IdObject);
 
             return true;
         }

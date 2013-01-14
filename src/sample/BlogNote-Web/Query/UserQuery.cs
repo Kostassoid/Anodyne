@@ -19,29 +19,24 @@ namespace Kostassoid.BlogNote.Web.Query
     using System.Collections.Generic;
     using System.Linq;
     using Models.Persistent;
-    using MongoDB.Driver;
 
     public class UserQuery : IQuery
     {
-        private readonly MongoDatabase _database;
+        private readonly IDataAccessContext _dataAccessContext;
 
-        public UserQuery(IDataAccessProvider dataAccessProvider)
+        public UserQuery(IDataAccessContext dataAccessContext)
         {
-            _database = (MongoDatabase)dataAccessProvider.SessionFactory.Open().NativeSession; //TODO: make more dbms-agnostic
+            _dataAccessContext = dataAccessContext;
         }
 
         public IList<User> GetAll()
         {
-            return _database
-                .GetCollection<User>("User")
-                .FindAll().ToList();
+            return _dataAccessContext.Query<User>().ToList();
         }
 
         public User GetOne(Guid user)
         {
-            return _database
-                .GetCollection<User>("User")
-                .FindOne(MongoDB.Driver.Builders.Query.EQ("_id", user));
+            return _dataAccessContext.Query<User>().FirstOrDefault(u => u.Id == user);
         }
 
     }

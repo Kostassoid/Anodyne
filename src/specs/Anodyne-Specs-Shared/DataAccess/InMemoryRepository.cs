@@ -11,11 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess.Domain.Exceptions;
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using Kostassoid.Anodyne.Domain.DataAccess.Exceptions;
+using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
+    using Anodyne.DataAccess;
     using Common;
     using Common.Extentions;
     using Domain.Base;
@@ -28,14 +29,14 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
     {
         private readonly IList<TRoot> _collection;
 
-        public InMemoryRepository(IDictionary<object, object> roots)
+        public InMemoryRepository(IDictionary<object, IPersistableRoot> roots)
         {
             _collection = roots.Values.OfType<TRoot>().ToList();
         }
 
         public virtual TRoot GetOne(object key)
         {
-            var found = _collection.FirstOrDefault(r => r.IdObject.Equals(key));
+            var found = _collection.FirstOrDefault(r => ((IEntity) r).IdObject.Equals(key));
             if (found == null)
                 throw new AggregateRootNotFoundException(key);
 
@@ -44,7 +45,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public virtual Option<TRoot> FindOne(object key)
         {
-            var found = _collection.FirstOrDefault(r => r.IdObject.Equals(key));
+            var found = _collection.FirstOrDefault(r => ((IEntity) r).IdObject.Equals(key));
             return found != null ? found.DeepClone() : null;
         }
 

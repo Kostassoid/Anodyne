@@ -12,9 +12,9 @@
 // specific language governing permissions and limitations under the License.
 
 using Kostassoid.Anodyne.DataAccess;
-using Kostassoid.Anodyne.DataAccess.Domain;
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
 using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.DataAccess;
+using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 using MongoDB.Driver;
 
 namespace Kostassoid.Anodyne.MongoDb

@@ -11,13 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using System;
+using Kostassoid.Anodyne.DataAccess;
 using Kostassoid.Anodyne.Domain.Base;
+using Kostassoid.Anodyne.Domain.DataAccess.Policy;
+using Kostassoid.Anodyne.Domain.Events;
+using Kostassoid.Anodyne.Wiring;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain
+namespace Kostassoid.Anodyne.Domain.DataAccess
 {
-    public interface IRepositoryResolver
+    public interface IDomainDataSession : IDisposable, IHandlerOf<IAggregateEvent>
     {
-        IRepository<TRoot> Get<TRoot>(IDataSession dataSession) where TRoot : class, IAggregateRoot;
+        IDataSession DataSession { get; }
+
+        void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
+
+        DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy);
+        void Rollback();
     }
 }

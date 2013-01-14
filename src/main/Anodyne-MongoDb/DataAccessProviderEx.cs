@@ -18,14 +18,14 @@ namespace Kostassoid.Anodyne.MongoDb
     using MongoDB.Driver;
     using System;
 
-    public static class DataSessionFactoryEx
+    public static class DataAccessProviderEx
     {
         public static void OnNative(this IDataAccessProvider provider, Action<MongoDatabase> nativeAction)
         {
             if (!(provider is MongoDataAccessProvider))
                 throw new InvalidOperationException("Exprected MongoDataAccessProvider, but was {0}" + provider.GetType().Name);
 
-            using (var session = ((MongoDataAccessProvider)provider).SessionFactory.Open())
+            using (var session = provider.SessionFactory.Open())
             {
                 nativeAction((MongoDatabase)session.NativeSession);
             }

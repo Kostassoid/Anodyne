@@ -13,8 +13,6 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
-    using Common.Reflection;
-    using Domain.Base;
     using MongoDB.Driver;
     using System;
     using System.Collections.Generic;
@@ -26,7 +24,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
     public static class MongoDatabaseEx
     {
-        public static MongoCollection<TEntity> GetCollection<TEntity>(this MongoDatabase database) where TEntity : class, IAggregateRoot
+        public static MongoCollection<TEntity> GetCollection<TEntity>(this MongoDatabase database) where TEntity : class
         {
             return database.GetCollection<TEntity>(GetCollectionNameFor(typeof(TEntity)));
         }
@@ -40,6 +38,7 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             var collectionType = type;
 
+/* TODO: rethink
             while (collectionType != null && !collectionType.BaseType.IsRawGeneric(typeof(AggregateRoot<>)))
             {
                 collectionType = collectionType.BaseType;
@@ -47,6 +46,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
             if (collectionType == null)
                 throw new ArgumentException(string.Format("Type {0} is not derived from AggregateRoot", type.Name));
+*/
 
             return collectionType.Name;
         }
@@ -56,17 +56,17 @@ namespace Kostassoid.Anodyne.MongoDb
             MongoHelper.CreateMapForAllClassesBasedOn<T>(assemblies);
         }
 
-        public static void EnsureIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class, IAggregateRoot
+        public static void EnsureIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class
         {
             database.GetCollection<TRoot>().EnsureIndex(index, false, true);
         }
 
-        public static void EnsureUniqueIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class, IAggregateRoot
+        public static void EnsureUniqueIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class
         {
             database.GetCollection<TRoot>().EnsureIndex(index, true, true);
         }
 
-        public static void EnsureCappedCollectionExists<T>(this MongoDatabase db, int collectionSizeMb) where T : class, IAggregateRoot
+        public static void EnsureCappedCollectionExists<T>(this MongoDatabase db, int collectionSizeMb) where T : class
         {
             var collectionName = GetCollectionNameFor(typeof(T));
             var collectionSize = collectionSizeMb * 1024 * 1024;

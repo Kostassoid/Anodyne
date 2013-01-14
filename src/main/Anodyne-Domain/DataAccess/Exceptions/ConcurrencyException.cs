@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2013 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,23 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Node.DataAccess;
+using System;
+using Kostassoid.Anodyne.Domain.Base;
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
 {
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public class ConcurrencyException : Exception
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public IAggregateRoot Aggregate { get; protected set; }
+
+        public ConcurrencyException(IAggregateRoot aggregate)
+            :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
+                        ((IEntity) aggregate).IdObject, aggregate.GetType().Name))
         {
-            var cfg = (INodeInstance)configuration;
-
-            UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
+            Aggregate = aggregate;
         }
-
     }
-
 }

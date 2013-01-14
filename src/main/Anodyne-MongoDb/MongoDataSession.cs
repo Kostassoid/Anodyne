@@ -13,11 +13,12 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using System.Linq;
+    using Common.CodeContracts;
     using DataAccess;
-    using Domain.Base;
     using MongoDB.Driver;
-    using MongoDB.Driver.Builders;
     using System;
+    using MongoDB.Driver.Linq;
 
     public class MongoDataSession : IDataSession
     {
@@ -33,22 +34,41 @@ namespace Kostassoid.Anodyne.MongoDb
             _nativeSession = dataContext;
         }
 
-        public object FindOne(Type type, object id)
+        public IQueryable<T> Query<T>() where T : class, IPersistableRoot
         {
-            var collection = _nativeSession.GetCollection(type);
-            return collection.FindOneByIdAs(type, id.AsIdValue()) as IAggregateRoot;
+            return _nativeSession.GetCollection<T>().AsQueryable();
         }
 
-        public void SaveOne(Type type, object o)
+        public T FindOne<T>(object id) where T : class, IPersistableRoot
         {
+            return (T)FindOne(typeof (T), id);
+        }
+
+        private static void EnsureTypeIsPersistable(Type type)
+        {
+            Requires.True(typeof(IPersistableRoot).IsAssignableFrom(type), "type", "type should be IPersistable");
+        }
+
+        public IPersistableRoot FindOne(Type type, object id)
+        {
+            EnsureTypeIsPersistable(type);
+
             var collection = _nativeSession.GetCollection(type);
+            return (IPersistableRoot)collection.FindOneByIdAs(type, id.AsIdValue());
+        }
+
+        public void SaveOne(IPersistableRoot o)
+        {
+            var collection = _nativeSession.GetCollection(o.GetType());
             collection.Save(o);
         }
 
         public void RemoveOne(Type type, object id)
         {
+            EnsureTypeIsPersistable(type);
+
             var collection = _nativeSession.GetCollection(type);
-            collection.Remove(Query.EQ("_id", id.AsIdValue()));
+            collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", id.AsIdValue()));
         }
 
         public void Dispose()

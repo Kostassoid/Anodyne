@@ -43,42 +43,19 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Domain\AggregateRootChangeSet.cs" />
+    <Compile Include="IPersistableRoot.cs" />
+    <Compile Include="DefaultDataAccessContext.cs" />
+    <Compile Include="IDataAccessContext.cs" />
     <Compile Include="IDataAccessProvider.cs" />
     <Compile Include="IDataSession.cs" />
-    <Compile Include="Domain\IUnitOfWorkEx.cs" />
-    <Compile Include="Domain\Operations\BaseDomainOperation.cs" />
-    <Compile Include="Domain\DomainDataSession.cs" />
-    <Compile Include="Domain\Exceptions\StaleDataException.cs" />
-    <Compile Include="Domain\Exceptions\ConcurrencyException.cs" />
-    <Compile Include="Domain\DataChangeSet.cs" />
-    <Compile Include="Domain\Events\UnitOfWorkCompletedEvent.cs" />
-    <Compile Include="Domain\Exceptions\AggregateRootNotFoundException.cs" />
-    <Compile Include="Domain\Events\UnitOfWorkRollbackEvent.cs" />
-    <Compile Include="Domain\IDomainDataSession.cs" />
     <Compile Include="IDataSessionEx.cs" />
     <Compile Include="IDataSessionFactory.cs" />
-    <Compile Include="Domain\Operations\IOperationResolver.cs" />
-    <Compile Include="Domain\Operations\IRepository.cs" />
-    <Compile Include="Domain\Policy\DataAccessPolicy.cs" />
-    <Compile Include="Domain\Policy\StaleDataPolicy.cs" />
-    <Compile Include="Domain\UnitOfWork.cs" />
-    <Compile Include="Domain\Events\UnitOfWorkCompletingEvent.cs" />
-    <Compile Include="Domain\Events\UnitOfWorkDisposingEvent.cs" />
-    <Compile Include="Domain\IRepositoryResolver.cs" />
+    <Compile Include="IPersistable.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
-      <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
+      <Project>{2d6ac91a-29e5-4700-8e16-58d87ab98563}</Project>
       <Name>Anodyne-Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Anodyne-Domain\Anodyne-Domain.csproj">
-      <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
-      <Name>Anodyne-Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Anodyne-Wiring\Anodyne-Wiring.csproj">
-      <Project>{321BB928-1A81-40BF-8BA9-644F95B8CD5A}</Project>
-      <Name>Anodyne-Wiring</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

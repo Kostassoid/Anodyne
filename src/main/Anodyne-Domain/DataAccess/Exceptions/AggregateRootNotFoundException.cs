@@ -13,7 +13,7 @@
 
 using System;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain.Exceptions
+namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
 {
     public class AggregateRootNotFoundException : Exception
     {

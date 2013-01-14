@@ -37,7 +37,8 @@ namespace Kostassoid.Anodyne.MongoDb
             }
 
             var types = assemblies.SelectMany(s => s.GetTypes())
-                .Where(typeof(TBase).IsAssignableFrom).Where(t => !t.ContainsGenericParameters);
+                .Where(typeof(TBase).IsAssignableFrom)
+                .Where(t => !t.ContainsGenericParameters && !t.IsInterface);
 
             types
                 .Where(t => !BsonClassMap.IsClassMapRegistered(t))

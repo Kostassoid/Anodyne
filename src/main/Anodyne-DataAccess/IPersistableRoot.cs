@@ -11,23 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Node.DataAccess;
-
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.DataAccess
 {
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public interface IPersistableRoot : IPersistable
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
-        {
-            var cfg = (INodeInstance)configuration;
-
-            UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
-        }
-
+        object Identity { get; }
     }
-
 }

@@ -11,23 +11,25 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Common;
-using Kostassoid.Anodyne.Common.CodeContracts;
-using Kostassoid.Anodyne.Common.ExecutionContext;
-using Kostassoid.Anodyne.Common.Reflection;
-using Kostassoid.Anodyne.DataAccess.Domain.Events;
-using Kostassoid.Anodyne.DataAccess.Domain.Exceptions;
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
-using Kostassoid.Anodyne.DataAccess.Domain.Policy;
-using Kostassoid.Anodyne.Domain.Events;
-using Kostassoid.Anodyne.Domain;
-using Kostassoid.Anodyne.Domain.Base;
-using Kostassoid.Anodyne.Wiring;
 using System;
 using System.Linq;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain
+
+namespace Kostassoid.Anodyne.Domain.DataAccess
 {
+    using Common;
+    using Common.CodeContracts;
+    using Common.ExecutionContext;
+    using Common.Reflection;
+    using Anodyne.DataAccess;
+    using Base;
+    using Events;
+    using Exceptions;
+    using Operations;
+    using Policy;
+    using Domain.Events;
+    using Wiring;
+
     public class UnitOfWork : IUnitOfWorkEx, IDisposable
     {
         private const string HeadContextKey = "head-unit-of-work";

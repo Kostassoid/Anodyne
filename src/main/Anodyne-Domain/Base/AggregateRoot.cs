@@ -15,12 +15,15 @@ namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
     using System.Collections.Generic;
+    using Anodyne.DataAccess;
     using Events;
     using Wiring;
 
     [Serializable]
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
+        object IPersistableRoot.Identity { get { return ((IEntity)this).IdObject; } }
+
         public virtual int Version { get; protected set; }
 
 // ReSharper disable StaticFieldInGenericType
@@ -50,5 +53,6 @@ namespace Kostassoid.Anodyne.Domain.Base
         {
             EventBus.Publish(@event);
         }
+
     }
 }

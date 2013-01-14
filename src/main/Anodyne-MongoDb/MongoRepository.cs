@@ -11,8 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess.Domain.Exceptions;
-using Kostassoid.Anodyne.DataAccess.Domain.Operations;
+using Kostassoid.Anodyne.Domain.DataAccess.Exceptions;
+using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 
 namespace Kostassoid.Anodyne.MongoDb
 {

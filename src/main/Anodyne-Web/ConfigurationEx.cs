@@ -13,14 +13,17 @@
 
 namespace Kostassoid.Anodyne.Web
 {
-    using Kostassoid.Anodyne.Common.ExecutionContext;
-    using Kostassoid.Anodyne.Node.Configuration;
+    using Common.ExecutionContext;
+    using Node.Configuration;
 
     public static class ConfigurationEx
     {
         public static void UseHttpContext(this IConfiguration configuration)
         {
             Context.SetProvider(new HttpContextProvider());
+
+            //TODO: close open DataAccessContext session on request end
+            //HttpContext.Current.ApplicationInstance.EndRequest += () => 
         }
 
         public static void UseOperationContext(this IConfiguration configuration)

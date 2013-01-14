@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 // 
 
-using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.Domain.DataAccess;
 
 namespace Kostassoid.BlogNote.Host.Service
 {

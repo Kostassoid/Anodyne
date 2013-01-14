@@ -11,19 +11,22 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Base;
 using System;
-using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using Kostassoid.Anodyne.Common;
+using Kostassoid.Anodyne.Domain.Base;
 
-namespace Kostassoid.Anodyne.DataAccess.Domain.Exceptions
+namespace Kostassoid.Anodyne.Domain.DataAccess.Operations
 {
-    public class StaleDataException : Exception
+    public interface IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
-        public IList<IAggregateRoot> StaleData { get; protected set; }
-
-        public StaleDataException(IList<IAggregateRoot> staleData, string message):base(message)
-        {
-            StaleData = staleData;
-        }
+        TRoot this[object key] { get; }
+        TRoot GetOne(object key);
+        Option<TRoot> FindOne(object key);
+        IQueryable<TRoot> All();
+        bool Exists(object key);
+        long Count(Expression<Func<TRoot, bool>> criteria);
+        long Count();
     }
 }

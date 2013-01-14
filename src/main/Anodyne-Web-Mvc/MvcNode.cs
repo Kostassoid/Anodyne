@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Web.Mvc
 {
-    public abstract class MvcNode : Node.Node
+    public abstract class MvcNode : WebNode
     {
         protected MvcNode()
         {

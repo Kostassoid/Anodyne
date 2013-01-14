@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
     using Node.Dependency;
 
     // ReSharper disable InconsistentNaming
-    public class WindsorAdaptorSpecs
+    public class WindsorAdapterSpecs
     {
         public class WindsorScenario
         {

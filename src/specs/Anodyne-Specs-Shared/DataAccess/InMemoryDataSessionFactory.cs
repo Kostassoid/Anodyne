@@ -20,7 +20,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
     public class InMemoryDataSessionFactory : IDataSessionFactory
     {
-        private readonly IDictionary<object, object> _roots = new ConcurrentDictionary<object, object>();
+        private readonly IDictionary<object, IPersistableRoot> _roots = new ConcurrentDictionary<object, IPersistableRoot>();
 
         public IDataSession Open()
         {

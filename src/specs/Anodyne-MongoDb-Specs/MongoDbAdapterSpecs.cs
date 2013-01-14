@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 
 using FluentAssertions;
-using Kostassoid.Anodyne.DataAccess.Domain;
+using Kostassoid.Anodyne.Domain.DataAccess;
 using Kostassoid.Anodyne.MongoDb.Specs.Domain;
 using MongoDB.Driver;
 using NUnit.Framework;
@@ -51,6 +51,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
         [Category("Integration")]
         public class when_getting_collection_by_derived_root_type : MongoDbScenario
         {
+/*
             [Test]
             public void should_return_collection_with_name_as_base_root_name()
             {
@@ -61,7 +62,18 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
                     collection.Should().NotBeNull();
                     collection.Name.Should().Be(typeof(TestRoot).Name);
                 }
+            }
+*/
+            [Test]
+            public void should_return_collection_with_name_as_derived_root_name()
+            {
+                using (var uow = new UnitOfWork())
+                {
+                    var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<DerivedTestRoot>();
 
+                    collection.Should().NotBeNull();
+                    collection.Name.Should().Be(typeof(DerivedTestRoot).Name);
+                }
             }
         }
 

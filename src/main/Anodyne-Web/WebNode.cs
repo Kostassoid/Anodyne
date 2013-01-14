@@ -11,12 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain;
-
-namespace Kostassoid.Anodyne.DataAccess.Domain.Operations
+namespace Kostassoid.Anodyne.Web
 {
-    public interface IOperationResolver
+    public abstract class WebNode : Node.Node
     {
-        TOp Get<TOp>() where TOp : class, IDomainOperation;
+        protected WebNode()
+        {
+
+        }
     }
 }

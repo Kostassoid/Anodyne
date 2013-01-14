@@ -11,23 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Node.DataAccess;
+using Kostassoid.Anodyne.Domain.Events;
 
-namespace Kostassoid.Anodyne.Specs.Shared
+namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
-    using DataAccess;
-    using Node.Configuration;
-
-    public static class ConfigurationEx
+    public class UnitOfWorkCompletingEvent : IDomainEvent
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public UnitOfWork UnitOfWork { get; protected set; }
+
+        public UnitOfWorkCompletingEvent(UnitOfWork unitOfWork)
         {
-            var cfg = (INodeInstance)configuration;
-
-            UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
+            UnitOfWork = unitOfWork;
         }
-
     }
-
 }

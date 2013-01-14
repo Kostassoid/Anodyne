@@ -11,23 +11,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Base;
-using Kostassoid.Anodyne.Domain.Events;
-using System.Collections.Generic;
-
-namespace Kostassoid.Anodyne.DataAccess.Domain
+namespace Kostassoid.Anodyne.DataAccess
 {
-    public class DataChangeSet
+    public interface IPersistable
     {
-        public IList<IAggregateEvent> AppliedEvents { get; protected set; }
-        public IList<IAggregateRoot> StaleData { get; protected set; }
-
-        public bool StaleDataDetected { get { return StaleData.Count > 0; } }
-
-        public DataChangeSet(IList<IAggregateEvent> appliedEvents, IList<IAggregateRoot> staleData)
-        {
-            AppliedEvents = appliedEvents;
-            StaleData = staleData;
-        }
     }
 }
