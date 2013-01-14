@@ -13,7 +13,7 @@
 
 namespace Kostassoid.BlogNote.Web.Code
 {
-    using Anodyne.Common.Reflection;
+    using System.Web;
     using Anodyne.Node.Configuration;
     using Anodyne.Web.Mvc;
     using Anodyne.Windsor;
@@ -21,14 +21,16 @@ namespace Kostassoid.BlogNote.Web.Code
 
     public class BlogNoteWebNode : MvcNode
     {
+        public BlogNoteWebNode(HttpApplication application) : base(application)
+        {
+        }
+
         public override void OnConfigure(IConfiguration c)
         {
             c.UseWindsorContainer();
-            c.UseWindsorWcfServicePublisher();
+            c.UseWindsorWcfAdapter();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
             c.UseDataAccessPolicy(p => p.ReadOnlyAccess());
-            c.ResolveControllersFromContainer();
-            c.RegisterControllers(From.ThisAssembly);
 
             c.OnStartupPerform<QueryRegistration>();
             c.OnStartupPerform<WcfClientsRegistration>();

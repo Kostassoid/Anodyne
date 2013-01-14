@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using System;
     using Anodyne.DataAccess;
     using Dependency;
     using Logging;
@@ -23,8 +24,10 @@ namespace Kostassoid.Anodyne.Node.Configuration
         RuntimeMode RuntimeMode { get; }
         IContainer Container { get; }
         ILoggerAdapter Logger { get; }
-        IWcfProxyProvider WcfProxyProvider { get; }
+        IWcfAdapter WcfAdapter { get; }
         IDataAccessProvider DataAccess { get; }
         string SystemNamespace { get; }
+
+        event Action OnContainerReady;
     }
 }

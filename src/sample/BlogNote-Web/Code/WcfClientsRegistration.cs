@@ -24,7 +24,7 @@ namespace Kostassoid.BlogNote.Web.Code
         public void OnStartup(INodeInstance instance)
         {
             instance
-                .WcfProxyProvider
+                .WcfAdapter
                 .Consume<IUserService>(Bound.To(new BasicHttpBinding()).AtUrl(Configured.From.AppSettings("UserServiceUrl")));
         }
     }

@@ -55,7 +55,7 @@ namespace Kostassoid.Anodyne.DataAccess
             CloseCurrentSession();
         }
 
-        public ~DefaultDataAccessContext()
+        ~DefaultDataAccessContext()
         {
             CloseCurrentSession();
         }

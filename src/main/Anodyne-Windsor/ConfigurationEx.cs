@@ -29,9 +29,9 @@ namespace Kostassoid.Anodyne.Windsor
             ((IConfigurationBuilder)configuration).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
         }
 
-        public static void UseWindsorWcfServicePublisher(this IConfiguration configuration)
+        public static void UseWindsorWcfAdapter(this IConfiguration configuration)
         {
-            ((IConfigurationBuilder)configuration).SetWcfServiceProvider(new WindsorWcfProxyProvider(configuration));
+            ((IConfigurationBuilder)configuration).SetWcfServiceProvider(new WindsorWcfAdapter(configuration));
         }
 
     }

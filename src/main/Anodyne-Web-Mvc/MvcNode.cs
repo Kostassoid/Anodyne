@@ -13,12 +13,21 @@
 
 namespace Kostassoid.Anodyne.Web.Mvc
 {
+    using System.Web;
+    using Common.Reflection;
+    using Node.Configuration;
+
     public abstract class MvcNode : WebNode
     {
-        protected MvcNode()
+        protected MvcNode(HttpApplication application) : base(application)
         {
-            
+            Instance.OnContainerReady += () =>
+            {
+                var cfg = ((IConfiguration)Instance);
 
+                cfg.ResolveControllersFromContainer();
+                cfg.RegisterControllers(From.Assemblies(_ => true));
+            };
         }
     }
 }

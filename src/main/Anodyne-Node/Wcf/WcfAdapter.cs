@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Node.Wcf
     using Registration;
     using Registration.Concrete;
 
-    public abstract class WcfProxyProvider : IWcfProxyProvider
+    public abstract class WcfAdapter : IWcfAdapter
     {
         public IServiceImplementationSyntax<TService> Start<TService>() where TService : class
         {

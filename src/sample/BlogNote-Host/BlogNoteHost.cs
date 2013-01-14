@@ -26,7 +26,7 @@ namespace Kostassoid.BlogNote.Host
         {
             c.UseLog4Net();
             c.UseWindsorContainer();
-            c.UseWindsorWcfServicePublisher();
+            c.UseWindsorWcfAdapter();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
 
             c.OnStartupPerform<DataAccessConfiguration>();

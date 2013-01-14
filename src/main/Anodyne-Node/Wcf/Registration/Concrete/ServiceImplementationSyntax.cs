@@ -15,16 +15,16 @@ namespace Kostassoid.Anodyne.Node.Wcf.Registration.Concrete
 {
     internal class ServiceImplementationSyntax<TService> : IServiceImplementationSyntax<TService> where TService : class
     {
-        private readonly WcfProxyProvider _wcfProxyProvider;
+        private readonly WcfAdapter _wcfAdapter;
 
-        public ServiceImplementationSyntax(WcfProxyProvider wcfProxyProvider)
+        public ServiceImplementationSyntax(WcfAdapter wcfAdapter)
         {
-            _wcfProxyProvider = wcfProxyProvider;
+            _wcfAdapter = wcfAdapter;
         }
 
         public IServiceConfigurationSyntax<TService, TImpl> ImplementedBy<TImpl>() where TImpl : class, TService
         {
-            return new ServiceConfigurationSyntax<TService, TImpl>(_wcfProxyProvider);
+            return new ServiceConfigurationSyntax<TService, TImpl>(_wcfAdapter);
         }
     }
 }

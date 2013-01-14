@@ -39,11 +39,13 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         IDataAccessProvider INodeInstance.DataAccess { get { return _container.Get<IDataAccessProvider>(); } }
 
-        private IWcfProxyProvider _wcfProxyProvider;
-        IWcfProxyProvider INodeInstance.WcfProxyProvider { get { return _wcfProxyProvider; } }
+        private IWcfAdapter _wcfAdapter;
+        IWcfAdapter INodeInstance.WcfAdapter { get { return _wcfAdapter; } }
 
         private string _systemNamespace;
         string INodeInstance.SystemNamespace { get { return _systemNamespace; } }
+
+        public event Action OnContainerReady = () => { };
 
         public NodeInstance()
         {
@@ -70,6 +72,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
                 throw new InvalidOperationException("Container adapter is already set to " + _container.GetType().Name);
 
             _container = container;
+
+            OnContainerReady();
         }
 
         void IConfigurationBuilder.SetLoggerAdapter(ILoggerAdapter loggerAdapter)
@@ -78,9 +82,9 @@ namespace Kostassoid.Anodyne.Node.Configuration
             LogManager.Adapter = loggerAdapter;
         }
 
-        void IConfigurationBuilder.SetWcfServiceProvider(IWcfProxyProvider wcfProxyProvider)
+        void IConfigurationBuilder.SetWcfServiceProvider(IWcfAdapter wcfAdapter)
         {
-            _wcfProxyProvider = wcfProxyProvider;
+            _wcfAdapter = wcfAdapter;
         }
 
         public void RunIn(RuntimeMode runtimeMode)

@@ -10,7 +10,15 @@ namespace Kostassoid.BlogNote.Web
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        private readonly BlogNoteWebNode _node = new BlogNoteWebNode();
+        private BlogNoteWebNode _node;
+
+        public override void Init()
+        {
+            base.Init();
+
+            _node = new BlogNoteWebNode(this);
+            _node.Start();
+        }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -35,13 +43,11 @@ namespace Kostassoid.BlogNote.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-            _node.Start();
         }
 
         protected void Application_End()
         {
-            _node.Shutdown();
+            if (_node != null) _node.Shutdown();
         }
     }
 }

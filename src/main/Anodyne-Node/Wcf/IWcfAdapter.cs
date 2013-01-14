@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Node.Wcf
 {
     using Registration;
 
-    public interface IWcfProxyProvider
+    public interface IWcfAdapter
     {
         IServiceImplementationSyntax<TService> Start<TService>() where TService : class;
         void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
