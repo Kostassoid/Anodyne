@@ -17,7 +17,6 @@ namespace Kostassoid.BlogNote.Web
             base.Init();
 
             _node = new BlogNoteWebNode(this);
-            _node.Start();
         }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -43,6 +42,8 @@ namespace Kostassoid.BlogNote.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            _node.Start();
         }
 
         protected void Application_End()
