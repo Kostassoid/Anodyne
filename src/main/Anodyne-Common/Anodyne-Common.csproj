@@ -59,6 +59,7 @@
     <Compile Include="Option.cs" />
     <Compile Include="Period.cs" />
     <Compile Include="Priority.cs" />
+    <Compile Include="Reflection\AssemblyPreloader.cs" />
     <Compile Include="Reflection\From.cs" />
     <Compile Include="Reflection\TypeEx.cs" />
     <Compile Include="Reflection\AllTypes.cs" />

@@ -21,16 +21,6 @@ namespace Kostassoid.Anodyne.Web
         public static void UseHttpContext(this INodeConfigurator nodeConfigurator)
         {
             Context.SetProvider(new HttpContextProvider());
-
-            //TODO: close open DataAccessContext session on request end
-            //HttpContext.Current.ApplicationInstance.EndRequest += () => 
         }
-
-        public static void UseOperationContext(this INodeConfigurator nodeConfigurator)
-        {
-            Context.SetProvider(new OperationContextProvider());
-        }
-
     }
-
 }

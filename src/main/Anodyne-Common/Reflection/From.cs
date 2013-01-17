@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Common.Reflection
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+    using System.IO;
     using System.Reflection;
     using Extentions;
 
@@ -37,9 +37,15 @@ namespace Kostassoid.Anodyne.Common.Reflection
             }
         }
 
-        public static IEnumerable<Assembly> Assemblies(Func<Assembly, bool> assemblyPredicate)
+        public static IEnumerable<Assembly> AllAssemblies()
         {
-            return AppDomain.CurrentDomain.GetAssemblies().Where(assemblyPredicate);
+            return AppDomain.CurrentDomain.GetAssemblies();
+        }
+
+        public static IEnumerable<FileInfo> AllFilesIn(string path, bool recursively = false)
+        {
+            return new DirectoryInfo(path)
+                .EnumerateFiles("*.*", recursively ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.Common.Reflection
 
         public static IEnumerable<Type> BasedOn(Type baseType, IEnumerable<Assembly> from = null)
         {
-            var lookinAssemblies = from ?? From.Assemblies(_ => true);
+            var lookinAssemblies = from ?? From.AllAssemblies();
 
             return lookinAssemblies
                 .SelectMany(a => a.GetTypes())

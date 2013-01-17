@@ -29,12 +29,21 @@ namespace Kostassoid.Anodyne.MongoDb
                 if (!BsonClassMap.IsClassMapRegistered(typeof(TBase)))
                     BsonClassMap.RegisterClassMap<TBase>(
                         cm =>
-                            {
-                                cm.AutoMap();
-                                cm.SetDiscriminatorIsRequired(true);
-                                cm.SetIsRootClass(true);
-                            });
+                        {
+                            cm.AutoMap();
+                            cm.SetDiscriminatorIsRequired(true);
+                            cm.SetIsRootClass(true);
+                        });
             }
+/*
+            else
+            {
+                var classes = assemblies.SelectMany(s => s.GetTypes())
+                          .Where(typeof(TBase).IsAssignableFrom)
+                          .Where(t => t.BaseType == typeof(object)).ToList();
+
+            }
+*/
 
             var types = assemblies.SelectMany(s => s.GetTypes())
                 .Where(typeof(TBase).IsAssignableFrom)

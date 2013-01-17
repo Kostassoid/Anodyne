@@ -46,7 +46,6 @@
     </Compile>
     <Compile Include="ConfigurationEx.cs" />
     <Compile Include="WebNode.cs" />
-    <Compile Include="OperationContextProvider.cs" />
     <Compile Include="HttpContextProvider.cs" />
   </ItemGroup>
   <ItemGroup>

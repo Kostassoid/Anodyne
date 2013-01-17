@@ -113,7 +113,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             EventBus
                 .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>(From.Assemblies(_ => true))
+                .AllBasedOn<IAggregateEvent>(From.AllAssemblies())
                 .With(e =>
                 {
                     if (_policy.ReadOnly)

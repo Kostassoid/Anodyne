@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Web.Mvc
 {
+    using System.Linq;
     using System.Web;
     using Common.Reflection;
 
@@ -23,7 +24,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
             AfterConfiguration += cfg =>
             {
                 cfg.ResolveControllersFromContainer();
-                cfg.RegisterControllers(From.Assemblies(a => a.FullName.StartsWith(cfg.Configuration.SystemNamespace)));
+                cfg.RegisterControllers(From.AllAssemblies().Where(a => a.FullName.StartsWith(cfg.Configuration.SystemNamespace)));
             };
         }
     }

@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text;
     using Common;
     using Common.Reflection;
@@ -145,7 +146,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             {
                 var handler = A.Fake<IHandlerOf<TestEvent>>();
 
-                EventBus.SubscribeTo().AllBasedOn<TestEvent>(From.Assemblies(a => a.FullName.Contains("Wiring-Specs"))).With(handler);
+                EventBus.SubscribeTo().AllBasedOn<TestEvent>(From.AllAssemblies().Where(a => a.FullName.Contains("Wiring-Specs"))).With(handler);
 
                 EventBus.Publish(new DerivedTestEvent());
                 EventBus.Publish(new TestEvent());

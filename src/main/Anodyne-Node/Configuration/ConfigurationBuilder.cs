@@ -17,8 +17,10 @@ using Kostassoid.Anodyne.Node.Dependency.Registration;
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using System.Linq;
     using System.Reflection;
     using Anodyne.DataAccess;
+    using Common.Reflection;
     using Common.Tools;
     using Dependency;
     using Logging;
@@ -35,12 +37,12 @@ namespace Kostassoid.Anodyne.Node.Configuration
 
         public ConfigurationBuilder()
         {
-            _configuration = new NodeConfiguration
-                {
-                    RuntimeMode = RuntimeMode.Production,
-                    SystemNamespace = DetectSystemNamespace(),
-                    LoggerAdapter = new NullLoggerAdapter()
-                };
+            _configuration = new NodeConfiguration();
+
+            RunIn(RuntimeMode.Production);
+            DefineSystemNamespaceAs(DetectSystemNamespace());
+            
+            ((INodeConfiguratorEx)this).SetLoggerAdapter(new NullLoggerAdapter()); //TODO: beautify
         }
 
         private static string DetectSystemNamespace()
@@ -81,6 +83,8 @@ namespace Kostassoid.Anodyne.Node.Configuration
         public void DefineSystemNamespaceAs(string systemNamespace)
         {
             _configuration.SystemNamespace = systemNamespace;
+
+            //AssemblyPreloader.Preload(From.AllFilesIn(".").Where(f => f.Extension == ".dll" && f.Name.StartsWith(systemNamespace)));
         }
 
         public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)
