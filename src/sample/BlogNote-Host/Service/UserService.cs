@@ -19,7 +19,6 @@ namespace Kostassoid.BlogNote.Host.Service
     using System;
     using System.Linq;
     using System.ServiceModel;
-    using Anodyne.DataAccess;
     using Contracts;
     using Domain;
 
@@ -50,7 +49,7 @@ namespace Kostassoid.BlogNote.Host.Service
         {
             RequireUserExists(user);
 
-            using (var uow = new UnitOfWork())
+            using (new UnitOfWork())
             {
                 return Post.Create(new TextContent(title, body, tags)).Id;
             }
@@ -60,7 +59,7 @@ namespace Kostassoid.BlogNote.Host.Service
         {
             RequireUserExists(user);
 
-            using (var uow = new UnitOfWork())
+            using (new UnitOfWork())
             {
                 return Post.Create(new UrlContent(title, url, tags)).Id;
             }

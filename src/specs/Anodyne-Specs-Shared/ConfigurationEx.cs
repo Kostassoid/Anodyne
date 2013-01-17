@@ -21,9 +21,9 @@ namespace Kostassoid.Anodyne.Specs.Shared
 
     public static class ConfigurationEx
     {
-        public static void UseInMemoryDataAccess(this IConfiguration configuration)
+        public static void UseInMemoryDataAccess(this INodeConfigurator nodeConfigurator)
         {
-            var cfg = (INodeInstance)configuration;
+            var cfg = nodeConfigurator.Configuration;
 
             UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
         }

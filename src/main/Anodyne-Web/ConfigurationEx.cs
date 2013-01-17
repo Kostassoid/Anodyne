@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.Web
 
     public static class ConfigurationEx
     {
-        public static void UseHttpContext(this IConfiguration configuration)
+        public static void UseHttpContext(this INodeConfigurator nodeConfigurator)
         {
             Context.SetProvider(new HttpContextProvider());
 
@@ -26,7 +26,7 @@ namespace Kostassoid.Anodyne.Web
             //HttpContext.Current.ApplicationInstance.EndRequest += () => 
         }
 
-        public static void UseOperationContext(this IConfiguration configuration)
+        public static void UseOperationContext(this INodeConfigurator nodeConfigurator)
         {
             Context.SetProvider(new OperationContextProvider());
         }

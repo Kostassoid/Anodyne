@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node
 {
+    using System;
     using System.Collections.Generic;
     using Common.Extentions;
     using Configuration;
@@ -20,56 +21,88 @@ namespace Kostassoid.Anodyne.Node
 
     public abstract class Node
     {
-        private readonly IConfiguration _configuration = new NodeInstance();
-
-        public INodeInstance Instance { get { return _configuration as INodeInstance; } }
+        public INodeConfiguration Configuration { get; private set; }
 
         public InstanceState State { get; private set; }
 
         public bool CanBeStarted { get { return State != InstanceState.Started; } }
         public bool CanBeStopped { get { return State != InstanceState.Stopped; } }
-        public bool MustBeConfigured { get { return !((IConfigurationBuilder) _configuration).IsValid; } }
+        public bool IsConfigured { get; private set; }
 
-        public abstract void OnConfigure(IConfiguration configuration);
+        public abstract void OnConfigure(INodeConfigurator nodeConfigurator);
         public virtual void OnStart() {}
         public virtual void OnShutdown() {}
 
+        public event Action<INodeConfigurator> BeforeConfiguration = s => { };
+        public event Action<INodeConfigurator> AfterConfiguration = s => { };
+        public event Action<Node> Started = s => { };
+        public event Action<Node> Stopped = s => { };
+        public event Action<Node> Starting = s => { };
+        public event Action<Node> Stopping = s => { };
+
         public bool IsIn(RuntimeMode runtimeMode)
         {
-            return Instance.RuntimeMode == runtimeMode;
+            RequireNodeIsConfigured();
+            return Configuration.RuntimeMode == runtimeMode;
+        }
+
+        private void RequireNodeIsConfigured()
+        {
+            if (!IsConfigured)
+                throw new InvalidOperationException("Node is not configured. Use Start() to configure and initialize.");
         }
 
         private IList<ISubsystem> _subsystems = new List<ISubsystem>();
+
+        private void EnsureNodeIsConfigured()
+        {
+            if (IsConfigured) return;
+
+            var configurationBuilder = new ConfigurationBuilder();
+
+            BeforeConfiguration(configurationBuilder);
+            OnConfigure(configurationBuilder);
+            AfterConfiguration(configurationBuilder);
+
+            Configuration = configurationBuilder.Build();
+            IsConfigured = true;
+        }
 
         public void Start()
         {
             if (!CanBeStarted) return;
 
-            //TODO: move
-            if (MustBeConfigured)
-                OnConfigure(_configuration);
+            EnsureNodeIsConfigured();
 
-            Instance.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Instance));
+            Starting(this);
 
-            _subsystems = Instance.Container.GetAll<ISubsystem>();
+            Configuration.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Configuration));
+
+            _subsystems = Configuration.Container.GetAll<ISubsystem>();
             _subsystems.ForEach(s => s.Start());
 
             OnStart();
 
             State = InstanceState.Started;
+
+            Started(this);
         }
 
         public void Shutdown()
         {
             if (!CanBeStopped) return;
 
-            Instance.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Instance));
+            Stopping(this);
+
+            Configuration.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Configuration));
 
             OnShutdown();
 
             _subsystems.ForEach(s => s.Stop());
 
             State = InstanceState.Stopped;
+
+            Stopped(this);
         }
 
     }

@@ -24,19 +24,18 @@ namespace Kostassoid.Anodyne.Web.Mvc
 
     public static class ConfigurationEx
     {
-        public static void ResolveControllersFromContainer(this IConfiguration configuration)
+        public static void ResolveControllersFromContainer(this INodeConfigurator nodeConfigurator)
         {
-            var node = (INodeInstance)configuration;
+            var cfg = nodeConfigurator.Configuration;
 
-            DependencyResolver.SetResolver(new ContainerDependencyResolver(node.Container));
-            ControllerBuilder.Current.SetControllerFactory(new ContainerControllerFactory(node.Container));
+            DependencyResolver.SetResolver(new ContainerDependencyResolver(cfg.Container));
+            ControllerBuilder.Current.SetControllerFactory(new ContainerControllerFactory(cfg.Container));
         }
 
-        public static void RegisterControllers(this IConfiguration configuration, IEnumerable<Assembly> assemblies)
+        public static void RegisterControllers(this INodeConfigurator nodeConfigurator, IEnumerable<Assembly> assemblies)
         {
-            var node = (INodeInstance)configuration;
-
-            node.Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).With(Lifestyle.Transient));
+            nodeConfigurator.Configuration
+                .Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).With(Lifestyle.Transient));
         }
     }
 }

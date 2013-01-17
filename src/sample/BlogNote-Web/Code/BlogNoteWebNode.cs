@@ -25,10 +25,10 @@ namespace Kostassoid.BlogNote.Web.Code
         {
         }
 
-        public override void OnConfigure(IConfiguration c)
+        public override void OnConfigure(INodeConfigurator c)
         {
             c.UseWindsorContainer();
-            c.UseWindsorWcfAdapter();
+            c.UseWindsorWcfProxyFactory();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
             c.UseDataAccessPolicy(p => p.ReadOnlyAccess());
 

@@ -13,16 +13,18 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using Anodyne.DataAccess;
     using Dependency;
     using Logging;
     using Wcf;
 
-    public interface IConfigurationBuilder
+    public interface INodeConfiguration
     {
-        bool IsValid { get; }
-
-        void SetContainerAdapter(IContainer container);
-        void SetLoggerAdapter(ILoggerAdapter loggerAdapter);
-        void SetWcfServiceProvider(IWcfAdapter wcfAdapter);
+        RuntimeMode RuntimeMode { get; }
+        IContainer Container { get; }
+        ILoggerAdapter LoggerAdapter { get; }
+        IWcfProxyFactory WcfProxyFactory { get; }
+        IDataAccessProvider DataAccess { get; }
+        string SystemNamespace { get; }
     }
 }

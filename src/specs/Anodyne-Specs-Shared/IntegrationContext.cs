@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.Specs.Shared
 
         class TestSystem : Node
         {
-            public override void OnConfigure(IConfiguration c)
+            public override void OnConfigure(INodeConfigurator c)
             {
                 c.UseWindsorContainer();
                 c.UseInMemoryDataAccess();

@@ -23,9 +23,9 @@ namespace Kostassoid.BlogNote.Web.Code
 
     public class QueryRegistration : IStartupAction
     {
-        public void OnStartup(INodeInstance instance)
+        public void OnStartup(INodeConfiguration configuration)
         {
-            instance
+            configuration
                 .Container
                 .Put(Binding.Use(AllTypes.BasedOn<IQuery>(From.ThisAssembly)).With(Lifestyle.Unmanaged));
         }

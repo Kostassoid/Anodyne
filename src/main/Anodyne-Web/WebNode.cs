@@ -15,7 +15,6 @@ namespace Kostassoid.Anodyne.Web
 {
     using System.Web;
     using DataAccess;
-    using Node.Configuration;
 
     public abstract class WebNode : Node.Node
     {
@@ -25,13 +24,15 @@ namespace Kostassoid.Anodyne.Web
         {
             _application = application;
 
-            Instance.OnContainerReady += () =>
+            AfterConfiguration += cfg =>
                 {
-                    var cfg = ((IConfiguration) Instance);
-
                     cfg.UseHttpContext();
 
-                    _application.EndRequest += (sender, args) => Instance.Container.Get<IDataAccessContext>().CloseCurrentSession();
+                    _application.EndRequest += (sender, args) =>
+                        {
+                            if (Configuration.Container.Has<IDataAccessContext>())
+                                Configuration.Container.Get<IDataAccessContext>().CloseCurrentSession();
+                        };
                 };
         }
     }

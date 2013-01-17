@@ -23,16 +23,16 @@ namespace Kostassoid.Anodyne.Windsor
     using Node.Wcf.Registration;
     using System;
 
-    public class WindsorWcfAdapter : WcfAdapter
+    public class WindsorWcfProxyFactory : WcfProxyFactory
     {
         private readonly IWindsorContainer _container;
 
-        public WindsorWcfAdapter(IConfiguration configuration)
+        public WindsorWcfProxyFactory(INodeConfigurator nodeConfigurator)
         {
-            var containerAdapter = ((INodeInstance)configuration).Container;
+            var containerAdapter = nodeConfigurator.Configuration.Container;
 
             if (!(containerAdapter is WindsorContainerAdapter))
-                throw new InvalidOperationException("WindsorWcfServicePublisher requires Windsor Container");
+                throw new InvalidOperationException("WindsorWcfProxyFactory requires Windsor Container");
 
             _container = (containerAdapter as WindsorContainerAdapter).NativeContainer;
 

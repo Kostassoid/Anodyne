@@ -23,10 +23,10 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class WcfServicesRegistration : IStartupAction
     {
-        public void OnStartup(INodeInstance instance)
+        public void OnStartup(INodeConfiguration configuration)
         {
-            instance
-                .WcfAdapter
+            configuration
+                .WcfProxyFactory
                 .Start<IUserService>()
                 .ImplementedBy<UserService>()
                 .ConfiguredWith(c =>

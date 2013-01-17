@@ -21,10 +21,10 @@ namespace Kostassoid.BlogNote.Web.Code
 
     public class WcfClientsRegistration : IStartupAction
     {
-        public void OnStartup(INodeInstance instance)
+        public void OnStartup(INodeConfiguration configuration)
         {
-            instance
-                .WcfAdapter
+            configuration
+                .WcfProxyFactory
                 .Consume<IUserService>(Bound.To(new BasicHttpBinding()).AtUrl(Configured.From.AppSettings("UserServiceUrl")));
         }
     }

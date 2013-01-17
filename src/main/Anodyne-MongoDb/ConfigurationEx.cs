@@ -23,19 +23,21 @@ namespace Kostassoid.Anodyne.MongoDb
 
     public static class ConfigurationEx
     {
-        public static void UseMongoDataAccess(this IConfiguration configuration, string databaseServer, string databaseName)
+        public static void UseMongoDataAccess(this INodeConfigurator nodeConfigurator, string databaseServer, string databaseName)
         {
-            var cfg = (INodeInstance)configuration;
+            var cfg = nodeConfigurator.Configuration;
 
             cfg.Container.Put(Binding.For<IDataAccessProvider>().UseInstance(new MongoDataAccessProvider(cfg.SystemNamespace, databaseServer, databaseName)));
             cfg.Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
 
+            ((INodeConfiguratorEx)nodeConfigurator).SetDataAccessProvider(cfg.Container.Get<IDataAccessProvider>());
+
             UnitOfWork.SetDependencyResolvers(cfg.Container.Get<IDataAccessProvider>().SessionFactory, new ContainerOperationResolver(cfg.Container), new MongoRepositoryResolver());
         }
 
-        public static void UseMongoDataAccess(this IConfiguration configuration, Tuple<string, string> databaseServerAndName)
+        public static void UseMongoDataAccess(this INodeConfigurator nodeConfigurator, Tuple<string, string> databaseServerAndName)
         {
-            UseMongoDataAccess(configuration, databaseServerAndName.Item1, databaseServerAndName.Item2);
+            UseMongoDataAccess(nodeConfigurator, databaseServerAndName.Item1, databaseServerAndName.Item2);
         }
     }
 }

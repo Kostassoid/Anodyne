@@ -17,6 +17,6 @@ namespace Kostassoid.Anodyne.Node
 
     public interface IStartupAction
     {
-        void OnStartup(INodeInstance instance);
+        void OnStartup(INodeConfiguration configuration);
     }
 }

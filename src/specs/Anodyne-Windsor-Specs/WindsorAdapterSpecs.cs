@@ -34,7 +34,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             {
                 IntegrationContext.Init();
 
-                Container = IntegrationContext.System.Instance.Container;
+                Container = IntegrationContext.System.Configuration.Container;
             }
         }
 

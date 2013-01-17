@@ -69,7 +69,7 @@
     <Compile Include="UnmanagedLifestyleManager.cs" />
     <Compile Include="WindsorContainerAdapter.cs" />
     <Compile Include="WindsorContainerRegistrator.cs" />
-    <Compile Include="WindsorWcfAdapter.cs" />
+    <Compile Include="WindsorWcfProxyFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

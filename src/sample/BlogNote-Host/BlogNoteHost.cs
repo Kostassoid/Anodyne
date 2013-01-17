@@ -22,11 +22,11 @@ namespace Kostassoid.BlogNote.Host
 
     public class BlogNoteHost : Node
     {
-        public override void OnConfigure(IConfiguration c)
+        public override void OnConfigure(INodeConfigurator c)
         {
             c.UseLog4Net();
             c.UseWindsorContainer();
-            c.UseWindsorWcfAdapter();
+            c.UseWindsorWcfProxyFactory();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
 
             c.OnStartupPerform<DataAccessConfiguration>();

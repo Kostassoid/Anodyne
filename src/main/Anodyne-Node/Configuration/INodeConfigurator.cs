@@ -19,10 +19,12 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using System;
     using Subsystem;
 
-    public delegate bool ConfigurationPredicate(INodeInstance instance);
+    public delegate bool ConfigurationPredicate(INodeConfiguration configuration);
 
-    public interface IConfiguration : ISyntax
+    public interface INodeConfigurator : ISyntax
     {
+        INodeConfiguration Configuration { get; }
+
         void RunIn(RuntimeMode runtimeMode);
 
         void DefineSystemNamespaceAs(string systemNamespace);
@@ -30,13 +32,13 @@ namespace Kostassoid.Anodyne.Node.Configuration
         void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
 
         void ConfigureUsing<TConfiguration>(ConfigurationPredicate when = null) where TConfiguration : IConfigurationAction;
-        void ConfigureUsing(Action<INodeInstance> configurationAction, ConfigurationPredicate when = null);
+        void ConfigureUsing(Action<INodeConfiguration> configurationAction, ConfigurationPredicate when = null);
 
         void OnStartupPerform<TStartup>(ConfigurationPredicate when = null) where TStartup : IStartupAction;
-        void OnStartupPerform(Action<INodeInstance> startupAction, ConfigurationPredicate when = null);
+        void OnStartupPerform(Action<INodeConfiguration> startupAction, ConfigurationPredicate when = null);
 
         void OnShutdownPerform<TShutdown>(ConfigurationPredicate when = null) where TShutdown : IShutdownAction;
-        void OnShutdownPerform(Action<INodeInstance> shutdownAction, ConfigurationPredicate when = null);
+        void OnShutdownPerform(Action<INodeConfiguration> shutdownAction, ConfigurationPredicate when = null);
 
         void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem;
     }

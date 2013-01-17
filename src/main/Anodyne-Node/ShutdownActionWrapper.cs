@@ -18,16 +18,16 @@ namespace Kostassoid.Anodyne.Node
 
     public class ShutdownActionWrapper : IShutdownAction
     {
-        private readonly Action<INodeInstance> _shutdownAction;
+        private readonly Action<INodeConfiguration> _shutdownAction;
 
-        public ShutdownActionWrapper(Action<INodeInstance> shutdownAction)
+        public ShutdownActionWrapper(Action<INodeConfiguration> shutdownAction)
         {
             _shutdownAction = shutdownAction;
         }
 
-        public void OnShutdown(INodeInstance instance)
+        public void OnShutdown(INodeConfiguration configuration)
         {
-            _shutdownAction(instance);
+            _shutdownAction(configuration);
         }
     }
 }

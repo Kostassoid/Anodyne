@@ -21,9 +21,9 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class DataAccessConfiguration : IStartupAction
     {
-        public void OnStartup(INodeInstance instance)
+        public void OnStartup(INodeConfiguration configuration)
         {
-            instance.DataAccess
+            configuration.DataAccess
                 .OnNative(db =>
                 {
                     db.EnsureUniqueIndexFor<User>(u => u.Name);

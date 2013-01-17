@@ -17,9 +17,9 @@ namespace Kostassoid.Anodyne.Log4Net
 
     public static class ConfigurationEx
     {
-        public static void UseLog4Net(this IConfiguration configuration)
+        public static void UseLog4Net(this INodeConfigurator nodeConfigurator)
         {
-            ((IConfigurationBuilder)configuration).SetLoggerAdapter(new Log4NetLoggerAdapter());
+            ((INodeConfiguratorEx)nodeConfigurator).SetLoggerAdapter(new Log4NetLoggerAdapter());
         }
 
     }

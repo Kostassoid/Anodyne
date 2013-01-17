@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Specs
 {
+    using System;
     using Configuration;
     using FluentAssertions;
     using NUnit.Framework;
@@ -28,28 +29,28 @@ namespace Kostassoid.Anodyne.Node.Specs
             public int StartupCounter { get; set; }
             public int ShutdownCounter { get; set; }
 
-            private void InternalConfigure(INodeInstance nodeInstance)
+            private void InternalConfigure(INodeConfiguration nodeConfiguration)
             {
                 ConfigurationCounter++;
             }
 
-            private void InternalStartup(INodeInstance nodeInstance)
+            private void InternalStartup(INodeConfiguration nodeConfiguration)
             {
                 StartupCounter++;
             }
 
-            private void InternalShutdown(INodeInstance nodeInstance)
+            private void InternalShutdown(INodeConfiguration nodeConfiguration)
             {
                 ShutdownCounter++;
             }
 
-            public override void OnConfigure(IConfiguration configuration)
+            public override void OnConfigure(INodeConfigurator nodeConfigurator)
             {
-                configuration.UseWindsorContainer();
+                nodeConfigurator.UseWindsorContainer();
 
-                configuration.ConfigureUsing(InternalConfigure);
-                configuration.OnStartupPerform(InternalStartup);
-                configuration.OnShutdownPerform(InternalShutdown);
+                nodeConfigurator.ConfigureUsing(InternalConfigure);
+                nodeConfigurator.OnStartupPerform(InternalStartup);
+                nodeConfigurator.OnShutdownPerform(InternalShutdown);
             }
         }
 
@@ -66,9 +67,9 @@ namespace Kostassoid.Anodyne.Node.Specs
             }
 
             [Test]
-            public void should_be_in_production_mode()
+            public void should_be_in_undetermined_mode()
             {
-                _node.IsIn(RuntimeMode.Production).Should().BeTrue();
+                _node.Invoking(n => n.IsIn(RuntimeMode.Production)).ShouldThrow<InvalidOperationException>();
             }
 
             [Test]
@@ -102,6 +103,12 @@ namespace Kostassoid.Anodyne.Node.Specs
             {
                 _node = new TestNode();
                 _node.Start();
+            }
+
+            [Test]
+            public void should_be_in_production_mode()
+            {
+                _node.IsIn(RuntimeMode.Production).Should().BeTrue();
             }
 
             [Test]

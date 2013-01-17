@@ -17,6 +17,9 @@ using Kostassoid.Anodyne.DataAccess;
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using System.Reflection;
+    using Domain.Base;
+
     public class MongoDataAccessProvider : IDataAccessProvider
     {
         public IDataSessionFactory SessionFactory { get; private set; }
@@ -35,13 +38,13 @@ namespace Kostassoid.Anodyne.MongoDb
 
         private static void RegisterClassMaps(string systemNamespace)
         {
-            var assemblies = From.Assemblies(a => a.FullName.StartsWith(systemNamespace)).ToList();
+            var assemblies = From.Assemblies(a => a.FullName.StartsWith("Anodyne") || a.FullName.StartsWith(systemNamespace)).ToList();
 
+            //TODO: should register all subclasses
             MongoHelper.CreateMapForAllClassesBasedOn<IPersistable>(assemblies);
-/*
-            MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
-            MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
-*/
+
+            //MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
+            //MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
         }
 
         private static string NormalizeConnectionString(string connectionString)

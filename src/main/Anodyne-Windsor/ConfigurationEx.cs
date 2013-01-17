@@ -19,19 +19,19 @@ namespace Kostassoid.Anodyne.Windsor
 
     public static class ConfigurationEx
     {
-        public static void UseWindsorContainer(this IConfiguration configuration, Func<IWindsorContainer> containerProvider)
+        public static void UseWindsorContainer(this INodeConfigurator nodeConfigurator, Func<IWindsorContainer> containerProvider)
         {
-            ((IConfigurationBuilder)configuration).SetContainerAdapter(new WindsorContainerAdapter(containerProvider()));
+            ((INodeConfiguratorEx)nodeConfigurator).SetContainerAdapter(new WindsorContainerAdapter(containerProvider()));
         }
 
-        public static void UseWindsorContainer(this IConfiguration configuration)
+        public static void UseWindsorContainer(this INodeConfigurator nodeConfigurator)
         {
-            ((IConfigurationBuilder)configuration).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
+            ((INodeConfiguratorEx)nodeConfigurator).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
         }
 
-        public static void UseWindsorWcfAdapter(this IConfiguration configuration)
+        public static void UseWindsorWcfProxyFactory(this INodeConfigurator nodeConfigurator)
         {
-            ((IConfigurationBuilder)configuration).SetWcfServiceProvider(new WindsorWcfAdapter(configuration));
+            ((INodeConfiguratorEx)nodeConfigurator).SetWcfProxyFactory(new WindsorWcfProxyFactory(nodeConfigurator));
         }
 
     }

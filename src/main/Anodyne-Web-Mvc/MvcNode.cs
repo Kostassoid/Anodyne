@@ -15,18 +15,15 @@ namespace Kostassoid.Anodyne.Web.Mvc
 {
     using System.Web;
     using Common.Reflection;
-    using Node.Configuration;
 
     public abstract class MvcNode : WebNode
     {
         protected MvcNode(HttpApplication application) : base(application)
         {
-            Instance.OnContainerReady += () =>
+            AfterConfiguration += cfg =>
             {
-                var cfg = ((IConfiguration)Instance);
-
                 cfg.ResolveControllersFromContainer();
-                cfg.RegisterControllers(From.Assemblies(_ => true));
+                cfg.RegisterControllers(From.Assemblies(a => a.FullName.StartsWith(cfg.Configuration.SystemNamespace)));
             };
         }
     }

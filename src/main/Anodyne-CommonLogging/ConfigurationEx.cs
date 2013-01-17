@@ -17,9 +17,9 @@ namespace Kostassoid.Anodyne.CommonLogging
 
     public static class ConfigurationEx
     {
-        public static void UseCommonLogging(this IConfiguration configuration)
+        public static void UseCommonLogging(this INodeConfigurator nodeConfigurator)
         {
-            (configuration as IConfigurationBuilder).SetLoggerAdapter(new CommonLoggingLoggerAdapter());
+            ((INodeConfiguratorEx)nodeConfigurator).SetLoggerAdapter(new CommonLoggingLoggerAdapter());
         }
 
     }

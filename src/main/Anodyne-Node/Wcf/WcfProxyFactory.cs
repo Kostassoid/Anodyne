@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2013 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,10 +14,19 @@
 namespace Kostassoid.Anodyne.Node.Wcf
 {
     using Registration;
+    using Registration.Concrete;
 
-    public interface IWcfAdapter
+    public abstract class WcfProxyFactory : IWcfProxyFactory
     {
-        IServiceImplementationSyntax<TService> Start<TService>() where TService : class;
-        void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
+        public IServiceImplementationSyntax<TService> Start<TService>() where TService : class
+        {
+            return new ServiceImplementationSyntax<TService>(this);
+        }
+
+        public abstract void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
+
+        public abstract void Publish<TService, TImpl>(WcfServiceSpecification<TService, TImpl> specification)
+            where TService : class
+            where TImpl : TService;
     }
 }

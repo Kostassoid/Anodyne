@@ -23,7 +23,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
         class TestSystem : Node.Node
         {
-            public override void OnConfigure(IConfiguration c)
+            public override void OnConfigure(INodeConfigurator c)
             {
                 c.UseWindsorContainer();
                 c.UseMongoDataAccess("localhost:27001", "Anodyne-Testing");
