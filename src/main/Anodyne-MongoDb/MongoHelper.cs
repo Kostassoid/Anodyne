@@ -65,13 +65,14 @@ namespace Kostassoid.Anodyne.MongoDb
 
         private static void RegisterRoot(Type rootType, IEnumerable<Assembly> assemblies)
         {
-            var rootClassMap = CreateBsonClassMapFor(rootType);
-            rootClassMap.AutoMap();
-            rootClassMap.SetDiscriminatorIsRequired(true);
-            rootClassMap.SetIsRootClass(true);
-
             if (!BsonClassMap.IsClassMapRegistered(rootType))
+            {
+                var rootClassMap = CreateBsonClassMapFor(rootType);
+                rootClassMap.AutoMap();
+                rootClassMap.SetDiscriminatorIsRequired(true);
+                rootClassMap.SetIsRootClass(true);
                 BsonClassMap.RegisterClassMap(rootClassMap);
+            }
 
             RegisterSubclasses(rootType, assemblies);
         }

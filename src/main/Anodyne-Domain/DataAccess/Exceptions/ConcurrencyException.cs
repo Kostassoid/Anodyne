@@ -16,13 +16,14 @@ using Kostassoid.Anodyne.Domain.Base;
 
 namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
 {
+    [Serializable]
     public class ConcurrencyException : Exception
     {
         public IAggregateRoot Aggregate { get; protected set; }
 
         public ConcurrencyException(IAggregateRoot aggregate)
             :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
-                        ((IEntity) aggregate).IdObject, aggregate.GetType().Name))
+                        aggregate.IdObject, aggregate.GetType().Name))
         {
             Aggregate = aggregate;
         }

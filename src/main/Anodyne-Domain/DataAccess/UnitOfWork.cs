@@ -157,7 +157,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             EventBus.Publish(new UnitOfWorkRollbackEvent(this));
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (IsDisposed) return;
 

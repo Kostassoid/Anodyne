@@ -104,7 +104,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             ChangeSets.Clear();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             _dataSession.Dispose();
         }

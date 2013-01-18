@@ -50,14 +50,14 @@ namespace Kostassoid.Anodyne.DataAccess
             return GetCurrentSession().Query<T>();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             CloseCurrentSession();
         }
 
         ~DefaultDataAccessContext()
         {
-            CloseCurrentSession();
+            Dispose();
         }
     }
 }
