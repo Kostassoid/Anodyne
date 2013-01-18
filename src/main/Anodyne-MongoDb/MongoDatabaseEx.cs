@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using System.Linq;
     using MongoDB.Driver;
     using System;
     using System.Collections.Generic;
@@ -51,9 +52,9 @@ namespace Kostassoid.Anodyne.MongoDb
             return collectionType.Name;
         }
 
-        public static void MapAllClassesBasedOn<T>(this MongoDatabase database, IEnumerable<Assembly> assemblies)
+        public static void MapAllClassesBasedOn<T>(this MongoDatabase database, IEnumerable<Assembly> assemblies) where T : class
         {
-            MongoHelper.CreateMapForAllClassesBasedOn<T>(assemblies);
+            MongoHelper.CreateMapForAllClassesBasedOn<T>(assemblies.ToList());
         }
 
         public static void EnsureIndexFor<TRoot>(this MongoDatabase database, Expression<Func<TRoot, object>> index) where TRoot : class

@@ -39,11 +39,10 @@ namespace Kostassoid.Anodyne.MongoDb
         {
             var assemblies = From.AllAssemblies().Where(a => a.FullName.StartsWith("Anodyne") || a.FullName.StartsWith(systemNamespace)).ToList();
 
-            //TODO: should register all subclasses
-            //MongoHelper.CreateMapForAllClassesBasedOn<IPersistable>(assemblies);
+            MongoHelper.CreateMapForAllClassesBasedOn<IPersistable>(assemblies);
 
-            MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
-            MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
+            //MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
+            //MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
         }
 
         private static string NormalizeConnectionString(string connectionString)
