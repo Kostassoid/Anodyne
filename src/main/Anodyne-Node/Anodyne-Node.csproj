@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Configuration\INodeConfiguratorEx.cs" />
     <Compile Include="Configuration\NodeConfiguration.cs" />
+    <Compile Include="ConfigurationActionWrapper.cs" />
     <Compile Include="Dependency\IBinding.cs" />
     <Compile Include="Dependency\Registration\Binding.cs" />
     <Compile Include="Dependency\Registration\IBindingSyntax.cs" />

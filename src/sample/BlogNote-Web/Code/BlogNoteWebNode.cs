@@ -29,7 +29,7 @@ namespace Kostassoid.BlogNote.Web.Code
         {
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
-            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
+            c.UseMongoDataAccess(Anodyne.Node.Configuration.Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
             c.UseDataAccessPolicy(p => p.ReadOnlyAccess());
 
             c.OnStartupPerform<QueryRegistration>();

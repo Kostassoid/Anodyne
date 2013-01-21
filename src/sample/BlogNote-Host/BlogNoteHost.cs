@@ -27,7 +27,7 @@ namespace Kostassoid.BlogNote.Host
             c.UseLog4Net();
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
-            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
+            c.UseMongoDataAccess(Anodyne.Node.Configuration.Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
 
             c.OnStartupPerform<DataAccessConfiguration>();
             c.OnStartupPerform<WcfServicesRegistration>();

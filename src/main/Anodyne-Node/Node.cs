@@ -33,8 +33,7 @@ namespace Kostassoid.Anodyne.Node
         public virtual void OnStart() {}
         public virtual void OnShutdown() {}
 
-        public event Action<INodeConfigurator> BeforeConfiguration = s => { };
-        public event Action<INodeConfigurator> AfterConfiguration = s => { };
+        public event Action<INodeConfigurator> Configured = s => { };
         public event Action<Node> Started = s => { };
         public event Action<Node> Stopped = s => { };
         public event Action<Node> Starting = s => { };
@@ -60,11 +59,12 @@ namespace Kostassoid.Anodyne.Node
 
             var configurationBuilder = new ConfigurationBuilder();
 
-            BeforeConfiguration(configurationBuilder);
             OnConfigure(configurationBuilder);
-            AfterConfiguration(configurationBuilder);
-
+            Configured(configurationBuilder);
             Configuration = configurationBuilder.Build();
+
+            Configuration.Container.GetAll<IConfigurationAction>().ForEach(b => b.OnConfigure(Configuration));
+
             IsConfigured = true;
         }
 
@@ -94,11 +94,11 @@ namespace Kostassoid.Anodyne.Node
 
             Stopping(this);
 
-            Configuration.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Configuration));
-
             OnShutdown();
 
             _subsystems.ForEach(s => s.Stop());
+
+            Configuration.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Configuration));
 
             State = InstanceState.Stopped;
 
