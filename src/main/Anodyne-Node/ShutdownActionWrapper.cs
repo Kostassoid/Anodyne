@@ -16,7 +16,7 @@ namespace Kostassoid.Anodyne.Node
     using Configuration;
     using System;
 
-    public class ShutdownActionWrapper : IShutdownAction
+    internal class ShutdownActionWrapper : IShutdownAction
     {
         private readonly Action<INodeConfiguration> _shutdownAction;
 

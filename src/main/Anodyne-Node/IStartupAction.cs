@@ -15,8 +15,15 @@ namespace Kostassoid.Anodyne.Node
 {
     using Configuration;
 
+    /// <summary>
+    /// Startup action which should be performed upon Node startup.
+    /// </summary>
     public interface IStartupAction
     {
+        /// <summary>
+        /// Called when action should be performed. 
+        /// </summary>
+        /// <param name="configuration">Node configuration.</param>
         void OnStartup(INodeConfiguration configuration);
     }
 }

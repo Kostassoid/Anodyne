@@ -13,9 +13,18 @@
 
 namespace Kostassoid.Anodyne.Node
 {
+    /// <summary>
+    /// Runtime mode the Node is running in.
+    /// </summary>
     public enum RuntimeMode
     {
+        /// <summary>
+        /// Node is started in testing environment.
+        /// </summary>
         Testing,
+        /// <summary>
+        /// Node is started in production environment.
+        /// </summary>
         Production
     }
 }

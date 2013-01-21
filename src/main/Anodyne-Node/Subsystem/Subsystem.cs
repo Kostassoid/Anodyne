@@ -16,6 +16,9 @@ namespace Kostassoid.Anodyne.Node.Subsystem
     using System;
     using log4net;
 
+    /// <summary>
+    /// Base subsystem implementation.
+    /// </summary>
     public abstract class Subsystem : ISubsystem
     {
         private InstanceState _state = InstanceState.Stopped;
@@ -66,7 +69,13 @@ namespace Kostassoid.Anodyne.Node.Subsystem
         protected abstract void OnStart();
         protected abstract void OnStop();
         
-        public virtual event Action<ISubsystem> Started = s => {};
-        public virtual event Action<ISubsystem> Stopped = s => {};
+        /// <summary>
+        /// Notifies when subsystem has been started.
+        /// </summary>
+        public event Action<ISubsystem> Started = s => {};
+        /// <summary>
+        /// Notifies when subsystem has been stopped.
+        /// </summary>
+        public event Action<ISubsystem> Stopped = s => { };
     }
 }

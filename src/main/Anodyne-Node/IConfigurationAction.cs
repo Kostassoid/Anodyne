@@ -15,8 +15,15 @@ namespace Kostassoid.Anodyne.Node
 {
     using Configuration;
 
+    /// <summary>
+    /// Configuration action which should be performed upon Node configuration.
+    /// </summary>
     public interface IConfigurationAction
     {
+        /// <summary>
+        /// Called when action should be performed. 
+        /// </summary>
+        /// <param name="configuration">Node configuration.</param>
         void OnConfigure(INodeConfiguration configuration);
     }
 }

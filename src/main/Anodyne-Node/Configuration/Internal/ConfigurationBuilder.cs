@@ -11,16 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Domain.DataAccess.Policy;
-using Kostassoid.Anodyne.Node.Dependency.Registration;
-
-namespace Kostassoid.Anodyne.Node.Configuration
+namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
-    using System.Linq;
+    using Domain.DataAccess;
+    using Domain.DataAccess.Policy;
+    using Dependency.Registration;
     using System.Reflection;
     using Anodyne.DataAccess;
-    using Common.Reflection;
     using Common.Tools;
     using Dependency;
     using Logging;
@@ -32,7 +29,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
     {
         private readonly NodeConfiguration _configuration;
 
-        //INodeConfiguration INodeConfiguratorEx.Configuration { get { return _configuration; } }
         public INodeConfiguration Configuration { get { return _configuration; } }
 
         public ConfigurationBuilder()
@@ -109,7 +105,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
                 Binding.For<IConfigurationAction>()
                 .Use<TConfiguration>().With(Lifestyle.Unmanaged)
                 .Named(GetTypeUniqueName<TConfiguration>("Configuration")));
-            //Activator.CreateInstance<TConfiguration>().OnConfigure(_configuration);
         }
 
         public void ConfigureUsing(Action<INodeConfiguration> configurationAction, ConfigurationPredicate when)
@@ -122,7 +117,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
                 .Use(() => new ConfigurationActionWrapper(configurationAction))
                 .With(Lifestyle.Unmanaged)
                 .Named("Configuration-" + SeqGuid.NewGuid()));
-            //configurationAction(_configuration);
         }
 
         private static string GetTypeUniqueName<T>(string prefix)

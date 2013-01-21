@@ -13,8 +13,14 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency
 {
+    /// <summary>
+    /// Lifestyle-based binding.
+    /// </summary>
     public abstract class LifestyleBasedBinding : IBinding
     {
+        /// <summary>
+        /// Defined lifestyle.
+        /// </summary>
         public Lifestyle Lifestyle { get; protected set; }
 
         protected LifestyleBasedBinding()
@@ -22,6 +28,10 @@ namespace Kostassoid.Anodyne.Node.Dependency
             Lifestyle = Lifestyle.ProviderDefault;
         }
 
+        /// <summary>
+        /// Set component lifestyle.
+        /// </summary>
+        /// <param name="lifestyle">Desired lifestyle for a component.</param>
         public void SetLifestyle(Lifestyle lifestyle)
         {
             Lifestyle = lifestyle;

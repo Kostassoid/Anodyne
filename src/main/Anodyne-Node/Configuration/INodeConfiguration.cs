@@ -18,13 +18,34 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using Logging;
     using Wcf;
 
+    /// <summary>
+    /// Access to base Node configuration and depencencies.
+    /// </summary>
     public interface INodeConfiguration
     {
+        /// <summary>
+        /// Node instance runtime mode.
+        /// </summary>
         RuntimeMode RuntimeMode { get; }
+        /// <summary>
+        /// IoC container.
+        /// </summary>
         IContainer Container { get; }
+        /// <summary>
+        /// Logger adapter.
+        /// </summary>
         ILoggerAdapter LoggerAdapter { get; }
+        /// <summary>
+        /// Wcf Proxy Factory.
+        /// </summary>
         IWcfProxyFactory WcfProxyFactory { get; }
+        /// <summary>
+        /// Data Access adapter.
+        /// </summary>
         IDataAccessProvider DataAccess { get; }
+        /// <summary>
+        /// System (project) namespace.
+        /// </summary>
         string SystemNamespace { get; }
     }
 }

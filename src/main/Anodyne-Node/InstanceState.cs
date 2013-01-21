@@ -13,9 +13,18 @@
 
 namespace Kostassoid.Anodyne.Node
 {
+    /// <summary>
+    /// Instance current state.
+    /// </summary>
     public enum InstanceState
     {
+        /// <summary>
+        /// Instance is not running, not started yet or has been stopped.
+        /// </summary>
         Stopped,
+        /// <summary>
+        /// Instance has been successfully started and is running.
+        /// </summary>
         Started
     }
 }

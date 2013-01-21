@@ -13,6 +13,9 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency
 {
+    /// <summary>
+    /// Service implementation resolver marker.
+    /// </summary>
     public interface IImplementationResolver
     {
     }

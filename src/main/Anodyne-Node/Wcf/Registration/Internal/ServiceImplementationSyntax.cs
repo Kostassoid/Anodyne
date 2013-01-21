@@ -11,26 +11,20 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Node.Wcf.Registration.Concrete
+namespace Kostassoid.Anodyne.Node.Wcf.Registration.Internal
 {
-    using System;
-
-    internal class ServiceConfigurationSyntax<TService, TImpl> : IServiceConfigurationSyntax<TService, TImpl> where TService : class where TImpl : class, TService
+    internal class ServiceImplementationSyntax<TService> : IServiceImplementationSyntax<TService> where TService : class
     {
         private readonly WcfProxyFactory _wcfProxyFactory;
 
-        public ServiceConfigurationSyntax(WcfProxyFactory wcfProxyFactory)
+        public ServiceImplementationSyntax(WcfProxyFactory wcfProxyFactory)
         {
             _wcfProxyFactory = wcfProxyFactory;
         }
 
-        public void ConfiguredWith(Action<IWcfServiceConfiguration> configurationAction)
+        public IServiceConfigurationSyntax<TService, TImpl> ImplementedBy<TImpl>() where TImpl : class, TService
         {
-            var specification = new WcfServiceSpecification<TService, TImpl>();
-
-            configurationAction(specification);
-
-            _wcfProxyFactory.Publish(specification);
+            return new ServiceConfigurationSyntax<TService, TImpl>(_wcfProxyFactory);
         }
     }
 }

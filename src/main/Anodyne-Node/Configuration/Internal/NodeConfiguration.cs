@@ -3,26 +3,28 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-// 
+//  
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-// 
 
-namespace Kostassoid.BlogNote.Host.Startup
+namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
-    using Anodyne.Node;
-    using Anodyne.Node.Configuration;
+    using Anodyne.DataAccess;
+    using Dependency;
+    using Logging;
+    using Wcf;
 
-    public class CommandConsumersRegistration : IStartupAction
+    internal class NodeConfiguration : INodeConfiguration
     {
-        public void OnStartup(INodeConfiguration configuration)
-        {
-            //system.Container.For(typeof(IConsumerOf<>)).UseAll(From.Assemblies(a => a.FullName.Contains(Const.ProjectName)));
-        }
-
+        public RuntimeMode RuntimeMode { get; internal set; }
+        public IContainer Container { get; internal set; }
+        public ILoggerAdapter LoggerAdapter { get; internal set; }
+        public IWcfProxyFactory WcfProxyFactory { get; internal set; }
+        public IDataAccessProvider DataAccess { get; internal set; }
+        public string SystemNamespace { get; internal set; }
     }
 }

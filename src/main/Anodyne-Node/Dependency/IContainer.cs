@@ -19,9 +19,22 @@ namespace Kostassoid.Anodyne.Node.Dependency
     using System.Collections;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// IoC Container interface.
+    /// </summary>
     public interface IContainer
     {
+        /// <summary>
+        /// Resolve all instances of specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of required component it was registered with.</typeparam>
+        /// <returns>List of resolved instances, or empty list if no components were found.</returns>
         IList<T> GetAll<T>();
+        /// <summary>
+        /// Resolve instance of specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of required component it was registered with.</typeparam>
+        /// <returns>Resolved instance or null.</returns>
         T Get<T>();
         T Get<T>(string name);
 
@@ -31,13 +44,7 @@ namespace Kostassoid.Anodyne.Node.Dependency
 
         void Release(object instance);
 
-        // container.Put(Binding.For<IFoo>().AsSelf().Named("Ololo").WithLifestyle(Lifestyle.Singleton))
-        // container.Put(Binding.For(AllTypes.BasedOn<IFoo>()))
         void Put(IBindingSyntax binding);
-
-        //ISingleBindingSyntax<TService> For<TService>() where TService : class;
-        //ISingleBindingSyntax For(Type type);
-        //IMultipleBindingSyntax For(IEnumerable<Type> types);
 
         bool Has<T>();
         bool Has(Type type);

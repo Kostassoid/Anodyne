@@ -13,6 +13,9 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency
 {
+    /// <summary>
+    /// Component binding specification.
+    /// </summary>
     public interface IBinding
     {
          

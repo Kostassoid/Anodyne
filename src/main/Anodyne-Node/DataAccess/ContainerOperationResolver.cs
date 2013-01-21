@@ -19,15 +19,27 @@ namespace Kostassoid.Anodyne.Node.DataAccess
     using Dependency;
     using Domain;
 
+    /// <summary>
+    /// Domain operation resolver based on Container.
+    /// </summary>
     public class ContainerOperationResolver : IOperationResolver
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        /// Construct an instance of ContainerOperationResolver.
+        /// </summary>
+        /// <param name="container">Container to use for resolving operations.</param>
         public ContainerOperationResolver(IContainer container)
         {
             _container = container;
         }
 
+        /// <summary>
+        /// Resolve domain operation.
+        /// </summary>
+        /// <typeparam name="TOp">Tytpe of concrete IDomainOperation implementation.</typeparam>
+        /// <returns>Resolved instance of IDomainOperation.</returns>
         public TOp Get<TOp>() where TOp : class, IDomainOperation
         {
             var operation = _container.Get<TOp>();

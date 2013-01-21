@@ -15,12 +15,30 @@ namespace Kostassoid.Anodyne.Node.Subsystem
 {
     using System;
 
+    /// <summary>
+    /// High-level subsystem with lifecycle binded to Node.
+    /// </summary>
     public interface ISubsystem
     {
+        /// <summary>
+        /// Subsystem runtime state.
+        /// </summary>
         InstanceState State { get; }
+        /// <summary>
+        /// Start subsystem.
+        /// </summary>
         void Start();
+        /// <summary>
+        /// Stop subsystem.
+        /// </summary>
         void Stop();
+        /// <summary>
+        /// Notifies when subsystem has been started.
+        /// </summary>
         event Action<ISubsystem> Started;
+        /// <summary>
+        /// Notifies when subsystem has been stopped.
+        /// </summary>
         event Action<ISubsystem> Stopped;
     }
 }

@@ -11,11 +11,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-
-namespace Kostassoid.Anodyne.Node.Dependency.Registration
+namespace Kostassoid.Anodyne.Node.Dependency.Registration.Internal
 {
-    public class SingleBindingSyntax<TService> : ISingleBindingSyntax<TService> where TService : class
+    using System;
+
+    internal class SingleBindingSyntax<TService> : ISingleBindingSyntax<TService> where TService : class
     {
         private readonly SingleBinding _binding;
         IBinding IBindingSyntax.Binding { get { return _binding; } }
@@ -62,7 +62,7 @@ namespace Kostassoid.Anodyne.Node.Dependency.Registration
         }
     }
 
-    public class SingleBindingSyntax : ISingleBindingSyntax, IBindingSyntax
+    internal class SingleBindingSyntax : ISingleBindingSyntax, IBindingSyntax
     {
         private readonly SingleBinding _binding;
         IBinding IBindingSyntax.Binding { get { return _binding; } }

@@ -13,12 +13,30 @@
 
 namespace Kostassoid.Anodyne.Node.Dependency
 {
+    /// <summary>
+    /// Container component lifestyle.
+    /// </summary>
     public enum Lifestyle
     {
+        /// <summary>
+        /// Default provider lifestyle.
+        /// </summary>
         ProviderDefault,
+        /// <summary>
+        /// Resolved objects aren't managed and get garbage-collected when they're not referenced anymore.
+        /// </summary>
         Unmanaged,
+        /// <summary>
+        /// Singleton. Only one instance of component exists.
+        /// </summary>
         Singleton,
+        /// <summary>
+        /// New instance is created upon every resolving but explicit release is required.
+        /// </summary>
         Transient,
+        /// <summary>
+        /// Resolved instance will be disposed upon web request end.
+        /// </summary>
         PerWebRequest
     }
 }

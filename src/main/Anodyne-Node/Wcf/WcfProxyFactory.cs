@@ -14,8 +14,11 @@
 namespace Kostassoid.Anodyne.Node.Wcf
 {
     using Registration;
-    using Registration.Concrete;
+    using Registration.Internal;
 
+    /// <summary>
+    /// Base Wcf proxy factory.
+    /// </summary>
     public abstract class WcfProxyFactory : IWcfProxyFactory
     {
         public IServiceImplementationSyntax<TService> Start<TService>() where TService : class
@@ -25,6 +28,12 @@ namespace Kostassoid.Anodyne.Node.Wcf
 
         public abstract void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
 
+        /// <summary>
+        /// Publish Wcf service.
+        /// </summary>
+        /// <typeparam name="TService">Service interface.</typeparam>
+        /// <typeparam name="TImpl">Service implementation.</typeparam>
+        /// <param name="specification">Wcf publishing specification.</param>
         public abstract void Publish<TService, TImpl>(WcfServiceSpecification<TService, TImpl> specification)
             where TService : class
             where TImpl : TService;

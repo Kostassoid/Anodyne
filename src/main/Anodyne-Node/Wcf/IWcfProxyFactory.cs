@@ -15,9 +15,22 @@ namespace Kostassoid.Anodyne.Node.Wcf
 {
     using Registration;
 
+    /// <summary>
+    /// Represents Wcf proxy factory.
+    /// </summary>
     public interface IWcfProxyFactory
     {
+        /// <summary>
+        /// Register and start service as a Wcf service.
+        /// </summary>
+        /// <typeparam name="TService">Service interface.</typeparam>
+        /// <returns>Service implementation syntax.</returns>
         IServiceImplementationSyntax<TService> Start<TService>() where TService : class;
+        /// <summary>
+        /// Set up Wcf client proxy.
+        /// </summary>
+        /// <typeparam name="TService">Service interface.</typeparam>
+        /// <param name="endpoint">Wcf endpoint specification.</param>
         void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
     }
 }

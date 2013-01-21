@@ -15,8 +15,15 @@ namespace Kostassoid.Anodyne.Node
 {
     using Configuration;
 
+    /// <summary>
+    /// Shutdown action which should be performed upon Node shutdown.
+    /// </summary>
     public interface IShutdownAction
     {
+        /// <summary>
+        /// Called when action should be performed. 
+        /// </summary>
+        /// <param name="configuration">Node configuration.</param>
         void OnShutdown(INodeConfiguration configuration);
     }
 }

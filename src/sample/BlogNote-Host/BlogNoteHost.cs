@@ -31,7 +31,6 @@ namespace Kostassoid.BlogNote.Host
 
             c.OnStartupPerform<DataAccessConfiguration>();
             c.OnStartupPerform<WcfServicesRegistration>();
-            c.OnStartupPerform<CommandConsumersRegistration>();
         }
     }
 }

@@ -18,11 +18,30 @@ namespace Kostassoid.Anodyne.Node.Configuration
     using Logging;
     using Wcf;
 
+    /// <summary>
+    /// Direct access to Node configurator setters.
+    /// </summary>
     public interface INodeConfiguratorEx
     {
+        /// <summary>
+        /// Set container adapter. Must be called once for every node.
+        /// </summary>
+        /// <param name="container">Container adapter.</param>
         void SetContainerAdapter(IContainer container);
+        /// <summary>
+        /// Set logger adapter.
+        /// </summary>
+        /// <param name="loggerAdapter">Logger adapter.</param>
         void SetLoggerAdapter(ILoggerAdapter loggerAdapter);
+        /// <summary>
+        /// Set Wcf proxy factory.
+        /// </summary>
+        /// <param name="wcfProxyFactory">Wcf proxy factory.</param>
         void SetWcfProxyFactory(IWcfProxyFactory wcfProxyFactory);
+        /// <summary>
+        /// Set Data Access provider.
+        /// </summary>
+        /// <param name="dataAccessProvider">Data Access provider.</param>
         void SetDataAccessProvider(IDataAccessProvider dataAccessProvider);
     }
 }

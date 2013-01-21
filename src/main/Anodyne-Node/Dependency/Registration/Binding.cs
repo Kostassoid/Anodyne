@@ -16,6 +16,8 @@ using System.Collections.Generic;
 
 namespace Kostassoid.Anodyne.Node.Dependency.Registration
 {
+    using Internal;
+
     public static class Binding
     {
         public static ISingleBindingSyntax<TService> For<TService>() where TService : class

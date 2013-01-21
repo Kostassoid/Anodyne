@@ -15,8 +15,16 @@ namespace Kostassoid.Anodyne.Node.Wcf.Registration
 {
     using System.ServiceModel.Channels;
 
+    /// <summary>
+    /// Binding specification syntax.
+    /// </summary>
     public static class Bound
     {
+        /// <summary>
+        /// Specify Wcf binding.
+        /// </summary>
+        /// <param name="binding">Wcf endpoint binding.</param>
+        /// <returns>Wcf endpoint configuration syntax.</returns>
         public static WcfEndpointSpecification To(Binding binding)
         {
             return new WcfEndpointSpecification(binding);

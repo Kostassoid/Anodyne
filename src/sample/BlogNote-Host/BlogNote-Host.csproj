@@ -93,7 +93,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\UserService.cs" />
-    <Compile Include="Startup\CommandConsumersRegistration.cs" />
     <Compile Include="Startup\DataAccessConfiguration.cs" />
     <Compile Include="Startup\WcfServicesRegistration.cs" />
     <Compile Include="BlogNoteHost.cs" />
