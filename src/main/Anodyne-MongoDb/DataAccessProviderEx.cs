@@ -14,7 +14,7 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
-    using DataAccess;
+    using Abstractions.DataAccess;
     using MongoDB.Driver;
     using System;
 

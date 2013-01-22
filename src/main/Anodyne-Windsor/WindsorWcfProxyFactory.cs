@@ -15,12 +15,12 @@ using System.Linq;
 
 namespace Kostassoid.Anodyne.Windsor
 {
+    using Abstractions.Wcf;
+    using Abstractions.Wcf.Registration;
     using Castle.Facilities.WcfIntegration;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
     using Node.Configuration;
-    using Node.Wcf;
-    using Node.Wcf.Registration;
     using System;
 
     public class WindsorWcfProxyFactory : WcfProxyFactory

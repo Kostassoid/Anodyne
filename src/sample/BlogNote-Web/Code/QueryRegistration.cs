@@ -11,15 +11,14 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Common.Reflection;
-using Kostassoid.Anodyne.Node.Dependency;
-using Kostassoid.Anodyne.Node.Dependency.Registration;
-using Kostassoid.BlogNote.Web.Query;
-
 namespace Kostassoid.BlogNote.Web.Code
 {
+    using Anodyne.Abstractions.Dependency;
+    using Anodyne.Abstractions.Dependency.Registration;
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
+    using Anodyne.Common.Reflection;
+    using Query;
 
     public class QueryRegistration : IStartupAction
     {

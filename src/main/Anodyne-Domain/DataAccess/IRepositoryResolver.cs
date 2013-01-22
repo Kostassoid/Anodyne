@@ -11,12 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.DataAccess;
 using Kostassoid.Anodyne.Domain.Base;
 using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
+    using Abstractions.DataAccess;
+
     public interface IRepositoryResolver
     {
         IRepository<TRoot> Get<TRoot>(IDataSession dataSession) where TRoot : class, IAggregateRoot;

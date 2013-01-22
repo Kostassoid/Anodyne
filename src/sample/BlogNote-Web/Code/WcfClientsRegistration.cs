@@ -14,9 +14,9 @@
 namespace Kostassoid.BlogNote.Web.Code
 {
     using System.ServiceModel;
+    using Anodyne.Abstractions.Wcf.Registration;
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
-    using Anodyne.Node.Wcf.Registration;
     using Contracts;
 
     public class WcfClientsRegistration : IStartupAction

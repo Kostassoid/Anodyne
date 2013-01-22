@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Domain.Base
 {
-    using Anodyne.DataAccess;
+    using Abstractions.DataAccess;
 
     public interface IEntity : IPersistable
     {

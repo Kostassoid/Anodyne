@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Wiring
 {
     using Internal;
     using Syntax;
-    using Syntax.Concrete;
+    using Syntax.Internal;
 
     public static class EventBus
     {

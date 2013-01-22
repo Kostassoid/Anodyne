@@ -13,10 +13,10 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
-    using Anodyne.DataAccess;
-    using Dependency;
-    using Logging;
-    using Wcf;
+    using Abstractions.DataAccess;
+    using Abstractions.Dependency;
+    using Abstractions.Logging;
+    using Abstractions.Wcf;
 
     internal class NodeConfiguration : INodeConfiguration
     {

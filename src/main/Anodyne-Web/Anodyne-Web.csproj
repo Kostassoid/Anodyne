@@ -49,13 +49,13 @@
     <Compile Include="HttpContextProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Anodyne-Abstractions\Anodyne-Abstractions.csproj">
+      <Project>{b67fa75e-6807-4639-9a11-9155de5520d8}</Project>
+      <Name>Anodyne-Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Anodyne-DataAccess\Anodyne-DataAccess.csproj">
-      <Project>{6e6aea6a-502c-419f-aada-35ad702473b7}</Project>
-      <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\Anodyne-Node\Anodyne-Node.csproj">
       <Project>{F29A2AF0-FA6E-4172-983B-AE7729447CFC}</Project>

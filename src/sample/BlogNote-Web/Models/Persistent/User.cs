@@ -14,7 +14,7 @@
 namespace Kostassoid.BlogNote.Web.Models.Persistent
 {
     using System;
-    using Anodyne.DataAccess;
+    using Anodyne.Abstractions.DataAccess;
 
     public class User : IPersistableRoot
     {

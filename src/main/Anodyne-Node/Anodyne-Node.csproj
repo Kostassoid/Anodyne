@@ -47,7 +47,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,36 +60,13 @@
     <Compile Include="Configuration\INodeConfiguratorEx.cs" />
     <Compile Include="Configuration\Internal\NodeConfiguration.cs" />
     <Compile Include="ConfigurationActionWrapper.cs" />
-    <Compile Include="Dependency\IBinding.cs" />
-    <Compile Include="Dependency\Registration\Binding.cs" />
-    <Compile Include="Dependency\Registration\IBindingSyntax.cs" />
-    <Compile Include="Dependency\Registration\IMultipleBindingSyntax.cs" />
-    <Compile Include="Dependency\Registration\Internal\MultipleBindingSyntax.cs" />
-    <Compile Include="Dependency\Registration\Internal\SingleBindingSyntax.cs" />
-    <Compile Include="Dependency\SingleBinding.cs" />
-    <Compile Include="Dependency\MultipleBinding.cs" />
-    <Compile Include="Dependency\DynamicResolver.cs" />
-    <Compile Include="Dependency\IImplementationResolver.cs" />
-    <Compile Include="Dependency\InstanceResolver.cs" />
-    <Compile Include="Dependency\LifestyleBasedBinding.cs" />
-    <Compile Include="Dependency\StaticResolver.cs" />
     <Compile Include="IConfigurationAction.cs" />
-    <Compile Include="Logging\NullLog.cs" />
-    <Compile Include="Logging\NullLoggerAdapter.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Configuration\Configured.cs" />
     <Compile Include="Configuration\INodeConfiguration.cs" />
     <Compile Include="Configuration\INodeConfigurator.cs" />
     <Compile Include="ShutdownActionWrapper.cs" />
-    <Compile Include="DataAccess\ContainerOperationResolver.cs" />
     <Compile Include="IShutdownAction.cs" />
-    <Compile Include="Dependency\Lifestyle.cs" />
-    <Compile Include="Dependency\Registration\ISingleBindingSyntax.cs" />
-    <Compile Include="Dependency\IContainer.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILoggerAdapter.cs" />
-    <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="Logging\LogManager.cs" />
     <Compile Include="RuntimeMode.cs" />
     <Compile Include="IStartupAction.cs" />
     <Compile Include="StartupActionWrapper.cs" />
@@ -98,28 +74,18 @@
     <Compile Include="Subsystem\Subsystem.cs" />
     <Compile Include="InstanceState.cs" />
     <Compile Include="Configuration\Internal\ConfigurationBuilder.cs" />
-    <Compile Include="Wcf\Registration\IWcfServiceConfiguration.cs" />
-    <Compile Include="Wcf\Registration\Bound.cs" />
-    <Compile Include="Wcf\Registration\IServiceConfigurationSyntax.cs" />
-    <Compile Include="Wcf\Registration\IServiceImplementationSyntax.cs" />
-    <Compile Include="Wcf\IWcfProxyFactory.cs" />
-    <Compile Include="Wcf\Registration\Internal\ServiceConfigurationSyntax.cs" />
-    <Compile Include="Wcf\Registration\Internal\ServiceImplementationSyntax.cs" />
-    <Compile Include="Wcf\Registration\WcfEndpointSpecification.cs" />
-    <Compile Include="Wcf\Registration\WcfServiceSpecification.cs" />
-    <Compile Include="Wcf\WcfProxyFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Anodyne-Abstractions\Anodyne-Abstractions.csproj">
+      <Project>{b67fa75e-6807-4639-9a11-9155de5520d8}</Project>
+      <Name>Anodyne-Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Anodyne-DataAccess\Anodyne-DataAccess.csproj">
-      <Project>{6E6AEA6A-502C-419F-AADA-35AD702473B7}</Project>
-      <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\Anodyne-Domain\Anodyne-Domain.csproj">
       <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>

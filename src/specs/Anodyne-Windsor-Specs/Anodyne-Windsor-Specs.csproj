@@ -60,6 +60,10 @@
     <Compile Include="WindsorAdapterSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\main\Anodyne-Abstractions\Anodyne-Abstractions.csproj">
+      <Project>{b67fa75e-6807-4639-9a11-9155de5520d8}</Project>
+      <Name>Anodyne-Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Main\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2d6ac91a-29e5-4700-8e16-58d87ab98563}</Project>
       <Name>Anodyne-Common</Name>

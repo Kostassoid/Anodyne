@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.MongoDb
 {
-    using DataAccess;
+    using Abstractions.DataAccess;
     using MongoDB.Driver;
 
     public class MongoDataSessionFactory : IDataSessionFactory

@@ -11,17 +11,16 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Common.Reflection;
-using Kostassoid.Anodyne.Node.Dependency.Registration;
-
 namespace Kostassoid.Anodyne.Windsor.Specs
 {
     using System;
+    using Abstractions.Dependency.Registration;
+    using Common.Reflection;
+    using Abstractions.Dependency;
     using Anodyne.Specs.Shared;
     using Castle.Core;
     using FluentAssertions;
     using NUnit.Framework;
-    using Node.Dependency;
 
     // ReSharper disable InconsistentNaming
     public class WindsorAdapterSpecs

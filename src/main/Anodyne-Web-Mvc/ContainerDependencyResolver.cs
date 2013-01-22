@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
-    using Node.Dependency;
+    using Abstractions.Dependency;
 
     public class ContainerDependencyResolver : IDependencyResolver
     {

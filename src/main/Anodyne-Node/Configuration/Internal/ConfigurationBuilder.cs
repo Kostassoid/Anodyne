@@ -13,16 +13,16 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
+    using Abstractions.DataAccess;
+    using Abstractions.Dependency;
+    using Abstractions.Dependency.Registration;
+    using Abstractions.Logging;
+    using Abstractions.Wcf;
     using Domain.DataAccess;
     using Domain.DataAccess.Policy;
-    using Dependency.Registration;
     using System.Reflection;
-    using Anodyne.DataAccess;
     using Common.Tools;
-    using Dependency;
-    using Logging;
     using Subsystem;
-    using Wcf;
     using System;
 
     internal class ConfigurationBuilder : INodeConfigurator, INodeConfiguratorEx

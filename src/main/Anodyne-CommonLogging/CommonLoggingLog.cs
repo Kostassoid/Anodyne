@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.CommonLogging
 {
     using System;
-    using Node.Logging;
+    using Abstractions.Logging;
     using Common = global::Common;
 
     public class CommonLoggingLog : ILog

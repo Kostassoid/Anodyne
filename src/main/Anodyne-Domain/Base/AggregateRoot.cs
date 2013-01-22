@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
     using System.Collections.Generic;
-    using Anodyne.DataAccess;
+    using Abstractions.DataAccess;
     using Events;
     using Wiring;
 

@@ -63,6 +63,7 @@
     <Compile Include="DataAccess\IRepositoryResolver.cs" />
     <Compile Include="DataAccess\IUnitOfWorkEx.cs" />
     <Compile Include="DataAccess\Operations\BaseDomainOperation.cs" />
+    <Compile Include="DataAccess\Operations\ContainerOperationResolver.cs" />
     <Compile Include="DataAccess\Operations\IOperationResolver.cs" />
     <Compile Include="DataAccess\Operations\IRepository.cs" />
     <Compile Include="DataAccess\Policy\DataAccessPolicy.cs" />
@@ -78,13 +79,13 @@
     <Compile Include="IDomainQuery.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Anodyne-Abstractions\Anodyne-Abstractions.csproj">
+      <Project>{b67fa75e-6807-4639-9a11-9155de5520d8}</Project>
+      <Name>Anodyne-Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Anodyne-DataAccess\Anodyne-DataAccess.csproj">
-      <Project>{6e6aea6a-502c-419f-aada-35ad702473b7}</Project>
-      <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\Anodyne-Wiring\Anodyne-Wiring.csproj">
       <Project>{321BB928-1A81-40BF-8BA9-644F95B8CD5A}</Project>

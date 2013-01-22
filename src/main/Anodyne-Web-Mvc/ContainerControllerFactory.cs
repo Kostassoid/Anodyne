@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Node.Dependency;
+    using Abstractions.Dependency;
 
     public class ContainerControllerFactory : DefaultControllerFactory 
     {

@@ -13,10 +13,10 @@
 
 using System.Linq;
 using Kostassoid.Anodyne.Common.Reflection;
-using Kostassoid.Anodyne.DataAccess;
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using Abstractions.DataAccess;
     using Domain.Base;
 
     public class MongoDataAccessProvider : IDataAccessProvider

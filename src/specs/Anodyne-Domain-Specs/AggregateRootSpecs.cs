@@ -16,7 +16,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using System.Threading.Tasks;
     using Base;
     using Common.Extentions;
     using Events;

@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
     using System.Linq;
-    using Anodyne.DataAccess;
+    using Abstractions.DataAccess;
     using System;
     using System.Collections.Generic;
 

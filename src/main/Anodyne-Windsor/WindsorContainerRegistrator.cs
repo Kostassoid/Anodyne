@@ -14,10 +14,11 @@
 using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Kostassoid.Anodyne.Node.Dependency;
 
 namespace Kostassoid.Anodyne.Windsor
 {
+    using Abstractions.Dependency;
+
     public static class WindsorContainerRegistrator
     {
         public static void Register(IWindsorContainer container, SingleBinding binding)

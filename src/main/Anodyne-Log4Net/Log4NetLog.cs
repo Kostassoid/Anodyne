@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.Log4Net
 {
-    using Node.Logging;
+    using Abstractions.Logging;
     using System;
 
     public class Log4NetLog : ILog

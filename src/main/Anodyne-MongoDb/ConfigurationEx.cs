@@ -12,13 +12,13 @@
 // specific language governing permissions and limitations under the License.
 
 using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Node.Dependency.Registration;
 
 namespace Kostassoid.Anodyne.MongoDb
 {
-    using DataAccess;
+    using Abstractions.DataAccess;
+    using Abstractions.Dependency.Registration;
+    using Domain.DataAccess.Operations;
     using Node.Configuration;
-    using Node.DataAccess;
     using System;
 
     public static class ConfigurationEx

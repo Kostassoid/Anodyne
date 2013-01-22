@@ -16,7 +16,7 @@ using Kostassoid.Anodyne.Domain.DataAccess.Operations;
 
 namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 {
-    using Anodyne.DataAccess;
+    using Abstractions.DataAccess;
     using Common;
     using Common.Extentions;
     using Domain.Base;

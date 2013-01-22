@@ -11,15 +11,15 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-using Kostassoid.Anodyne.DataAccess;
-using Kostassoid.Anodyne.Domain.Base;
-using Kostassoid.Anodyne.Domain.DataAccess.Policy;
-using Kostassoid.Anodyne.Domain.Events;
-using Kostassoid.Anodyne.Wiring;
-
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
+    using System;
+    using Base;
+    using Policy;
+    using Domain.Events;
+    using Wiring;
+    using Abstractions.DataAccess;
+
     public interface IDomainDataSession : IDisposable, IHandlerOf<IAggregateEvent>
     {
         IDataSession DataSession { get; }

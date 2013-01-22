@@ -11,12 +11,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Node.DataAccess;
-
 namespace Kostassoid.Anodyne.Specs.Shared
 {
     using DataAccess;
+    using Domain.DataAccess;
+    using Domain.DataAccess.Operations;
     using Node.Configuration;
 
     public static class ConfigurationEx

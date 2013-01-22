@@ -11,16 +11,15 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Common.Reflection;
-using Kostassoid.Anodyne.Node.Dependency.Registration;
-
 namespace Kostassoid.Anodyne.Web.Mvc
 {
     using System.Collections.Generic;
     using System.Reflection;
     using System.Web.Mvc;
+    using Common.Reflection;
+    using Abstractions.Dependency;
+    using Abstractions.Dependency.Registration;
     using Node.Configuration;
-    using Node.Dependency;
 
     public static class ConfigurationEx
     {

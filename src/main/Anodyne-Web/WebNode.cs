@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Web
 {
     using System.Web;
-    using DataAccess;
+    using Abstractions.DataAccess;
 
     public abstract class WebNode : Node.Node
     {

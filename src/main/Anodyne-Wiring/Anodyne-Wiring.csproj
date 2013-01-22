@@ -51,7 +51,7 @@
     <Compile Include="Syntax\ITargetDiscoveryByTypeSyntax.cs" />
     <Compile Include="Syntax\IConventionSourceSyntax.cs" />
     <Compile Include="Syntax\IPredicateSourceSyntax.cs" />
-    <Compile Include="Syntax\Concrete\ConventionSourceSyntax.cs" />
+    <Compile Include="Syntax\Internal\ConventionSourceSyntax.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IHandlerOf.cs" />
     <Compile Include="Internal\IEventAggregator.cs" />
@@ -62,12 +62,12 @@
     <Compile Include="Syntax\ISourceTypeFilterSyntax.cs" />
     <Compile Include="Syntax\ITargetDiscoverySyntax.cs" />
     <Compile Include="Syntax\ITargetSyntax.cs" />
-    <Compile Include="Syntax\Concrete\PredicateSourceSyntax.cs" />
+    <Compile Include="Syntax\Internal\PredicateSourceSyntax.cs" />
     <Compile Include="Subscription\SubscriptionSpecification.cs" />
-    <Compile Include="Syntax\Concrete\SourceTypeFilterSyntax.cs" />
-    <Compile Include="Syntax\Concrete\TargetSyntax.cs" />
-    <Compile Include="Syntax\Concrete\TargetDiscoverySyntax.cs" />
-    <Compile Include="Syntax\Concrete\TargetDiscoveryByTypeSyntax.cs" />
+    <Compile Include="Syntax\Internal\SourceTypeFilterSyntax.cs" />
+    <Compile Include="Syntax\Internal\TargetSyntax.cs" />
+    <Compile Include="Syntax\Internal\TargetDiscoverySyntax.cs" />
+    <Compile Include="Syntax\Internal\TargetDiscoveryByTypeSyntax.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">

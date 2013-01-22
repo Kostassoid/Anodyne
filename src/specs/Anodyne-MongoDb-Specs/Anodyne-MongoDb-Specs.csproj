@@ -75,13 +75,13 @@
     <Compile Include="MongoDbAdapterSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\main\Anodyne-Abstractions\Anodyne-Abstractions.csproj">
+      <Project>{b67fa75e-6807-4639-9a11-9155de5520d8}</Project>
+      <Name>Anodyne-Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Main\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2d6ac91a-29e5-4700-8e16-58d87ab98563}</Project>
       <Name>Anodyne-Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Main\Anodyne-DataAccess\Anodyne-DataAccess.csproj">
-      <Project>{6e6aea6a-502c-419f-aada-35ad702473b7}</Project>
-      <Name>Anodyne-DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\main\Anodyne-Domain\Anodyne-Domain.csproj">
       <Project>{dc5c4bf4-8efa-46e8-9542-191ac05b35f9}</Project>

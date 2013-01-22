@@ -13,7 +13,7 @@
 
 namespace Kostassoid.Anodyne.CommonLogging
 {
-    using Node.Logging;
+    using Abstractions.Logging;
     using System;
 
     public class CommonLoggingLoggerAdapter : ILoggerAdapter

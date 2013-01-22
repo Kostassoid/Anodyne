@@ -14,11 +14,11 @@
 namespace Kostassoid.Anodyne.Windsor
 {
     using System.Collections;
+    using Abstractions.Dependency;
+    using Abstractions.Dependency.Registration;
     using Castle.Facilities.Startable;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
-    using Node.Dependency;
-    using Node.Dependency.Registration;
     using System;
     using System.Collections.Generic;
 

@@ -17,11 +17,11 @@ using System.Linq;
 
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
+    using Abstractions.DataAccess;
     using Common;
     using Common.CodeContracts;
     using Common.ExecutionContext;
     using Common.Reflection;
-    using Anodyne.DataAccess;
     using Base;
     using Events;
     using Exceptions;
