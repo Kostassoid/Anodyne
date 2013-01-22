@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Abstractions.Logging
 {
     using System;
 
-    public class NullLog : ILog
+    internal class NullLog : ILog
     {
         public NullLog(string source)
         {

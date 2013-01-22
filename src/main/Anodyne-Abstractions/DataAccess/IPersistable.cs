@@ -13,6 +13,9 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
+    /// <summary>
+    /// Represents persistable entity.
+    /// </summary>
     public interface IPersistable
     {
     }

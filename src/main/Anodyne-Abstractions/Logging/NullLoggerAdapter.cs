@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Abstractions.Logging
 {
     using System;
 
-    public class NullLoggerAdapter : ILoggerAdapter
+    internal class NullLoggerAdapter : ILoggerAdapter
     {
         public ILog GetLogger(Type type)
         {

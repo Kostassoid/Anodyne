@@ -47,11 +47,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
@@ -88,7 +84,7 @@
       <Name>Anodyne-Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Anodyne-Domain\Anodyne-Domain.csproj">
-      <Project>{DC5C4BF4-8EFA-46E8-9542-191AC05B35F9}</Project>
+      <Project>{dc5c4bf4-8efa-46e8-9542-191ac05b35f9}</Project>
       <Name>Anodyne-Domain</Name>
     </ProjectReference>
   </ItemGroup>

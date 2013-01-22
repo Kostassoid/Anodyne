@@ -17,12 +17,19 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
     using Common;
     using Common.ExecutionContext;
 
+    /// <summary>
+    /// Default implementation of DataAccess context.
+    /// </summary>
     public class DefaultDataAccessContext : IDataAccessContext
     {
         private const string ContextValueName = "DataAccessContext-Session";
 
         private readonly IDataAccessProvider _dataAccessProvider;
 
+        /// <summary>
+        /// DefaultDataAccessContext constructor.
+        /// </summary>
+        /// <param name="dataAccessProvider">DataAccess provider.</param>
         public DefaultDataAccessContext(IDataAccessProvider dataAccessProvider)
         {
             _dataAccessProvider = dataAccessProvider;

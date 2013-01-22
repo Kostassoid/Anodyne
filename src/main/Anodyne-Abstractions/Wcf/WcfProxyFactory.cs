@@ -21,11 +21,21 @@ namespace Kostassoid.Anodyne.Abstractions.Wcf
     /// </summary>
     public abstract class WcfProxyFactory : IWcfProxyFactory
     {
+        /// <summary>
+        /// Register and start service as a Wcf service.
+        /// </summary>
+        /// <typeparam name="TService">Service interface.</typeparam>
+        /// <returns>Service implementation syntax.</returns>
         public IServiceImplementationSyntax<TService> Start<TService>() where TService : class
         {
             return new ServiceImplementationSyntax<TService>(this);
         }
 
+        /// <summary>
+        /// Set up Wcf client proxy.
+        /// </summary>
+        /// <typeparam name="TService">Service interface.</typeparam>
+        /// <param name="endpoint">Wcf endpoint specification.</param>
         public abstract void Consume<TService>(WcfEndpointSpecification endpoint) where TService : class;
 
         /// <summary>

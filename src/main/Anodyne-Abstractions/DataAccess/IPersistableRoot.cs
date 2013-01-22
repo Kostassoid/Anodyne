@@ -13,8 +13,14 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
+    /// <summary>
+    /// Represents persistable entity which can be used as a root.
+    /// </summary>
     public interface IPersistableRoot : IPersistable
     {
+        /// <summary>
+        /// Root identity.
+        /// </summary>
         object Identity { get; }
     }
 }

@@ -24,28 +24,67 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     public interface IContainer
     {
         /// <summary>
-        /// Resolve all instances of specified type.
+        /// Resolve instance of specific type.
         /// </summary>
-        /// <typeparam name="T">Type of required component it was registered with.</typeparam>
+        /// <typeparam name="T">Service type of required component.</typeparam>
+        /// <returns>Resolved instance or throws if no component was found.</returns>
+        T Get<T>();
+        /// <summary>
+        /// Resolve component of specific type with specific name.
+        /// </summary>
+        /// <typeparam name="T">Service type of required component.</typeparam>
+        /// <param name="name">Component name.</param>
+        /// <returns>Resolved instance or throws if no component was found.</returns>
+        T Get<T>(string name);
+        /// <summary>
+        /// Resolve instance of specific type.
+        /// </summary>
+        /// <param name="type">Service type of required component.</param>
+        /// <returns>Resolved instance or throws if no component was found.</returns>
+        object Get(Type type);
+        /// <summary>
+        /// Resolve component of specific type with specific name.
+        /// </summary>
+        /// <param name="type">Service type of required component.</param>
+        /// <param name="name">Component name.</param>
+        /// <returns>Resolved instance or throws if no component was found.</returns>
+        object Get(Type type, string name);
+        /// <summary>
+        /// Resolve all components of specific type.
+        /// </summary>
+        /// <typeparam name="T">Service type of required components.</typeparam>
         /// <returns>List of resolved instances, or empty list if no components were found.</returns>
         IList<T> GetAll<T>();
         /// <summary>
-        /// Resolve instance of specified type.
+        /// Resolve all components of specific type.
         /// </summary>
-        /// <typeparam name="T">Type of required component it was registered with.</typeparam>
-        /// <returns>Resolved instance or null.</returns>
-        T Get<T>();
-        T Get<T>(string name);
-
+        /// <param name="type">Service type of required components.</param>
+        /// <returns>List of resolved instances, or empty list if no components were found.</returns>
         IList GetAll(Type type);
-        object Get(Type type);
-        object Get(Type type, string name);
 
+        /// <summary>
+        /// Release previously resolved component allowing it to be GCed.
+        /// </summary>
+        /// <param name="instance">Component instance.</param>
         void Release(object instance);
 
+        /// <summary>
+        /// Register (put) component in container.
+        /// </summary>
+        /// <param name="binding">Binding specification.</param>
         void Put(IBindingSyntax binding);
 
+        /// <summary>
+        /// Check if component for specific type is registered in container.
+        /// </summary>
+        /// <typeparam name="T">Component service type.</typeparam>
+        /// <returns>True if component is registered.</returns>
         bool Has<T>();
+        /// <summary>
+        /// Check if component for specific type is registered in container.
+        /// </summary>
+        /// <param name="type">Component service type.</param>
+        /// <returns>True if component is registered.</returns>
         bool Has(Type type);
     }
 }

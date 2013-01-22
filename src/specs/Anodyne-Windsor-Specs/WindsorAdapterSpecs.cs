@@ -156,8 +156,27 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_resolving_single_non_registered_component : WindsorScenario
+        {
+            [Test]
+            public void should_throw()
+            {
+                Container.Invoking(c => c.Get<Boo>()).ShouldThrow<Exception>();
+            }
+        }
 
-
+        [TestFixture]
+        [Category("Unit")]
+        public class when_resolving_all_components_for_non_registered_service : WindsorScenario
+        {
+            [Test]
+            public void should_throw()
+            {
+                Container.GetAll<Boo>().Should().HaveCount(0);
+            }
+        }
     }
     // ReSharper restore InconsistentNaming
 

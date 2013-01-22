@@ -16,10 +16,26 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
     using System;
     using System.Linq;
 
+    /// <summary>
+    /// Allows to work with single DataSession within execution Context (for ex. thread, or HttpContext).
+    /// </summary>
     public interface IDataAccessContext : IDisposable
     {
+
+        /// <summary>
+        /// Get IQueryable for persistable entity.
+        /// </summary>
+        /// <typeparam name="T">Type of persistable entity.</typeparam>
+        /// <returns>IQueryable for required entity type.</returns>
         IQueryable<T> Query<T>() where T : class, IPersistableRoot;
+        /// <summary>
+        /// Get DataSession for current context (open new if needed).
+        /// </summary>
+        /// <returns>Open DataSession.</returns>
         IDataSession GetCurrentSession();
+        /// <summary>
+        /// Close DataSession associated with current context.
+        /// </summary>
         void CloseCurrentSession();
     }
 }

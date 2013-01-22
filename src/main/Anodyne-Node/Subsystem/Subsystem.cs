@@ -24,23 +24,35 @@ namespace Kostassoid.Anodyne.Node.Subsystem
         private InstanceState _state = InstanceState.Stopped;
         private readonly ILog _logger;
 
+        /// <summary>
+        /// Subsystem logger.
+        /// </summary>
         protected virtual ILog Logger
         {
             get { return _logger; }
         }
 
+        /// <summary>
+        /// Base subsystem constructor.
+        /// </summary>
         protected Subsystem()
         {
             _logger = LogManager.GetLogger(GetType());
         }
 
+        /// <summary>
+        /// Subsystem runtime state.
+        /// </summary>
         public virtual InstanceState State
         {
             get { return _state; }
             protected set { _state = value; }
         }
 
-        public virtual void Start()
+        /// <summary>
+        /// Start subsystem.
+        /// </summary>
+        public void Start()
         {
             if (_state == InstanceState.Stopped)
             {
@@ -53,7 +65,10 @@ namespace Kostassoid.Anodyne.Node.Subsystem
             }
         }
 
-        public virtual void Stop()
+        /// <summary>
+        /// Stop subsystem.
+        /// </summary>
+        public void Stop()
         {
             if (_state == InstanceState.Started)
             {
@@ -66,7 +81,13 @@ namespace Kostassoid.Anodyne.Node.Subsystem
             }
         }
 
+        /// <summary>
+        /// Called upon subsystem start.
+        /// </summary>
         protected abstract void OnStart();
+        /// <summary>
+        /// Called upon subsystem stop.
+        /// </summary>
         protected abstract void OnStop();
         
         /// <summary>
@@ -76,6 +97,6 @@ namespace Kostassoid.Anodyne.Node.Subsystem
         /// <summary>
         /// Notifies when subsystem has been stopped.
         /// </summary>
-        public event Action<ISubsystem> Stopped = s => { };
+        public event Action<ISubsystem> Stopped = s => {};
     }
 }

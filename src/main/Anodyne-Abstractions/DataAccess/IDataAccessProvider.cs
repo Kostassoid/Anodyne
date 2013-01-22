@@ -13,8 +13,14 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
+    /// <summary>
+    /// Data access provider. Provides and interface to work with DBMS/ORM for data persistence.
+    /// </summary>
     public interface IDataAccessProvider
     {
+        /// <summary>
+        /// Data session factory.
+        /// </summary>
         IDataSessionFactory SessionFactory { get; }
     }
 }

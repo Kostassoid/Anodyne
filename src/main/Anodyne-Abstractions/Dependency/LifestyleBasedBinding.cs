@@ -23,6 +23,9 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// </summary>
         public Lifestyle Lifestyle { get; protected set; }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         protected LifestyleBasedBinding()
         {
             Lifestyle = Lifestyle.ProviderDefault;

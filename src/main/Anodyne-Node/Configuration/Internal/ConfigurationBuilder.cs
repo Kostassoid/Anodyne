@@ -37,8 +37,6 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
 
             RunIn(RuntimeMode.Production);
             DefineSystemNamespaceAs(DetectSystemNamespace());
-            
-            ((INodeConfiguratorEx)this).SetLoggerAdapter(new NullLoggerAdapter()); //TODO: beautify
         }
 
         private static string DetectSystemNamespace()
@@ -58,7 +56,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
         void INodeConfiguratorEx.SetLoggerAdapter(ILoggerAdapter loggerAdapter)
         {
             _configuration.LoggerAdapter = loggerAdapter;
-            LogManager.Adapter = loggerAdapter; //TODO: move
+            LogManager.SetAdapter(loggerAdapter); //TODO: move
         }
 
         void INodeConfiguratorEx.SetWcfProxyFactory(IWcfProxyFactory wcfProxyFactory)

@@ -16,12 +16,41 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
     using System;
     using System.Linq;
 
+    /// <summary>
+    /// Data session. Usualy represents single connection to DBMS or open ORM session. Normally not thread-safe.
+    /// </summary>
     public interface IDataSession : IDataSessionEx, IDisposable
     {
+        /// <summary>
+        /// Get queryable for specific type.
+        /// </summary>
+        /// <typeparam name="T">Persistable root type.</typeparam>
+        /// <returns>Queryable object for specified type.</returns>
         IQueryable<T> Query<T>() where T : class, IPersistableRoot;
+        /// <summary>
+        /// Return one entity from data storage by id.
+        /// </summary>
+        /// <typeparam name="T">Persistable root type.</typeparam>
+        /// <param name="id">Entity identity.</param>
+        /// <returns>Found entity or null if nothing is found.</returns>
         T FindOne<T>(object id) where T : class, IPersistableRoot;
+        /// <summary>
+        /// Return one entity from data storage by id.
+        /// </summary>
+        /// <param name="type">Persistable root type.</param>
+        /// <param name="id">Entity identity.</param>
+        /// <returns>Found entity or null if nothing is found.</returns>
         IPersistableRoot FindOne(Type type, object id);
+        /// <summary>
+        /// Persist entity. Update if entity with the same id already exists.
+        /// </summary>
+        /// <param name="o">Entity to save.</param>
         void SaveOne(IPersistableRoot o);
+        /// <summary>
+        /// Remove entity from persistence storage.
+        /// </summary>
+        /// <param name="type">Persistable root type.</param>
+        /// <param name="id">Entity identity.</param>
         void RemoveOne(Type type, object id);
     }
 }

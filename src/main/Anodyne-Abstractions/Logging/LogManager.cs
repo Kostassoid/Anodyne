@@ -17,10 +17,24 @@ namespace Kostassoid.Anodyne.Abstractions.Logging
     using System;
     using System.Diagnostics;
 
+    /// <summary>
+    /// Logging manager.
+    /// </summary>
     public static class LogManager
     {
-        public static ILoggerAdapter Adapter { get; set; }
+        private static ILoggerAdapter _adapter = new NullLoggerAdapter();
+        /// <summary>
+        /// Current logger adapter instance.
+        /// </summary>
+        public static ILoggerAdapter Adapter
+        {
+            get { return _adapter; }
+        }
 
+        /// <summary>
+        /// Get Logger for current class.
+        /// </summary>
+        /// <returns></returns>
         public static ILog GetCurrentClassLogger()
         {
             var frame = new StackFrame(1, false);
@@ -29,16 +43,38 @@ namespace Kostassoid.Anodyne.Abstractions.Logging
             return Adapter.GetLogger(declaringType);
         }
 
+        /// <summary>
+        /// Set logger adapter.
+        /// </summary>
+        /// <param name="adapter">Logger adapter instance.</param>
+        public static void SetAdapter(ILoggerAdapter adapter)
+        {
+            _adapter = adapter;
+        }
+
+        /// <summary>
+        /// Get logger for specific type.
+        /// </summary>
+        /// <typeparam name="T">Type for which logger is required.</typeparam>
+        /// <returns>Logger for specified type.</returns>
         public static ILog GetLogger<T>()
         {
             return Adapter.GetLogger(typeof(T));
         }
 
+        /// <summary>
+        /// Get logger for specific type.
+        /// </summary>
+        /// <returns>Logger for specified type.</returns>
         public static ILog GetLogger(Type type)
         {
             return Adapter.GetLogger(type);
         }
 
+        /// <summary>
+        /// Get logger with any string as a source.
+        /// </summary>
+        /// <returns>Logger.</returns>
         public static ILog GetLogger(string name)
         {
             return Adapter.GetLogger(name);

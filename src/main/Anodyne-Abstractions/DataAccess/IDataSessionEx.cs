@@ -13,8 +13,14 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
+    /// <summary>
+    /// Extension interface for direct access to native data session.
+    /// </summary>
     public interface IDataSessionEx
     {
+        /// <summary>
+        /// Native low-level data session.
+        /// </summary>
         object NativeSession { get; }
     }
 }
