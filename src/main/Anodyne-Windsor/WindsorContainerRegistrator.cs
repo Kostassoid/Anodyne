@@ -60,33 +60,44 @@ namespace Kostassoid.Anodyne.Windsor
             return registration.UsingFactoryMethod(resolver.FactoryFunc);
         }
 
-        //TODO: dry
         private static ComponentRegistration<object> ApplyLifestyle(ComponentRegistration<object> registration, Lifestyle lifestyle)
         {
-            switch (lifestyle)
-            {
-                case Lifestyle.Singleton: return registration.LifestyleSingleton();
-                case Lifestyle.Transient: return registration.LifestyleTransient();
-                case Lifestyle.PerWebRequest: return registration.LifestylePerWebRequest();
-                case Lifestyle.Unmanaged: return registration.LifestyleCustom<UnmanagedLifestyleManager>();
-                case Lifestyle.ProviderDefault: return registration;
-                default:
-                    throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
-            }
+            if (lifestyle.Name == Lifestyle.Singleton.Name)
+                return registration.LifeStyle.Singleton;
+
+            if (lifestyle.Name == Lifestyle.Transient.Name)
+                return registration.LifeStyle.Transient;
+
+            if (lifestyle.Name == Lifestyle.PerWebRequest.Name)
+                return registration.LifeStyle.PerWebRequest;
+
+            if (lifestyle.Name == Lifestyle.Unmanaged.Name)
+                return registration.LifeStyle.Custom<UnmanagedLifestyleManager>();
+
+            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+                return registration;//.LifeStyle.Is(LifestyleType.Undefined);
+
+            throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
         }
 
         private static BasedOnDescriptor ApplyLifestyle(BasedOnDescriptor registration, Lifestyle lifestyle)
         {
-            switch (lifestyle)
-            {
-                case Lifestyle.Singleton: return registration.LifestyleSingleton();
-                case Lifestyle.Transient: return registration.LifestyleTransient();
-                case Lifestyle.PerWebRequest: return registration.LifestylePerWebRequest();
-                case Lifestyle.Unmanaged: return registration.LifestyleCustom<UnmanagedLifestyleManager>();
-                case Lifestyle.ProviderDefault: return registration;
-                default:
-                    throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
-            }
+            if (lifestyle.Name == Lifestyle.Singleton.Name)
+                return registration.LifestyleSingleton();
+
+            if (lifestyle.Name == Lifestyle.Transient.Name)
+                return registration.LifestyleTransient();
+
+            if (lifestyle.Name == Lifestyle.PerWebRequest.Name)
+                return registration.LifestylePerWebRequest();
+
+            if (lifestyle.Name == Lifestyle.Unmanaged.Name)
+                return registration.LifestyleCustom<UnmanagedLifestyleManager>();
+
+            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+                return registration;
+
+            throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
         }
 
         private static ComponentRegistration<object> ApplyName(ComponentRegistration<object> registration, string name)

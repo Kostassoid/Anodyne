@@ -16,27 +16,70 @@ namespace Kostassoid.Anodyne.Node.Dependency
     /// <summary>
     /// Container component lifestyle.
     /// </summary>
-    public enum Lifestyle
+    public class Lifestyle
     {
         /// <summary>
         /// Default provider lifestyle.
         /// </summary>
-        ProviderDefault,
+        public static Lifestyle ProviderDefault = new Lifestyle("ProviderDefault");
         /// <summary>
         /// Resolved objects aren't managed and get garbage-collected when they're not referenced anymore.
         /// </summary>
-        Unmanaged,
+        public static Lifestyle Unmanaged = new Lifestyle("Unmanaged");
         /// <summary>
         /// Singleton. Only one instance of component exists.
         /// </summary>
-        Singleton,
+        public static Lifestyle Singleton = new Lifestyle("Singleton");
         /// <summary>
         /// New instance is created upon every resolving but explicit release is required.
         /// </summary>
-        Transient,
+        public static Lifestyle Transient = new Lifestyle("Transient");
         /// <summary>
         /// Resolved instance will be disposed upon web request end.
         /// </summary>
-        PerWebRequest
+        public static Lifestyle PerWebRequest = new Lifestyle("PerWebRequest");
+
+        /// <summary>
+        /// Use provider-specific or user-defined lifestyle.
+        /// </summary>
+        /// <param name="name">Lifestyle name.</param>
+        /// <returns>Custom lifestyle descriptor.</returns>
+        public static Lifestyle Custom(string name)
+        {
+            return new Lifestyle(name);
+        }
+
+        /// <summary>
+        /// Lifestyle name.
+        /// </summary>
+        public string Name { get; private set; }
+
+        private Lifestyle(string name)
+        {
+            Name = name;
+        }
+
+        protected bool Equals(Lifestyle other)
+        {
+            return string.Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Lifestyle) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Name != null ? Name.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
