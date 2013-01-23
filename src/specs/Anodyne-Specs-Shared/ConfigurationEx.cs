@@ -13,18 +13,31 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared
 {
+    using Abstractions.DataAccess;
+    using Abstractions.Dependency;
+    using Abstractions.Dependency.Registration;
     using DataAccess;
     using Domain.DataAccess;
-    using Domain.DataAccess.Operations;
     using Node.Configuration;
 
     public static class ConfigurationEx
     {
-        public static void UseInMemoryDataAccess(this INodeConfigurator nodeConfigurator)
+        public static DataAccessTargetSelector UseInMemoryDataAccess(this INodeConfigurator nodeConfigurator)
         {
             var cfg = nodeConfigurator.Configuration;
 
-            UnitOfWork.SetDependencyResolvers(new InMemoryDataSessionFactory(), new ContainerOperationResolver(cfg.Container), new InMemoryRepositoryResolver()); //TODO: move it
+            var dataProvider = new InMemoryDataAccessProvider();
+            cfg.Container.Put(
+                Binding.For<IDataAccessProvider>()
+                .UseInstance(dataProvider)
+                .With(Lifestyle.Singleton));
+
+            cfg.Container.Put(
+                Binding.For<IRepositoryResolver>()
+                .Use(() => new InMemoryRepositoryResolver())
+                .With(Lifestyle.Singleton));
+
+            return new DataAccessTargetSelector(cfg.Container, dataProvider);
         }
 
     }

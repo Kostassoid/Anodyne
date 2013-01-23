@@ -13,6 +13,9 @@
 
 namespace Kostassoid.Anodyne.Windsor
 {
+    using Abstractions.Dependency;
+    using Abstractions.Dependency.Registration;
+    using Abstractions.Wcf;
     using Castle.Windsor;
     using Node.Configuration;
     using System;
@@ -31,7 +34,10 @@ namespace Kostassoid.Anodyne.Windsor
 
         public static void UseWindsorWcfProxyFactory(this INodeConfigurator nodeConfigurator)
         {
-            ((INodeConfiguratorEx)nodeConfigurator).SetWcfProxyFactory(new WindsorWcfProxyFactory(nodeConfigurator));
+            nodeConfigurator.Configuration.Container.Put(
+                Binding.For<IWcfProxyFactory>()
+                .Use(() => new WindsorWcfProxyFactory(nodeConfigurator))
+                .With(Lifestyle.Singleton));
         }
 
     }

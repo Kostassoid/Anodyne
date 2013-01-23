@@ -33,11 +33,11 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// <summary>
         /// Wcf Proxy Factory.
         /// </summary>
-        public IWcfProxyFactory WcfProxyFactory { get; internal set; }
+        public IWcfProxyFactory WcfProxyFactory { get { return Container.Get<IWcfProxyFactory>(); } }
         /// <summary>
         /// Data Access adapter.
         /// </summary>
-        public IDataAccessProvider DataAccess { get; internal set; }
+        public IDataAccessProvider DefaultDataAccess { get { return Container.Get<IDataAccessProvider>(); } }
         /// <summary>
         /// System (project) namespace.
         /// </summary>

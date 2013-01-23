@@ -17,6 +17,8 @@ using Kostassoid.Anodyne.Windsor;
 
 namespace Kostassoid.Anodyne.MongoDb.Specs
 {
+    using Anodyne.Domain.DataAccess;
+
     public static class IntegrationContext
     {
         public static Node.Node System;
@@ -26,8 +28,8 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             public override void OnConfigure(INodeConfigurator c)
             {
                 c.UseWindsorContainer();
-                c.UseMongoDataAccess("localhost:27001", "Anodyne-Testing");
-                c.OnStartupPerform(i => i.DataAccess.OnNative(d => d.Drop()));
+                c.UseMongoDataAccess("localhost:27001", "Anodyne-Testing").AsDomainStorage();
+                c.OnStartupPerform(i => i.DefaultDataAccess.OnNative(d => d.Drop()));
             }
         }
 

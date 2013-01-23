@@ -13,11 +13,9 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
-    using Abstractions.DataAccess;
     using Common;
     using System;
     using Subsystem;
-    using Domain.DataAccess.Policy;
 
     /// <summary>
     /// Allows to check special configuration-time conditions for action to run.
@@ -52,18 +50,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="systemNamespace">System namespace.</param>
         void DefineSystemNamespaceAs(string systemNamespace);
-
-        /// <summary>
-        /// Define default Data Action policy for working with domain entities (UnitOfWork).
-        /// </summary>
-        /// <param name="policyAction">Data access policy configurator.</param>
-        void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
-
-        /// <summary>
-        /// Use injectable low-level DataAccessContext to work with persistable objects.
-        /// </summary>
-        /// <param name="cc">Optional configurator.</param>
-        void UseDataAccessContext(Action<DataAccessContextConfigurator> cc = null);
 
         /// <summary>
         /// Add configuration action, which should be performed once on Node startup.

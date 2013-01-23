@@ -11,32 +11,54 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-
 namespace Kostassoid.Anodyne.MongoDb
 {
     using Abstractions.DataAccess;
+    using Abstractions.Dependency;
     using Abstractions.Dependency.Registration;
-    using Domain.DataAccess.Operations;
+    using Domain.DataAccess;
     using Node.Configuration;
     using System;
 
     public static class ConfigurationEx
     {
-        public static void UseMongoDataAccess(this INodeConfigurator nodeConfigurator, string databaseServer, string databaseName)
+        public static DataAccessTargetSelector UseMongoDataAccess(this INodeConfigurator nodeConfigurator, string name, string databaseServer, string databaseName)
         {
+            var componentName = string.Format("DataAccessProvider-{0}", name);
             var cfg = nodeConfigurator.Configuration;
 
-            cfg.Container.Put(Binding.For<IDataAccessProvider>().UseInstance(new MongoDataAccessProvider(cfg.SystemNamespace, databaseServer, databaseName)));
+            if (cfg.Container.Has(componentName))
+                throw new ArgumentException(string.Format("DataAccessProvider with name '{0}' already registered. Pick another name.", componentName), "name");
 
-            ((INodeConfiguratorEx)nodeConfigurator).SetDataAccessProvider(cfg.Container.Get<IDataAccessProvider>());
+            var dataProvider = new MongoDataAccessProvider(cfg.SystemNamespace, databaseServer, databaseName);
+            cfg.Container.Put(
+                Binding.For<IDataAccessProvider>()
+                .UseInstance(dataProvider)
+                .With(Lifestyle.Singleton)
+                .Named(name));
 
-            UnitOfWork.SetDependencyResolvers(cfg.Container.Get<IDataAccessProvider>().SessionFactory, new ContainerOperationResolver(cfg.Container), new MongoRepositoryResolver());
+            cfg.Container.Put(
+                Binding.For<IRepositoryResolver>()
+                .Use(() => new MongoRepositoryResolver())
+                .With(Lifestyle.Singleton));
+                //.Named(name + "-RepositoryResolver")); //only one domain data access is allowed
+
+            return new DataAccessTargetSelector(cfg.Container, dataProvider);
         }
 
-        public static void UseMongoDataAccess(this INodeConfigurator nodeConfigurator, Tuple<string, string> databaseServerAndName)
+        public static DataAccessTargetSelector UseMongoDataAccess(this INodeConfigurator nodeConfigurator, string name, Tuple<string, string> databaseServerAndName)
         {
-            UseMongoDataAccess(nodeConfigurator, databaseServerAndName.Item1, databaseServerAndName.Item2);
+            return UseMongoDataAccess(nodeConfigurator, name, databaseServerAndName.Item1, databaseServerAndName.Item2);
+        }
+
+        public static DataAccessTargetSelector UseMongoDataAccess(this INodeConfigurator nodeConfigurator, string databaseServer, string databaseName)
+        {
+            return UseMongoDataAccess(nodeConfigurator, Guid.NewGuid().ToString("n"), databaseServer, databaseName);
+        }
+
+        public static DataAccessTargetSelector UseMongoDataAccess(this INodeConfigurator nodeConfigurator, Tuple<string, string> databaseServerAndName)
+        {
+            return UseMongoDataAccess(nodeConfigurator, databaseServerAndName.Item1, databaseServerAndName.Item2);
         }
     }
 }

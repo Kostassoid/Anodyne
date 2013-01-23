@@ -30,8 +30,8 @@ namespace Kostassoid.BlogNote.Web.Node
         {
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
-            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
-            c.UseDataAccessContext(cc => cc.BoundToWebRequest());
+            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"))
+                .AsInjectedContext(cc => cc.BoundToWebRequest());
 
             c.OnStartupPerform<QueryRegistration>();
             c.OnStartupPerform<WcfClientsRegistration>();

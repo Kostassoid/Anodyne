@@ -13,9 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
-    using Abstractions.DataAccess;
     using Abstractions.Dependency;
-    using Abstractions.Wcf;
 
     /// <summary>
     /// Direct access to Node configurator setters.
@@ -27,15 +25,5 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="container">Container adapter.</param>
         void SetContainerAdapter(IContainer container);
-        /// <summary>
-        /// Set Wcf proxy factory.
-        /// </summary>
-        /// <param name="wcfProxyFactory">Wcf proxy factory.</param>
-        void SetWcfProxyFactory(IWcfProxyFactory wcfProxyFactory);
-        /// <summary>
-        /// Set Data Access provider.
-        /// </summary>
-        /// <param name="dataAccessProvider">Data Access provider.</param>
-        void SetDataAccessProvider(IDataAccessProvider dataAccessProvider);
     }
 }

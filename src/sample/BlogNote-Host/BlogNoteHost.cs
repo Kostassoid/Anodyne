@@ -13,6 +13,7 @@
 
 namespace Kostassoid.BlogNote.Host
 {
+    using Anodyne.Domain.DataAccess;
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
     using Anodyne.Windsor;
@@ -25,7 +26,8 @@ namespace Kostassoid.BlogNote.Host
         {
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
-            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
+            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"))
+                .AsDomainStorage();
 
             c.OnStartupPerform<DataAccessConfiguration>();
             c.OnStartupPerform<WcfServicesRegistration>();

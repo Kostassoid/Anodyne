@@ -120,7 +120,7 @@ namespace Kostassoid.Anodyne.Node
         {
             if (IsConfigured) return;
 
-            var configurationBuilder = new ConfigurationBuilder(this);
+            var configurationBuilder = new NodeConfigurator(this);
 
             OnConfigure(configurationBuilder);
             ConfigurationIsReady(configurationBuilder);

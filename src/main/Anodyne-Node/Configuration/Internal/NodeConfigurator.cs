@@ -13,18 +13,14 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
-    using Abstractions.DataAccess;
     using Abstractions.Dependency;
     using Abstractions.Dependency.Registration;
-    using Abstractions.Wcf;
-    using Domain.DataAccess;
-    using Domain.DataAccess.Policy;
     using System.Reflection;
     using Common.Tools;
     using Subsystem;
     using System;
 
-    internal class ConfigurationBuilder : INodeConfigurator, INodeConfiguratorEx
+    internal class NodeConfigurator : INodeConfigurator, INodeConfiguratorEx
     {
         private readonly INode _node;
         private readonly NodeConfiguration _configuration;
@@ -32,7 +28,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
         public INode Node { get { return _node; } }
         public NodeConfiguration Configuration { get { return _configuration; } }
 
-        public ConfigurationBuilder(INode node)
+        public NodeConfigurator(INode node)
         {
             _node = node;
             _configuration = _node.Configuration;
@@ -55,16 +51,6 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             _configuration.Container = container;
         }
 
-        void INodeConfiguratorEx.SetWcfProxyFactory(IWcfProxyFactory wcfProxyFactory)
-        {
-            _configuration.WcfProxyFactory = wcfProxyFactory;
-        }
-
-        void INodeConfiguratorEx.SetDataAccessProvider(IDataAccessProvider dataAccessProvider)
-        {
-            _configuration.DataAccess = dataAccessProvider;
-        }
-
         public void RunIn(RuntimeMode runtimeMode)
         {
             _configuration.RuntimeMode = runtimeMode;
@@ -75,22 +61,6 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             _configuration.SystemNamespace = systemNamespace;
 
             //AssemblyPreloader.Preload(From.AllFilesIn(".").Where(f => f.Extension == ".dll" && f.Name.StartsWith(systemNamespace)));
-        }
-
-        public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)
-        {
-            var dataPolicy = new DataAccessPolicy();
-            policyAction(dataPolicy);
-
-            UnitOfWork.EnforcePolicy(dataPolicy);
-        }
-
-        public void UseDataAccessContext(Action<DataAccessContextConfigurator> cc)
-        {
-            _configuration.Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
-
-            if (cc != null)
-                cc(new DataAccessContextConfigurator());
         }
 
         private bool CanContinue(ConfigurationPredicate when)

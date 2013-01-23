@@ -70,7 +70,7 @@
     <Compile Include="Subsystem\ISubsystem.cs" />
     <Compile Include="Subsystem\Subsystem.cs" />
     <Compile Include="InstanceState.cs" />
-    <Compile Include="Configuration\Internal\ConfigurationBuilder.cs" />
+    <Compile Include="Configuration\Internal\NodeConfigurator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Abstractions\Anodyne-Abstractions.csproj">

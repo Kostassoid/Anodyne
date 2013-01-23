@@ -86,5 +86,11 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// <param name="type">Component service type.</param>
         /// <returns>True if component is registered.</returns>
         bool Has(Type type);
+        /// <summary>
+        /// Check if component with specific name is registered in container.
+        /// </summary>
+        /// <param name="name">Component name.</param>
+        /// <returns>True if component is registered.</returns>
+        bool Has(string name);
     }
 }
