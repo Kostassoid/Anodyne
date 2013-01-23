@@ -29,17 +29,17 @@ namespace Kostassoid.Anodyne.Node.Specs
             public int StartupCounter { get; set; }
             public int ShutdownCounter { get; set; }
 
-            private void InternalConfigure(INodeConfiguration nodeConfiguration)
+            private void InternalConfigure(NodeConfiguration nodeConfiguration)
             {
                 ConfigurationCounter++;
             }
 
-            private void InternalStartup(INodeConfiguration nodeConfiguration)
+            private void InternalStartup(NodeConfiguration nodeConfiguration)
             {
                 StartupCounter++;
             }
 
-            private void InternalShutdown(INodeConfiguration nodeConfiguration)
+            private void InternalShutdown(NodeConfiguration nodeConfiguration)
             {
                 ShutdownCounter++;
             }

@@ -25,23 +25,5 @@ namespace Kostassoid.Anodyne.Web
         {
             Context.SetProvider(new HttpContextProvider());
         }
-
-        public static void UseRequestBoundDataContext(this INodeConfigurator nodeConfigurator)
-        {
-            nodeConfigurator.Configuration.Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
-
-            if (!(nodeConfigurator.Node is WebNode))
-            {
-                throw new InvalidOperationException(string.Format("Expected Node to be of WebNode type but was {0}", nodeConfigurator.Node.GetType().Name));
-            }
-
-            var container = nodeConfigurator.Configuration.Container;
-            ((WebNode)nodeConfigurator.Node).Application.EndRequest += (sender, args) =>
-                    {
-                        if (container.Has<IDataAccessContext>())
-                            container.Get<IDataAccessContext>().CloseCurrentSession();
-                    };
-
-        }
     }
 }

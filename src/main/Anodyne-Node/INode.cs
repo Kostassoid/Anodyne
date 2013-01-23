@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.Node
         /// <summary>
         /// Node instance configuration. Available after Node has been configured (normally after first Start).
         /// </summary>
-        INodeConfiguration Configuration { get; }
+        NodeConfiguration Configuration { get; }
 
         /// <summary>
         /// Node instance state.

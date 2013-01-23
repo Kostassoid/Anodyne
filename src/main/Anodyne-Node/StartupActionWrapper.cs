@@ -18,14 +18,14 @@ namespace Kostassoid.Anodyne.Node
 
     internal class StartupActionWrapper : IStartupAction
     {
-        private readonly Action<INodeConfiguration> _startupAction;
+        private readonly Action<NodeConfiguration> _startupAction;
 
-        public StartupActionWrapper(Action<INodeConfiguration> startupAction)
+        public StartupActionWrapper(Action<NodeConfiguration> startupAction)
         {
             _startupAction = startupAction;
         }
 
-        public void OnStartup(INodeConfiguration configuration)
+        public void OnStartup(NodeConfiguration configuration)
         {
             _startupAction(configuration);
         }

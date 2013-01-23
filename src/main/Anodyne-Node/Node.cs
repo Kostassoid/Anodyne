@@ -26,9 +26,14 @@ namespace Kostassoid.Anodyne.Node
     public abstract class Node : INode
     {
         /// <summary>
-        /// Node instance configuration. Available after Node has been configured (normally after first Start).
+        /// Current Node instance.
         /// </summary>
-        public INodeConfiguration Configuration { get; private set; }
+        public static INode Current { get; private set; }
+
+        /// <summary>
+        /// Node instance configuration.
+        /// </summary>
+        public NodeConfiguration Configuration { get; private set; }
 
         /// <summary>
         /// Node instance state.
@@ -84,6 +89,15 @@ namespace Kostassoid.Anodyne.Node
         public event Action<Node> Stopping = s => { };
 
         /// <summary>
+        /// Base Node constructor.
+        /// </summary>
+        protected Node()
+        {
+            Current = this;
+            Configuration = new NodeConfiguration();
+        }
+
+        /// <summary>
         /// Check if Node instance is in specified runtime mode.
         /// </summary>
         /// <param name="runtimeMode">Runtime mode.</param>
@@ -110,7 +124,8 @@ namespace Kostassoid.Anodyne.Node
 
             OnConfigure(configurationBuilder);
             ConfigurationIsReady(configurationBuilder);
-            Configuration = configurationBuilder.Build();
+
+            configurationBuilder.EnsureConfigurationIsValid();
 
             Configuration.Container.GetAll<IConfigurationAction>().ForEach(b => b.OnConfigure(Configuration));
 

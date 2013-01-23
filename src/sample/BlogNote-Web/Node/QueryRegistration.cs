@@ -13,16 +13,16 @@
 
 namespace Kostassoid.BlogNote.Web.Node
 {
-    using Kostassoid.Anodyne.Abstractions.Dependency;
-    using Kostassoid.Anodyne.Abstractions.Dependency.Registration;
-    using Kostassoid.Anodyne.Node;
-    using Kostassoid.Anodyne.Node.Configuration;
-    using Kostassoid.Anodyne.Common.Reflection;
-    using Kostassoid.BlogNote.Web.Query;
+    using Anodyne.Abstractions.Dependency;
+    using Anodyne.Abstractions.Dependency.Registration;
+    using Anodyne.Node;
+    using Anodyne.Node.Configuration;
+    using Anodyne.Common.Reflection;
+    using Query;
 
     public class QueryRegistration : IStartupAction
     {
-        public void OnStartup(INodeConfiguration configuration)
+        public void OnStartup(NodeConfiguration configuration)
         {
             configuration
                 .Container

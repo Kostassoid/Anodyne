@@ -24,6 +24,6 @@ namespace Kostassoid.Anodyne.Node
         /// Called when action should be performed. 
         /// </summary>
         /// <param name="configuration">Node configuration.</param>
-        void OnConfigure(INodeConfiguration configuration);
+        void OnConfigure(NodeConfiguration configuration);
     }
 }

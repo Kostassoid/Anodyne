@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using Abstractions.DataAccess;
     using Common;
     using System;
     using Subsystem;
@@ -23,7 +24,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
     /// </summary>
     /// <param name="configuration">Node configuration.</param>
     /// <returns></returns>
-    public delegate bool ConfigurationPredicate(INodeConfiguration configuration);
+    public delegate bool ConfigurationPredicate(NodeConfiguration configuration);
 
     /// <summary>
     /// Node configuration builder.
@@ -38,7 +39,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// <summary>
         /// Current Node configuration.
         /// </summary>
-        INodeConfiguration Configuration { get; }
+        NodeConfiguration Configuration { get; }
 
         /// <summary>
         /// Define Node runtime mode.
@@ -59,6 +60,12 @@ namespace Kostassoid.Anodyne.Node.Configuration
         void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction);
 
         /// <summary>
+        /// Use injectable low-level DataAccessContext to work with persistable objects.
+        /// </summary>
+        /// <param name="cc">Optional configurator.</param>
+        void UseDataAccessContext(Action<DataAccessContextConfigurator> cc = null);
+
+        /// <summary>
         /// Add configuration action, which should be performed once on Node startup.
         /// </summary>
         /// <typeparam name="TConfiguration">Concrete ConfigurationAction implementation.</typeparam>
@@ -70,7 +77,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="configurationAction">Delegate to be performed upon Node configuration.</param>
         /// <param name="when">Optional configuration-time predicate.</param>
-        void ConfigureUsing(Action<INodeConfiguration> configurationAction, ConfigurationPredicate when = null);
+        void ConfigureUsing(Action<NodeConfiguration> configurationAction, ConfigurationPredicate when = null);
 
         /// <summary>
         /// Add startup action, which should be performed every time on Node startup.
@@ -83,7 +90,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="startupAction">Delegate to be performed upon Node startup.</param>
         /// <param name="when">Optional configuration-time predicate.</param>
-        void OnStartupPerform(Action<INodeConfiguration> startupAction, ConfigurationPredicate when = null);
+        void OnStartupPerform(Action<NodeConfiguration> startupAction, ConfigurationPredicate when = null);
 
         /// <summary>
         /// Add shutdown action, which should be performed every time on Node shutdown.
@@ -96,7 +103,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="shutdownAction">Delegate to be performed upon Node shutdown.</param>
         /// <param name="when">Optional configuration-time predicate.</param>
-        void OnShutdownPerform(Action<INodeConfiguration> shutdownAction, ConfigurationPredicate when = null);
+        void OnShutdownPerform(Action<NodeConfiguration> shutdownAction, ConfigurationPredicate when = null);
 
         /// <summary>
         /// Register high-level Subsystem.

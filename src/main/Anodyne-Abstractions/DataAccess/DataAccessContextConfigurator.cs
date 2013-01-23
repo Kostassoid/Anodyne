@@ -11,18 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Node.Configuration.Internal
+namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
-    using Abstractions.DataAccess;
-    using Abstractions.Dependency;
-    using Abstractions.Wcf;
-
-    internal class NodeConfiguration : INodeConfiguration
+    /// <summary>
+    /// Base DataAccessContext configurator
+    /// </summary>
+    public class DataAccessContextConfigurator
     {
-        public RuntimeMode RuntimeMode { get; internal set; }
-        public IContainer Container { get; internal set; }
-        public IWcfProxyFactory WcfProxyFactory { get; internal set; }
-        public IDataAccessProvider DataAccess { get; internal set; }
-        public string SystemNamespace { get; internal set; }
     }
 }

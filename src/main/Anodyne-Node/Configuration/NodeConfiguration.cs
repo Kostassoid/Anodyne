@@ -20,27 +20,27 @@ namespace Kostassoid.Anodyne.Node.Configuration
     /// <summary>
     /// Access to base Node configuration and depencencies.
     /// </summary>
-    public interface INodeConfiguration
+    public class NodeConfiguration
     {
         /// <summary>
         /// Node instance runtime mode.
         /// </summary>
-        RuntimeMode RuntimeMode { get; }
+        public RuntimeMode RuntimeMode { get; internal set; }
         /// <summary>
         /// IoC container.
         /// </summary>
-        IContainer Container { get; }
+        public IContainer Container { get; internal set; }
         /// <summary>
         /// Wcf Proxy Factory.
         /// </summary>
-        IWcfProxyFactory WcfProxyFactory { get; }
+        public IWcfProxyFactory WcfProxyFactory { get; internal set; }
         /// <summary>
         /// Data Access adapter.
         /// </summary>
-        IDataAccessProvider DataAccess { get; }
+        public IDataAccessProvider DataAccess { get; internal set; }
         /// <summary>
         /// System (project) namespace.
         /// </summary>
-        string SystemNamespace { get; }
+        public string SystemNamespace { get; internal set; }
     }
 }

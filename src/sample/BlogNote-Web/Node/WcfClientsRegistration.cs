@@ -14,14 +14,14 @@
 namespace Kostassoid.BlogNote.Web.Node
 {
     using System.ServiceModel;
-    using Kostassoid.Anodyne.Abstractions.Wcf.Registration;
-    using Kostassoid.Anodyne.Node;
-    using Kostassoid.Anodyne.Node.Configuration;
-    using Kostassoid.BlogNote.Contracts;
+    using Anodyne.Abstractions.Wcf.Registration;
+    using Anodyne.Node;
+    using Anodyne.Node.Configuration;
+    using Contracts;
 
     public class WcfClientsRegistration : IStartupAction
     {
-        public void OnStartup(INodeConfiguration configuration)
+        public void OnStartup(NodeConfiguration configuration)
         {
             configuration
                 .WcfProxyFactory

@@ -23,7 +23,7 @@ namespace Kostassoid.BlogNote.Host.Startup
 
     public class WcfServicesRegistration : IStartupAction
     {
-        public void OnStartup(INodeConfiguration configuration)
+        public void OnStartup(NodeConfiguration configuration)
         {
             configuration
                 .WcfProxyFactory

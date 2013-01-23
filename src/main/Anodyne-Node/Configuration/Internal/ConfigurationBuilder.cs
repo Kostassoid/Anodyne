@@ -30,12 +30,12 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
         private readonly NodeConfiguration _configuration;
 
         public INode Node { get { return _node; } }
-        public INodeConfiguration Configuration { get { return _configuration; } }
+        public NodeConfiguration Configuration { get { return _configuration; } }
 
         public ConfigurationBuilder(INode node)
         {
             _node = node;
-            _configuration = new NodeConfiguration();
+            _configuration = _node.Configuration;
 
             RunIn(RuntimeMode.Production);
             DefineSystemNamespaceAs(DetectSystemNamespace());
@@ -85,6 +85,14 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             UnitOfWork.EnforcePolicy(dataPolicy);
         }
 
+        public void UseDataAccessContext(Action<DataAccessContextConfigurator> cc)
+        {
+            _configuration.Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
+
+            if (cc != null)
+                cc(new DataAccessContextConfigurator());
+        }
+
         private bool CanContinue(ConfigurationPredicate when)
         {
             return when == null || when(_configuration);
@@ -101,7 +109,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 .Named(GetTypeUniqueName<TConfiguration>("Configuration")));
         }
 
-        public void ConfigureUsing(Action<INodeConfiguration> configurationAction, ConfigurationPredicate when)
+        public void ConfigureUsing(Action<NodeConfiguration> configurationAction, ConfigurationPredicate when)
         {
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
@@ -130,7 +138,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 .Named(GetTypeUniqueName<TStartup>("Startup")));
         }
 
-        public void OnStartupPerform(Action<INodeConfiguration> startupAction, ConfigurationPredicate when)
+        public void OnStartupPerform(Action<NodeConfiguration> startupAction, ConfigurationPredicate when)
         {
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
@@ -154,7 +162,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 .Named(GetTypeUniqueName<TShutdown>("Shutdown")));
         }
 
-        public void OnShutdownPerform(Action<INodeConfiguration> shutdownAction, ConfigurationPredicate when)
+        public void OnShutdownPerform(Action<NodeConfiguration> shutdownAction, ConfigurationPredicate when)
         {
             if (!CanContinue(when)) return;
             _configuration.Container.Put(
@@ -172,22 +180,17 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 .With(Lifestyle.Unmanaged));
         }
 
-        private void EnsureConfigurationIsValid()
+        public void EnsureConfigurationIsValid()
         {
             EnsureContainerIsSet();
+
+            //TODO: add more sophisticated checks
         }
 
         private void EnsureContainerIsSet()
         {
             if (_configuration.Container == null)
                 throw new InvalidOperationException("Node container should be configured first");
-        }
-
-        public INodeConfiguration Build()
-        {
-            EnsureConfigurationIsValid();
-
-            return _configuration;
         }
     }
 }

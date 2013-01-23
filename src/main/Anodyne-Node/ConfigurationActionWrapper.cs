@@ -18,14 +18,14 @@ namespace Kostassoid.Anodyne.Node
 
     internal class ConfigurationActionWrapper : IConfigurationAction
     {
-        private readonly Action<INodeConfiguration> _configurationAction;
+        private readonly Action<NodeConfiguration> _configurationAction;
 
-        public ConfigurationActionWrapper(Action<INodeConfiguration> configurationAction)
+        public ConfigurationActionWrapper(Action<NodeConfiguration> configurationAction)
         {
             _configurationAction = configurationAction;
         }
 
-        public void OnConfigure(INodeConfiguration configuration)
+        public void OnConfigure(NodeConfiguration configuration)
         {
             _configurationAction(configuration);
         }
