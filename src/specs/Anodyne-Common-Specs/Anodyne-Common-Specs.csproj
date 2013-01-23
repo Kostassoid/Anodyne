@@ -66,7 +66,6 @@
     <Compile Include="ExecutionContextSpecs.cs" />
     <Compile Include="OptionSpecs.cs" />
     <Compile Include="ObjectFactorySpecs.cs" />
-    <Compile Include="TicketSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

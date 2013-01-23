@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.Web
         {
             _application = application;
 
-            Configured += cfg =>
+            ConfigurationIsReady += cfg =>
                 {
                     cfg.UseHttpContext();
 

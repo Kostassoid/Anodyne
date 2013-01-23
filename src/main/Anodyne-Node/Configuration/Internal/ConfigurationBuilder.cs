@@ -120,7 +120,11 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
 
-            _configuration.Container.Put(Binding.For<IStartupAction>().Use<TStartup>().With(Lifestyle.Singleton).Named(GetTypeUniqueName<TStartup>("Startup")));
+            _configuration.Container.Put(
+                Binding.For<IStartupAction>()
+                .Use<TStartup>()
+                .With(Lifestyle.Singleton)
+                .Named(GetTypeUniqueName<TStartup>("Startup")));
         }
 
         public void OnStartupPerform(Action<INodeConfiguration> startupAction, ConfigurationPredicate when)
@@ -128,7 +132,11 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
 
-            _configuration.Container.Put(Binding.For<IStartupAction>().Use(() => new StartupActionWrapper(startupAction)).With(Lifestyle.Unmanaged).Named("Startup-" + SeqGuid.NewGuid()));
+            _configuration.Container.Put(
+                Binding.For<IStartupAction>()
+                .Use(() => new StartupActionWrapper(startupAction))
+                .With(Lifestyle.Unmanaged)
+                .Named("Startup-" + SeqGuid.NewGuid()));
         }
 
         public void OnShutdownPerform<TShutdown>(ConfigurationPredicate when) where TShutdown : IShutdownAction
@@ -136,18 +144,29 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
 
-            _configuration.Container.Put(Binding.For<IShutdownAction>().Use<TShutdown>().With(Lifestyle.Unmanaged).Named(GetTypeUniqueName<TShutdown>("Shutdown")));
+            _configuration.Container.Put(
+                Binding.For<IShutdownAction>()
+                .Use<TShutdown>()
+                .With(Lifestyle.Unmanaged)
+                .Named(GetTypeUniqueName<TShutdown>("Shutdown")));
         }
 
         public void OnShutdownPerform(Action<INodeConfiguration> shutdownAction, ConfigurationPredicate when)
         {
             if (!CanContinue(when)) return;
-            _configuration.Container.Put(Binding.For<IShutdownAction>().Use(() => new ShutdownActionWrapper(shutdownAction)).With(Lifestyle.Unmanaged).Named("Shutdown-" + SeqGuid.NewGuid()));
+            _configuration.Container.Put(
+                Binding.For<IShutdownAction>()
+                .Use(() => new ShutdownActionWrapper(shutdownAction))
+                .With(Lifestyle.Unmanaged)
+                .Named("Shutdown-" + SeqGuid.NewGuid()));
         }
 
         public void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem
         {
-            _configuration.Container.Put(Binding.For<ISubsystem>().Use<TSubsystem>().With(Lifestyle.Unmanaged));
+            _configuration.Container.Put(
+                Binding.For<ISubsystem>()
+                .Use<TSubsystem>()
+                .With(Lifestyle.Unmanaged));
         }
 
         private void EnsureConfigurationIsValid()

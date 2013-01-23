@@ -3,7 +3,7 @@ using System.Web.Routing;
 
 namespace Kostassoid.BlogNote.Web
 {
-    using Code;
+    using Node;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801

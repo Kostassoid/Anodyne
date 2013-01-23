@@ -11,7 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Web.Code
+namespace Kostassoid.BlogNote.Web.Node
 {
     using System.Web;
     using Anodyne.Node.Configuration;
@@ -29,7 +29,7 @@ namespace Kostassoid.BlogNote.Web.Code
         {
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
-            c.UseMongoDataAccess(Anodyne.Node.Configuration.Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
+            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
             c.UseDataAccessPolicy(p => p.ReadOnlyAccess());
 
             c.OnStartupPerform<QueryRegistration>();

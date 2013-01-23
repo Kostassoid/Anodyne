@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
     {
         protected MvcNode(HttpApplication application) : base(application)
         {
-            Configured += cfg =>
+            ConfigurationIsReady += cfg =>
             {
                 cfg.ResolveControllersFromContainer();
                 cfg.RegisterControllers(From.AllAssemblies().Where(a => a.FullName.StartsWith(cfg.Configuration.SystemNamespace)));

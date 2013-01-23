@@ -65,7 +65,7 @@ namespace Kostassoid.Anodyne.Node
         /// <summary>
         /// Notifies when Node configuration builder is ready, just before actual Configuration is ready. Allows for any last minute configuration actions.
         /// </summary>
-        public event Action<INodeConfigurator> Configured = c => { };
+        public event Action<INodeConfigurator> ConfigurationIsReady = c => { };
         /// <summary>
         /// Notifies when Node has been successfully started.
         /// </summary>
@@ -109,7 +109,7 @@ namespace Kostassoid.Anodyne.Node
             var configurationBuilder = new ConfigurationBuilder();
 
             OnConfigure(configurationBuilder);
-            Configured(configurationBuilder);
+            ConfigurationIsReady(configurationBuilder);
             Configuration = configurationBuilder.Build();
 
             Configuration.Container.GetAll<IConfigurationAction>().ForEach(b => b.OnConfigure(Configuration));

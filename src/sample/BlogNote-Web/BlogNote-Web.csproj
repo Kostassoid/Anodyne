@@ -98,9 +98,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\BlogNoteWebNode.cs" />
-    <Compile Include="Code\QueryRegistration.cs" />
-    <Compile Include="Code\WcfClientsRegistration.cs" />
+    <Compile Include="Node\BlogNoteWebNode.cs" />
+    <Compile Include="Node\QueryRegistration.cs" />
+    <Compile Include="Node\WcfClientsRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
