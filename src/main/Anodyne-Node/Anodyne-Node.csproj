@@ -81,10 +81,6 @@
       <Project>{2D6AC91A-29E5-4700-8E16-58D87AB98563}</Project>
       <Name>Anodyne-Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Anodyne-Domain\Anodyne-Domain.csproj">
-      <Project>{dc5c4bf4-8efa-46e8-9542-191ac05b35f9}</Project>
-      <Name>Anodyne-Domain</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

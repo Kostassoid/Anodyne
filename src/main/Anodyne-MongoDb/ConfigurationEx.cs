@@ -37,11 +37,15 @@ namespace Kostassoid.Anodyne.MongoDb
                 .With(Lifestyle.Singleton)
                 .Named(name));
 
-            cfg.Container.Put(
-                Binding.For<IRepositoryResolver>()
-                .Use(() => new MongoRepositoryResolver())
-                .With(Lifestyle.Singleton));
-                //.Named(name + "-RepositoryResolver")); //only one domain data access is allowed
+            //TODO: rethink multi-provider cases
+            //only one domain data access is allowed
+            if (!cfg.Container.Has<IRepositoryResolver>())
+            {
+                cfg.Container.Put(
+                    Binding.For<IRepositoryResolver>()
+                           .Use(() => new MongoRepositoryResolver())
+                           .With(Lifestyle.Singleton));
+            }
 
             return new DataAccessTargetSelector(cfg.Container, dataProvider);
         }
