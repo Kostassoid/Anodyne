@@ -16,7 +16,6 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
     using Abstractions.DataAccess;
     using Abstractions.Dependency;
     using Abstractions.Dependency.Registration;
-    using Abstractions.Logging;
     using Abstractions.Wcf;
     using Domain.DataAccess;
     using Domain.DataAccess.Policy;
@@ -51,12 +50,6 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 throw new InvalidOperationException("Container adapter is already set to " + _configuration.Container.GetType().Name);
 
             _configuration.Container = container;
-        }
-
-        void INodeConfiguratorEx.SetLoggerAdapter(ILoggerAdapter loggerAdapter)
-        {
-            _configuration.LoggerAdapter = loggerAdapter;
-            LogManager.SetAdapter(loggerAdapter); //TODO: move
         }
 
         void INodeConfiguratorEx.SetWcfProxyFactory(IWcfProxyFactory wcfProxyFactory)

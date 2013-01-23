@@ -15,7 +15,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
 {
     using Abstractions.DataAccess;
     using Abstractions.Dependency;
-    using Abstractions.Logging;
     using Abstractions.Wcf;
 
     /// <summary>
@@ -28,11 +27,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="container">Container adapter.</param>
         void SetContainerAdapter(IContainer container);
-        /// <summary>
-        /// Set logger adapter.
-        /// </summary>
-        /// <param name="loggerAdapter">Logger adapter.</param>
-        void SetLoggerAdapter(ILoggerAdapter loggerAdapter);
         /// <summary>
         /// Set Wcf proxy factory.
         /// </summary>

@@ -13,16 +13,17 @@
 
 namespace Kostassoid.BlogNote.Host
 {
+    using System.Collections.Specialized;
+    using Common.Logging;
+    using Common.Logging.Log4Net;
     using Topshelf;
-    using System.IO;
-    using log4net;
-    using log4net.Config;
 
     class Program
     {
         static void Main(string[] args)
         {
-            XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
+            LogManager.Adapter = new Log4NetLoggerFactoryAdapter(
+                new NameValueCollection { { "configType", "FILE-WATCH" }, { "configFile", "log4net.config" } });
 
             var logger = LogManager.GetLogger(typeof(Program));
 
@@ -32,17 +33,18 @@ namespace Kostassoid.BlogNote.Host
             {
                 x.UseLog4Net();
 
-                x.BeforeStartingServices(s => logger.InfoFormat("Staring service {0}...", serviceName));
-                x.AfterStartingServices(s => logger.InfoFormat("Service {0} started.", serviceName));
-                x.AfterStoppingServices(s => logger.InfoFormat("Service {0} stopped.", serviceName));
-
                 x.Service<BlogNoteHost>(s =>
                 {
-                    s.SetServiceName(serviceName);
+                    s.BeforeStartingService(c => logger.InfoFormat("Staring service {0}...", serviceName));
+                    s.AfterStartingService(c => logger.InfoFormat("Service {0} started.", serviceName));
+                    s.AfterStoppingService(c => logger.InfoFormat("Service {0} stopped.", serviceName));
+
                     s.ConstructUsing(name => new BlogNoteHost());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Shutdown());
                 });
+
+                x.SetServiceName(serviceName);
                 x.RunAsNetworkService();
 
                 x.SetDescription(Const.ProjectName + " Host Service");

@@ -16,7 +16,6 @@ namespace Kostassoid.BlogNote.Host
     using Anodyne.Node;
     using Anodyne.Node.Configuration;
     using Anodyne.Windsor;
-    using Anodyne.Log4Net;
     using Anodyne.MongoDb;
     using Startup;
 
@@ -24,7 +23,6 @@ namespace Kostassoid.BlogNote.Host
     {
         public override void OnConfigure(INodeConfigurator c)
         {
-            c.UseLog4Net();
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
             c.UseMongoDataAccess(Anodyne.Node.Configuration.Configured.From.AppSettings("DatabaseServer", "DatabaseName"));

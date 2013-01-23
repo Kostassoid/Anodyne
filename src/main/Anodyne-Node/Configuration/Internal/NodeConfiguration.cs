@@ -15,14 +15,12 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
     using Abstractions.DataAccess;
     using Abstractions.Dependency;
-    using Abstractions.Logging;
     using Abstractions.Wcf;
 
     internal class NodeConfiguration : INodeConfiguration
     {
         public RuntimeMode RuntimeMode { get; internal set; }
         public IContainer Container { get; internal set; }
-        public ILoggerAdapter LoggerAdapter { get; internal set; }
         public IWcfProxyFactory WcfProxyFactory { get; internal set; }
         public IDataAccessProvider DataAccess { get; internal set; }
         public string SystemNamespace { get; internal set; }

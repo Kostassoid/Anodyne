@@ -14,7 +14,7 @@
 namespace Kostassoid.Anodyne.Node.Subsystem
 {
     using System;
-    using log4net;
+    using global::Common.Logging;
 
     /// <summary>
     /// Base subsystem implementation.
