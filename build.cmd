@@ -26,8 +26,6 @@ tools\ilmerge\ILMerge.exe /target:library ^
 
 copy src\main\Anodyne-Windsor\bin\Release\Anodyne-Windsor.* output\bin
 copy src\main\Anodyne-MongoDb\bin\Release\Anodyne-MongoDb.* output\bin
-copy src\main\Anodyne-Log4Net\bin\Release\Anodyne-Log4Net.* output\bin
-copy src\main\Anodyne-CommonLogging\bin\Release\Anodyne-CommonLogging.* output\bin
 copy src\main\Anodyne-Web\bin\Release\Anodyne-Web.* output\bin
 copy src\main\Anodyne-Web-Mvc\bin\Release\Anodyne-Web-Mvc.* output\bin
 
