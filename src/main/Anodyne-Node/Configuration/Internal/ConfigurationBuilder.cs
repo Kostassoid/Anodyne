@@ -26,12 +26,15 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
 
     internal class ConfigurationBuilder : INodeConfigurator, INodeConfiguratorEx
     {
+        private readonly INode _node;
         private readonly NodeConfiguration _configuration;
 
+        public INode Node { get { return _node; } }
         public INodeConfiguration Configuration { get { return _configuration; } }
 
-        public ConfigurationBuilder()
+        public ConfigurationBuilder(INode node)
         {
+            _node = node;
             _configuration = new NodeConfiguration();
 
             RunIn(RuntimeMode.Production);

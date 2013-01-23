@@ -31,6 +31,11 @@ namespace Kostassoid.Anodyne.Node.Configuration
     public interface INodeConfigurator : ISyntax
     {
         /// <summary>
+        /// Node being configured.
+        /// </summary>
+        INode Node { get; }
+
+        /// <summary>
         /// Current Node configuration.
         /// </summary>
         INodeConfiguration Configuration { get; }

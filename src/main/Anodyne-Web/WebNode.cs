@@ -14,26 +14,17 @@
 namespace Kostassoid.Anodyne.Web
 {
     using System.Web;
-    using Abstractions.DataAccess;
 
     public abstract class WebNode : Node.Node
     {
         private readonly HttpApplication _application;
+        public HttpApplication Application { get { return _application; } }
 
         protected WebNode(HttpApplication application)
         {
             _application = application;
 
-            ConfigurationIsReady += cfg =>
-                {
-                    cfg.UseHttpContext();
-
-                    _application.EndRequest += (sender, args) =>
-                        {
-                            if (Configuration.Container.Has<IDataAccessContext>())
-                                Configuration.Container.Get<IDataAccessContext>().CloseCurrentSession();
-                        };
-                };
+            ConfigurationIsReady += cfg => cfg.UseHttpContext();
         }
     }
 }

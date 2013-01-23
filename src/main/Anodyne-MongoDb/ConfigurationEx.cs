@@ -28,7 +28,6 @@ namespace Kostassoid.Anodyne.MongoDb
             var cfg = nodeConfigurator.Configuration;
 
             cfg.Container.Put(Binding.For<IDataAccessProvider>().UseInstance(new MongoDataAccessProvider(cfg.SystemNamespace, databaseServer, databaseName)));
-            cfg.Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
 
             ((INodeConfiguratorEx)nodeConfigurator).SetDataAccessProvider(cfg.Container.Get<IDataAccessProvider>());
 

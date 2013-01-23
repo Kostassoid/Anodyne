@@ -57,6 +57,7 @@
     <Compile Include="Configuration\INodeConfiguratorEx.cs" />
     <Compile Include="Configuration\Internal\NodeConfiguration.cs" />
     <Compile Include="ConfigurationActionWrapper.cs" />
+    <Compile Include="INode.cs" />
     <Compile Include="IConfigurationAction.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Configuration\Configured.cs" />

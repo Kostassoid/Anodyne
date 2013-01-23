@@ -15,6 +15,7 @@ namespace Kostassoid.BlogNote.Web.Node
 {
     using System.Web;
     using Anodyne.Node.Configuration;
+    using Anodyne.Web;
     using Anodyne.Web.Mvc;
     using Anodyne.Windsor;
     using Anodyne.MongoDb;
@@ -30,7 +31,7 @@ namespace Kostassoid.BlogNote.Web.Node
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
             c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
-            c.UseDataAccessPolicy(p => p.ReadOnlyAccess());
+            c.UseRequestBoundDataContext();
 
             c.OnStartupPerform<QueryRegistration>();
             c.OnStartupPerform<WcfClientsRegistration>();

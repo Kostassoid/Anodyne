@@ -14,151 +14,88 @@
 namespace Kostassoid.Anodyne.Node
 {
     using System;
-    using System.Collections.Generic;
-    using Common.Extentions;
     using Configuration;
-    using Configuration.Internal;
-    using Subsystem;
 
     /// <summary>
     /// Represents Node in distributed system. Should be one instance per AppDomain.
     /// </summary>
-    public abstract class Node : INode
+    public interface INode
     {
         /// <summary>
         /// Node instance configuration. Available after Node has been configured (normally after first Start).
         /// </summary>
-        public INodeConfiguration Configuration { get; private set; }
+        INodeConfiguration Configuration { get; }
 
         /// <summary>
         /// Node instance state.
         /// </summary>
-        public InstanceState State { get; private set; }
+        InstanceState State { get; }
 
         /// <summary>
         /// Node can be started using Start().
         /// </summary>
-        public bool CanBeStarted { get { return State != InstanceState.Started; } }
+        bool CanBeStarted { get; }
         /// <summary>
         /// Node can be stopped using Shutdown().
         /// </summary>
-        public bool CanBeStopped { get { return State != InstanceState.Stopped; } }
+        bool CanBeStopped { get; }
         /// <summary>
         /// Node instance has been configured successfully.
         /// </summary>
-        public bool IsConfigured { get; private set; }
+        bool IsConfigured { get; }
 
         /// <summary>
         /// Called when Node needs to be configured.
         /// </summary>
         /// <param name="c">Configuration builder</param>
-        public abstract void OnConfigure(INodeConfigurator c);
+        void OnConfigure(INodeConfigurator c);
+
         /// <summary>
         /// Called as the last step in startup process for any last minute startup actions.
         /// </summary>
-        public virtual void OnStart() {}
+        void OnStart();
+
         /// <summary>
         /// Called as the first step in shutdown process, usually to make special preparations before shutdown.
         /// </summary>
-        public virtual void OnShutdown() { }
+        void OnShutdown();
 
         /// <summary>
         /// Notifies when Node configuration builder is ready, just before actual Configuration is ready. Allows for any last minute configuration actions.
         /// </summary>
-        public event Action<INodeConfigurator> ConfigurationIsReady = c => { };
+        event Action<INodeConfigurator> ConfigurationIsReady;
         /// <summary>
         /// Notifies when Node has been successfully started.
         /// </summary>
-        public event Action<Node> Started = s => { };
+        event Action<Node> Started;
         /// <summary>
         /// Notifies when Node has been successfully shut down.
         /// </summary>
-        public event Action<Node> Stopped = s => { };
+        event Action<Node> Stopped;
         /// <summary>
         /// Notifies before Node starts.
         /// </summary>
-        public event Action<Node> Starting = s => { };
+        event Action<Node> Starting;
         /// <summary>
         /// Notifies before Node shuts down.
         /// </summary>
-        public event Action<Node> Stopping = s => { };
+        event Action<Node> Stopping;
 
         /// <summary>
         /// Check if Node instance is in specified runtime mode.
         /// </summary>
         /// <param name="runtimeMode">Runtime mode.</param>
         /// <returns></returns>
-        public bool IsIn(RuntimeMode runtimeMode)
-        {
-            RequireNodeIsConfigured();
-            return Configuration.RuntimeMode == runtimeMode;
-        }
-
-        private void RequireNodeIsConfigured()
-        {
-            if (!IsConfigured)
-                throw new InvalidOperationException("Node is not configured. Use Start() to configure and initialize.");
-        }
-
-        private IList<ISubsystem> _subsystems = new List<ISubsystem>();
-
-        private void EnsureNodeIsConfigured()
-        {
-            if (IsConfigured) return;
-
-            var configurationBuilder = new ConfigurationBuilder(this);
-
-            OnConfigure(configurationBuilder);
-            ConfigurationIsReady(configurationBuilder);
-            Configuration = configurationBuilder.Build();
-
-            Configuration.Container.GetAll<IConfigurationAction>().ForEach(b => b.OnConfigure(Configuration));
-
-            IsConfigured = true;
-        }
+        bool IsIn(RuntimeMode runtimeMode);
 
         /// <summary>
         /// Configure Node instance (if needed) and start it, performing all OnStartup actions.
         /// </summary>
-        public void Start()
-        {
-            if (!CanBeStarted) return;
-
-            EnsureNodeIsConfigured();
-
-            Starting(this);
-
-            Configuration.Container.GetAll<IStartupAction>().ForEach(b => b.OnStartup(Configuration));
-
-            _subsystems = Configuration.Container.GetAll<ISubsystem>();
-            _subsystems.ForEach(s => s.Start());
-
-            OnStart();
-
-            State = InstanceState.Started;
-
-            Started(this);
-        }
+        void Start();
 
         /// <summary>
         /// Shutdown Node instance, performing all OnShutdown actions.
         /// </summary>
-        public void Shutdown()
-        {
-            if (!CanBeStopped) return;
-
-            Stopping(this);
-
-            OnShutdown();
-
-            _subsystems.ForEach(s => s.Stop());
-
-            Configuration.Container.GetAll<IShutdownAction>().ForEach(b => b.OnShutdown(Configuration));
-
-            State = InstanceState.Stopped;
-
-            Stopped(this);
-        }
-
+        void Shutdown();
     }
 }
