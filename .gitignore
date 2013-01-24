@@ -37,3 +37,4 @@ packages
 testdb
 output
 tmp
+docs/_build/*
