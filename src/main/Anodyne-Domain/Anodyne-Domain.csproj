@@ -61,7 +61,7 @@
     <Compile Include="DataAccess\Exceptions\ConcurrencyException.cs" />
     <Compile Include="DataAccess\Exceptions\StaleDataException.cs" />
     <Compile Include="DataAccess\IDomainDataSession.cs" />
-    <Compile Include="DataAccess\IRepositoryResolver.cs" />
+    <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\IUnitOfWorkEx.cs" />
     <Compile Include="DataAccess\Operations\BaseDomainOperation.cs" />
     <Compile Include="DataAccess\Operations\ContainerOperationResolver.cs" />

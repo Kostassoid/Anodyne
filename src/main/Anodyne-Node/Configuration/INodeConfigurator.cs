@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
+    using Abstractions.DataAccess;
     using Common;
     using System;
     using Subsystem;
@@ -96,5 +97,12 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <typeparam name="TSubsystem">Subsystem implementation.</typeparam>
         void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem;
+
+        /// <summary>
+        /// Configure new data access endpoint.
+        /// </summary>
+        /// <param name="name">Optional name.</param>
+        /// <returns>Provider selector.</returns>
+        DataAccessProviderSelector UseDataAccess(string name = "default");
     }
 }

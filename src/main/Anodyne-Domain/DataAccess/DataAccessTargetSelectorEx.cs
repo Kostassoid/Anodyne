@@ -22,10 +22,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     {
         public static void AsDomainStorage(this DataAccessTargetSelector selector, Action<DomainDataAccessConfigurator> cc = null)
         {
-            UnitOfWork.SetDependencyResolvers(
-                selector.DataProvider.SessionFactory,
-                new ContainerOperationResolver(selector.Container),
-                selector.Container.Get<IRepositoryResolver>());
+            UnitOfWork.SetDataSessionFactory(selector.DataProvider.SessionFactory);
+            UnitOfWork.SetOperationResolver(new ContainerOperationResolver(selector.Selector.Container));
 
             if (cc != null)
                 cc(new DomainDataAccessConfigurator());

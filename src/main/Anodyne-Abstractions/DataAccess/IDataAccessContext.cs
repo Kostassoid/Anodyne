@@ -21,7 +21,6 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
     /// </summary>
     public interface IDataAccessContext : IDisposable
     {
-
         /// <summary>
         /// Get IQueryable for persistable entity.
         /// </summary>

@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
     public interface IDataAccessProvider
     {
         /// <summary>
-        /// Data session factory.
+        /// Data session factory for current provider.
         /// </summary>
         IDataSessionFactory SessionFactory { get; }
     }

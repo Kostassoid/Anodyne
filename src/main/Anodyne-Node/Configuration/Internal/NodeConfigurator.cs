@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration.Internal
 {
+    using Abstractions.DataAccess;
     using Abstractions.Dependency;
     using Abstractions.Dependency.Registration;
     using System.Reflection;
@@ -148,6 +149,12 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding.For<ISubsystem>()
                 .Use<TSubsystem>()
                 .With(Lifestyle.Unmanaged));
+        }
+
+        public DataAccessProviderSelector UseDataAccess(string name = "default")
+        {
+            EnsureContainerIsSet();
+            return new DataAccessProviderSelector(name, Configuration.Container);
         }
 
         public void EnsureConfigurationIsValid()

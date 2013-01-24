@@ -10,7 +10,6 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-// 
 
 using Kostassoid.Anodyne.Node.Configuration;
 using Kostassoid.Anodyne.Windsor;
@@ -28,7 +27,10 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             public override void OnConfigure(INodeConfigurator c)
             {
                 c.UseWindsorContainer();
-                c.UseMongoDataAccess("localhost:27001", "Anodyne-Testing").AsDomainStorage();
+                c.UseDataAccess()
+                    .Over(MongoProvider.Instance("localhost:27001", "Anodyne-Testing"))
+                    .AsDomainStorage();
+
                 c.OnStartupPerform(i => i.DefaultDataAccess.OnNative(d => d.Drop()));
             }
         }

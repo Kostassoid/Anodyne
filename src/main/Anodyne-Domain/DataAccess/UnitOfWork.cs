@@ -36,7 +36,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         private static IDataSessionFactory _dataSessionFactory;
         private static IOperationResolver _operationResolver;
-        private static IRepositoryResolver _repositoryResolver;
         private static DataAccessPolicy _policy = new DataAccessPolicy();
 
         private static bool _eventHandlersAreSet;
@@ -66,11 +65,14 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             get { return Context.Find(_contextKey).IsNone; }
         }
 
-        public static void SetDependencyResolvers(IDataSessionFactory dataSessionFactory, IOperationResolver operationResolver, IRepositoryResolver repositoryResolver)
+        public static void SetDataSessionFactory(IDataSessionFactory dataSessionFactory)
         {
             _dataSessionFactory = dataSessionFactory;
+        }
+
+        public static void SetOperationResolver(IOperationResolver operationResolver)
+        {
             _operationResolver = operationResolver;
-            _repositoryResolver = repositoryResolver;
         }
 
         public static void EnforcePolicy(DataAccessPolicy policy)
@@ -189,7 +191,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             AssertIfFinished();
 
-            return _repositoryResolver.Get<TRoot>(DomainDataSession.DataSession);
+            return new Repository<TRoot>(DomainDataSession.DataSession);
         }
 
         public IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot

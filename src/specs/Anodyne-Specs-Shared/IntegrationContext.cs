@@ -14,6 +14,7 @@
 
 namespace Kostassoid.Anodyne.Specs.Shared
 {
+    using DataAccess;
     using Domain.DataAccess;
     using Node;
     using Node.Configuration;
@@ -28,7 +29,7 @@ namespace Kostassoid.Anodyne.Specs.Shared
             public override void OnConfigure(INodeConfigurator c)
             {
                 c.UseWindsorContainer();
-                c.UseInMemoryDataAccess().AsDomainStorage();
+                c.UseDataAccess().Over(InMemoryDataAccessProvider.Instance()).AsDomainStorage();
             }
         }
 

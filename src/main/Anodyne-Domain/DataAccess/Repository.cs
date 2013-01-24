@@ -11,54 +11,45 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess.Exceptions;
-using Kostassoid.Anodyne.Domain.DataAccess.Operations;
-
-namespace Kostassoid.Anodyne.MongoDb
+namespace Kostassoid.Anodyne.Domain.DataAccess
 {
+    using Exceptions;
+    using Operations;
+    using Abstractions.DataAccess;
     using Common;
-    using Domain.Base;
-    using MongoDB.Driver;
-    using MongoDB.Driver.Builders;
-    using MongoDB.Driver.Linq;
+    using Common.Extentions;
+    using Base;
     using System;
     using System.Linq;
     using System.Linq.Expressions;
 
-    public class MongoRepository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
+    public class Repository<TRoot> : IRepository<TRoot> where TRoot : class, IAggregateRoot
     {
-        private readonly MongoDatabase _session;
-        private readonly Lazy<MongoCollection<TRoot>> _collection;
+        private readonly IDataSession _dataSession;
 
-        public MongoRepository(MongoDatabase session)
+        public Repository(IDataSession dataSession)
         {
-            _session = session;
-            _collection = new Lazy<MongoCollection<TRoot>>(session.GetCollection<TRoot>);
-        }
-
-        protected virtual MongoDatabase Session
-        {
-            get { return _session; }
+            _dataSession = dataSession;
         }
 
         public virtual TRoot GetOne(object key)
         {
-            var found = _collection.Value.FindOne(Query.EQ("_id", key.AsIdValue()));
+            var found = _dataSession.FindOne<TRoot>(key);
             if (found == null)
                 throw new AggregateRootNotFoundException(key);
 
-            return found;
+            return found.DeepClone();
         }
 
         public virtual Option<TRoot> FindOne(object key)
         {
-            return _collection.Value.FindOne(Query.EQ("_id", key.AsIdValue()));
+            return _dataSession.FindOne<TRoot>(key);
         }
 
 
         public virtual IQueryable<TRoot> All()
         {
-            return _collection.Value.AsQueryable();
+            return _dataSession.Query<TRoot>();
         }
 
         public virtual bool Exists(object key)
@@ -68,12 +59,12 @@ namespace Kostassoid.Anodyne.MongoDb
 
         public long Count(Expression<Func<TRoot, bool>> criteria)
         {
-            return _collection.Value.AsQueryable().Count(criteria);
+            return _dataSession.Query<TRoot>().Count(criteria);
         }
 
         public virtual long Count()
         {
-            return _collection.Value.Count();
+            return _dataSession.Query<TRoot>().Count();
         }
 
         public virtual TRoot this[object key]

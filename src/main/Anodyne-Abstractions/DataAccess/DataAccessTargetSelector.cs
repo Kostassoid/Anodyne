@@ -19,12 +19,12 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
 
     public class DataAccessTargetSelector
     {
-        public IContainer Container { get; private set; }
+        public DataAccessProviderSelector Selector { get; private set; }
         public IDataAccessProvider DataProvider { get; private set; }
 
-        public DataAccessTargetSelector(IContainer container, IDataAccessProvider dataProvider)
+        public DataAccessTargetSelector(DataAccessProviderSelector selector, IDataAccessProvider dataProvider)
         {
-            Container = container;
+            Selector = selector;
             DataProvider = dataProvider;
         }
 
@@ -34,7 +34,13 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         /// <param name="cc">Optional configurator.</param>
         public void AsInjectedContext(Action<DataAccessContextConfigurator> cc = null)
         {
-            Container.Put(Binding.For<IDataAccessContext>().Use<DefaultDataAccessContext>());
+            if (Selector.Container.Has<IDataAccessContext>())
+                throw new InvalidOperationException("Only one DataAccessContext is allowed.");
+
+            Selector.Container.Put(
+                Binding.For<IDataAccessContext>()
+                .Use(() => new DefaultDataAccessContext(DataProvider))
+                .With(Lifestyle.Singleton));
 
             if (cc != null)
                 cc(new DataAccessContextConfigurator());

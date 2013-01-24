@@ -17,6 +17,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
     using Abstractions.DataAccess;
     using System;
     using System.Collections.Generic;
+    using Common.Extentions;
 
     public class InMemoryDataSession : IDataSession
     {
@@ -29,7 +30,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public IQueryable<T> Query<T>() where T : class, IPersistableRoot
         {
-            return Roots.Values.OfType<T>().AsQueryable();
+            return Roots.Values.OfType<T>().Select(r => r.DeepClone()).AsQueryable();
         }
 
         public T FindOne<T>(object id) where T : class, IPersistableRoot
@@ -39,7 +40,7 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public IPersistableRoot FindOne(Type type, object id)
         {
-            return Roots.ContainsKey(id) ? Roots[id] : null;
+            return Roots.ContainsKey(id) ? Roots[id].DeepCloneAs(type) : null;
         }
 
         public void SaveOne(IPersistableRoot o)

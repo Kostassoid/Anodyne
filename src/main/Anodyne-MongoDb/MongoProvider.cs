@@ -16,33 +16,43 @@ using Kostassoid.Anodyne.Common.Reflection;
 
 namespace Kostassoid.Anodyne.MongoDb
 {
+    using System;
     using Abstractions.DataAccess;
-    using Domain.Base;
 
-    public class MongoDataAccessProvider : IDataAccessProvider
+    public class MongoProvider : IDataAccessProvider
     {
         public IDataSessionFactory SessionFactory { get; private set; }
 
-        public MongoDataAccessProvider(IDataSessionFactory sessionFactory)
+        public static IDataAccessProvider Instance(Tuple<string, string> databaseServerAndName)
         {
-            SessionFactory = sessionFactory;
+            return new MongoProvider(databaseServerAndName.Item1, databaseServerAndName.Item2);
         }
 
-        public MongoDataAccessProvider(string systemNamespace, string databaseServer, string databaseName)
+        public static IDataAccessProvider Instance(string databaseServer, string databaseName)
         {
-            RegisterClassMaps(systemNamespace);
+            return new MongoProvider(databaseServer, databaseName);
+        }
+
+/*
+        public static IDataAccessProvider Instance(string connectionString)
+        {
+            return new MongoProvider(databaseServer, databaseName);
+        }
+*/
+
+        protected MongoProvider(string databaseServer, string databaseName)
+        {
+            RegisterClassMaps();
 
             SessionFactory = new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName);
         }
 
-        private static void RegisterClassMaps(string systemNamespace)
+        private static void RegisterClassMaps()
         {
-            var assemblies = From.AllAssemblies().Where(a => a.FullName.StartsWith("Anodyne") || a.FullName.StartsWith(systemNamespace)).ToList();
+            //TODO: limit assembly selection
+            var assemblies = From.AllAssemblies().ToList();//.Where(a => a.FullName.StartsWith("Anodyne") || a.FullName.StartsWith(systemNamespace)).ToList();
 
             MongoHelper.CreateMapForAllClassesBasedOn<IPersistable>(assemblies);
-
-            //MongoHelper.CreateMapForAllClassesBasedOn<ValueObject>(assemblies);
-            //MongoHelper.CreateMapForAllClassesBasedOn<Entity>(assemblies);
         }
 
         private static string NormalizeConnectionString(string connectionString)
@@ -53,5 +63,6 @@ namespace Kostassoid.Anodyne.MongoDb
 
             return connectionStringPrefix + connectionString;
         }
+
     }
 }

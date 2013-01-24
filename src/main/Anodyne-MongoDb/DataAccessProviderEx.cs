@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.MongoDb
     {
         public static void OnNative(this IDataAccessProvider provider, Action<MongoDatabase> nativeAction)
         {
-            if (!(provider is MongoDataAccessProvider))
+            if (!(provider is MongoProvider))
                 throw new InvalidOperationException("Exprected MongoDataAccessProvider, but was {0}" + provider.GetType().Name);
 
             using (var session = provider.SessionFactory.Open())

@@ -35,12 +35,22 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         public IWcfProxyFactory WcfProxyFactory { get { return Container.Get<IWcfProxyFactory>(); } }
         /// <summary>
-        /// Data Access adapter.
+        /// Default data Access adapter (named 'default').
         /// </summary>
-        public IDataAccessProvider DefaultDataAccess { get { return Container.Get<IDataAccessProvider>(); } }
+        public IDataAccessProvider DefaultDataAccess { get { return GetDataAccessProvider("default"); } }
         /// <summary>
         /// System (project) namespace.
         /// </summary>
         public string SystemNamespace { get; internal set; }
+
+        /// <summary>
+        /// Return registered data access provider.
+        /// </summary>
+        /// <param name="name">Data access provider name.</param>
+        /// <returns>Data access provider.</returns>
+        public IDataAccessProvider GetDataAccessProvider(string name)
+        {
+            return Container.Get<IDataAccessProvider>("DataAccessProvider-" + name);
+        }
     }
 }

@@ -26,8 +26,8 @@ namespace Kostassoid.BlogNote.Host
         {
             c.UseWindsorContainer();
             c.UseWindsorWcfProxyFactory();
-            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"))
-                .AsDomainStorage();
+
+            c.UseDataAccess().Over(MongoProvider.Instance(Configured.From.AppSettings("DatabaseServer", "DatabaseName"))).AsDomainStorage();
 
             c.OnStartupPerform<DataAccessConfiguration>();
             c.OnStartupPerform<WcfServicesRegistration>();

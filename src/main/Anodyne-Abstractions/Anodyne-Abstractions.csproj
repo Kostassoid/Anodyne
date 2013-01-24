@@ -45,6 +45,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DataAccess\DataAccessProviderSelector.cs" />
     <Compile Include="DataAccess\DataAccessContextConfigurator.cs" />
     <Compile Include="DataAccess\DataAccessTargetSelector.cs" />
     <Compile Include="DataAccess\DefaultDataAccessContext.cs" />
