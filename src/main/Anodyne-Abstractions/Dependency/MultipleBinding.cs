@@ -16,24 +16,36 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Binding configuration for multiple components registration.
+    /// </summary>
     public class MultipleBinding : LifestyleBasedBinding
     {
-        public IEnumerable<Type> Services { get; protected set; }
-        public bool? BindAsSelf { get; protected set; }
-        public ISet<Type> BindTo { get; protected set; }
+        /// <summary>
+        /// Components service types.
+        /// </summary>
+        public IEnumerable<Type> Services { get; private set; }
+        /// <summary>
+        /// Should use implementation type as service type.
+        /// </summary>
+        internal bool? BindAsSelf { get; private set; }
+        /// <summary>
+        /// Optional service types.
+        /// </summary>
+        public ISet<Type> BindTo { get; private set; }
 
-        public MultipleBinding(IEnumerable<Type> services)
+        internal MultipleBinding(IEnumerable<Type> services)
         {
             Services = services;
             BindTo = new HashSet<Type>();
         }
 
-        public void AsSelf()
+        internal void AsSelf()
         {
             BindAsSelf = true;
         }
 
-        public void ForwardTo<TService>() where TService : class
+        internal void ForwardTo<TService>() where TService : class
         {
             BindTo.Add(typeof(TService));
         }

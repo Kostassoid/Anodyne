@@ -11,25 +11,18 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Abstractions.DataAccess
+namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
 {
     using System.Linq;
     using Common;
     using Common.ExecutionContext;
 
-    /// <summary>
-    /// Default implementation of DataAccess context.
-    /// </summary>
-    public class DefaultDataAccessContext : IDataAccessContext
+    internal class DefaultDataAccessContext : IDataAccessContext
     {
         private const string ContextValueName = "DataAccessContext-Session";
 
         private readonly IDataAccessProvider _dataAccessProvider;
 
-        /// <summary>
-        /// DefaultDataAccessContext constructor.
-        /// </summary>
-        /// <param name="dataAccessProvider">DataAccess provider.</param>
         public DefaultDataAccessContext(IDataAccessProvider dataAccessProvider)
         {
             _dataAccessProvider = dataAccessProvider;

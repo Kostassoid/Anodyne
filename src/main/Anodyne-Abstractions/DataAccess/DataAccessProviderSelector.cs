@@ -13,27 +13,35 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
-    using System;
+    using Common;
+    using Common.CodeContracts;
     using Dependency;
     using Dependency.Registration;
 
-    public class DataAccessProviderSelector
+    /// <summary>
+    /// Data access provider selector.
+    /// </summary>
+    public class DataAccessProviderSelector : ISyntax
     {
-        public string Name { get; private set; }
-        public IContainer Container { get; private set; }
+        internal string Name { get; private set; }
+        internal IContainer Container { get; private set; }
 
-        public DataAccessProviderSelector(string name, IContainer container)
+        internal DataAccessProviderSelector(string name, IContainer container)
         {
             Name = name;
             Container = container;
         }
 
-        public DataAccessTargetSelector Over(IDataAccessProvider dataAccessProvider)
+        /// <summary>
+        /// Use provided data access provider instance for this configuration.
+        /// </summary>
+        /// <param name="dataAccessProvider">Fully configured data access provider instance.</param>
+        /// <returns>Data access target selector.</returns>
+        public DataAccessTargetSelector Use(IDataAccessProvider dataAccessProvider)
         {
             var providerName = "DataAccessProvider-" + Name;
-            if (Container.Has(providerName))
-                throw new InvalidOperationException(string.Format("DataAccessProvider with name '{0}' is already registered, use another name.", Name));
-
+            Requires.True(!Container.Has(providerName), message: string.Format("DataAccessProvider with name '{0}' is already registered, use another name.", Name));
+            
             Container.Put(Binding.For<IDataAccessProvider>().UseInstance(dataAccessProvider).Named(providerName));
 
             return new DataAccessTargetSelector(this, dataAccessProvider);

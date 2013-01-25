@@ -13,8 +13,15 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
+    /// <summary>
+    /// Data session factory.
+    /// </summary>
     public interface IDataSessionFactory
     {
+        /// <summary>
+        /// Open new data session.
+        /// </summary>
+        /// <returns>Data session instance.</returns>
         IDataSession Open();
     }
 }

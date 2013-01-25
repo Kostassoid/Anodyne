@@ -14,19 +14,28 @@
 namespace Kostassoid.Anodyne.MongoDb
 {
     using Abstractions.DataAccess;
+    using Common.CodeContracts;
     using MongoDB.Driver;
     using System;
 
     public static class DataAccessContextEx
     {
+        private static MongoDatabase GetMongoNativeSessionFrom(IDataAccessContext dataAccessContext)
+        {
+            var nativeSession = dataAccessContext.GetCurrentSession().NativeSession;
+            Requires.True(nativeSession is MongoDatabase, message: string.Format("Expected MongoDatabase session, not {0}.", nativeSession.GetType().Name));
+
+            return (MongoDatabase) nativeSession;
+        }
+
         public static void OnNative(this IDataAccessContext dataAccessContext, Action<MongoDatabase> nativeAction)
         {
-            nativeAction((MongoDatabase)dataAccessContext.GetCurrentSession().NativeSession);
+            nativeAction(GetMongoNativeSessionFrom(dataAccessContext));
         }
 
         public static TResult OnNative<TResult>(this IDataAccessContext dataAccessContext, Func<MongoDatabase, TResult> nativeFunc)
         {
-            return nativeFunc((MongoDatabase)dataAccessContext.GetCurrentSession().NativeSession);
+            return nativeFunc(GetMongoNativeSessionFrom(dataAccessContext));
         }
     }
 }

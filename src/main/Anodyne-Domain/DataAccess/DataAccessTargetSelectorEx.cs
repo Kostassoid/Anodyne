@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 {
     using System;
     using Abstractions.DataAccess;
+    using Common.CodeContracts;
     using Operations;
     using Policy;
 
@@ -22,6 +23,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     {
         public static void AsDomainStorage(this DataAccessTargetSelector selector, Action<DomainDataAccessConfigurator> cc = null)
         {
+            //TODO: check without failing tests
+            //Requires.True(!UnitOfWork.IsConfigured, "Domain data access is already configured.");
+
             UnitOfWork.SetDataSessionFactory(selector.DataProvider.SessionFactory);
             UnitOfWork.SetOperationResolver(new ContainerOperationResolver(selector.Selector.Container));
 
@@ -33,7 +37,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     public class DomainDataAccessConfigurator
     {
         /// <summary>
-        /// Define default Data Action policy for working with domain entities (UnitOfWork).
+        /// Define default data action policy when working with domain entities through UnitOfWork.
         /// </summary>
         /// <param name="policyAction">Data access policy configurator.</param>
         public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)

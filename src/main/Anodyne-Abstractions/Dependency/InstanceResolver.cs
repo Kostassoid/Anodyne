@@ -17,7 +17,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     {
         public object Instance { get; protected set; }
 
-        public InstanceResolver(object instance)
+        internal InstanceResolver(object instance)
         {
             Instance = instance;
         }

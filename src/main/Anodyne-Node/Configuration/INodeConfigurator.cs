@@ -103,6 +103,6 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <param name="name">Optional name.</param>
         /// <returns>Provider selector.</returns>
-        DataAccessProviderSelector UseDataAccess(string name = "default");
+        DataAccessProviderSelector ForDataAccess(string name = "default");
     }
 }

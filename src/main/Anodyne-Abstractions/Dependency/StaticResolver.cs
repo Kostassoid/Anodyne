@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     {
         public Type Target { get; protected set; }
 
-        public StaticResolver(Type target)
+        internal StaticResolver(Type target)
         {
             Target = target;
         }

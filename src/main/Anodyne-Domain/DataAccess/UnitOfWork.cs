@@ -65,6 +65,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             get { return Context.Find(_contextKey).IsNone; }
         }
 
+        public static bool IsConfigured { get { return _dataSessionFactory != null; } }
+
         public static void SetDataSessionFactory(IDataSessionFactory dataSessionFactory)
         {
             _dataSessionFactory = dataSessionFactory;

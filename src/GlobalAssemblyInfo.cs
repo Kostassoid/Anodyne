@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #if DEBUG
@@ -52,3 +53,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.9.1.0")]
 [assembly: AssemblyFileVersion("0.9.1.0")]
 //[assembly: AssemblyKeyFile("..\\..\\Anodyne.snk")]
+
+[assembly: InternalsVisibleTo("Anodyne-Node")]
+[assembly: InternalsVisibleTo("Anodyne-Domain")]

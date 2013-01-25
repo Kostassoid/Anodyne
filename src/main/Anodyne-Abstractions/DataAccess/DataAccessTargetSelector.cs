@@ -14,24 +14,29 @@
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
     using System;
+    using Common;
     using Dependency;
     using Dependency.Registration;
+    using Internal;
 
-    public class DataAccessTargetSelector
+    /// <summary>
+    /// Data access target selector.
+    /// </summary>
+    public class DataAccessTargetSelector : ISyntax
     {
-        public DataAccessProviderSelector Selector { get; private set; }
-        public IDataAccessProvider DataProvider { get; private set; }
+        internal DataAccessProviderSelector Selector { get; private set; }
+        internal IDataAccessProvider DataProvider { get; private set; }
 
-        public DataAccessTargetSelector(DataAccessProviderSelector selector, IDataAccessProvider dataProvider)
+        internal DataAccessTargetSelector(DataAccessProviderSelector selector, IDataAccessProvider dataProvider)
         {
             Selector = selector;
             DataProvider = dataProvider;
         }
 
         /// <summary>
-        /// Use injectable low-level DataAccessContext to work with persistable objects.
+        /// Use injectable DataAccessContext to work with persistable objects.
         /// </summary>
-        /// <param name="cc">Optional configurator.</param>
+        /// <param name="cc">Optional data access context configurator.</param>
         public void AsInjectedContext(Action<DataAccessContextConfigurator> cc = null)
         {
             if (Selector.Container.Has<IDataAccessContext>())

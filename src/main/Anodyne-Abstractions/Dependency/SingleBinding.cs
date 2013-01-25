@@ -15,23 +15,35 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
 {
     using System;
 
+    /// <summary>
+    /// Single component type binding specification.
+    /// </summary>
     public class SingleBinding : LifestyleBasedBinding
     {
+        /// <summary>
+        /// Component service type.
+        /// </summary>
         public Type Service { get; protected set; }
+        /// <summary>
+        /// Implementation resolver.
+        /// </summary>
         public IImplementationResolver Resolver { get; protected set; }
+        /// <summary>
+        /// Optional name for component.
+        /// </summary>
         public string Named { get; protected set; }
 
-        public SingleBinding(Type service)
+        internal SingleBinding(Type service)
         {
             Service = service;
         }
 
-        public void SetResolver(IImplementationResolver resolver)
+        internal void SetResolver(IImplementationResolver resolver)
         {
             Resolver = resolver;
         }
 
-        public void SetName(string name)
+        internal void SetName(string name)
         {
             Named = name;
         }

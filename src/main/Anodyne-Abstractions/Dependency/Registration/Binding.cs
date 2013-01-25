@@ -17,18 +17,36 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration
     using System.Collections.Generic;
     using Internal;
 
+    /// <summary>
+    /// Define component(s) binding specification.
+    /// </summary>
     public static class Binding
     {
+        /// <summary>
+        /// Register single component.
+        /// </summary>
+        /// <typeparam name="TService">Component service type.</typeparam>
+        /// <returns>Additional registration options.</returns>
         public static ISingleBindingSyntax<TService> For<TService>() where TService : class
         {
             return new SingleBindingSyntax<TService>();
         }
 
+        /// <summary>
+        /// Register single component.
+        /// </summary>
+        /// <param name="service">Component service type.</param>
+        /// <returns>Additional registration options.</returns>
         public static ISingleBindingSyntax For(Type service)
         {
             return new SingleBindingSyntax(service);
         }
 
+        /// <summary>
+        /// Register multiple components for specific service type.
+        /// </summary>
+        /// <param name="services">Components service type.</param>
+        /// <returns>Additional registration options.</returns>
         public static IMultipleBindingSyntax Use(IEnumerable<Type> services)
         {
             return new MultipleBindingSyntax(services);

@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     {
         public Func<object> FactoryFunc { get; protected set; }
 
-        public DynamicResolver(Func<object> factoryFunc)
+        internal DynamicResolver(Func<object> factoryFunc)
         {
             FactoryFunc = factoryFunc;
         }

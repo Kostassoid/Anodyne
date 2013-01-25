@@ -151,7 +151,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 .With(Lifestyle.Unmanaged));
         }
 
-        public DataAccessProviderSelector UseDataAccess(string name = "default")
+        public DataAccessProviderSelector ForDataAccess(string name = "default")
         {
             EnsureContainerIsSet();
             return new DataAccessProviderSelector(name, Configuration.Container);
