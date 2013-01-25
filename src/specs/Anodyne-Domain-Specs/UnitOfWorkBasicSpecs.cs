@@ -11,19 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Base;
-using Kostassoid.Anodyne.Domain.DataAccess;
-using Kostassoid.Anodyne.Domain.DataAccess.Exceptions;
-using Kostassoid.Anodyne.Domain.DataAccess.Policy;
-using Kostassoid.Anodyne.Domain.Events;
-
-namespace Kostassoid.Anodyne.DataAccess.Specs
+namespace Kostassoid.Anodyne.Domain.Specs
 {
+    using Anodyne.Specs.Shared;
+    using Base;
+    using DataAccess;
+    using DataAccess.Exceptions;
+    using DataAccess.Policy;
+    using Events;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Anodyne.Specs.Shared;
     using Common.Extentions;
     using Common.Tools;
     using FluentAssertions;

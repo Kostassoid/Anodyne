@@ -76,6 +76,7 @@
     <Compile Include="Domain\Events\TestRootUpdated.cs" />
     <Compile Include="IntegrationContext.cs" />
     <Compile Include="MongoDbAdapterSpecs.cs" />
+    <Compile Include="ReadModel\SimpleQueryRoot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\main\Anodyne-Abstractions\Anodyne-Abstractions.csproj">

@@ -19,6 +19,10 @@ using NUnit.Framework;
 
 namespace Kostassoid.Anodyne.MongoDb.Specs
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using ReadModel;
+
     // ReSharper disable InconsistentNaming
     public class MongoDbAdapterSpecs
     {
@@ -158,8 +162,36 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Integration")]
+        public class when_getting_saved_root_by_id_using_data_context : MongoDbScenario
+        {
+            [TestFixtureSetUp]
+            public void SetUp()
+            {
+                using (var session = IntegrationContext.DataContext.GetSession())
+                {
+                    session.SaveOne(SimpleQueryRoot.Create("boo"));
+                    session.SaveOne(SimpleQueryRoot.Create("foo"));
+                    session.SaveOne(SimpleQueryRoot.Create("zoo"));
+                }
+            }
 
+            [Test]
+            public void should_return_valid_object()
+            {
+                IList<SimpleQueryRoot> simpleRoots;
+                using (var session = IntegrationContext.DataContext.GetSession())
+                {
+                    simpleRoots = session.Query<SimpleQueryRoot>().ToList();
+                }
 
+                simpleRoots.Should().HaveCount(3);
+                simpleRoots.Should().Contain(r => r.Data == "boo");
+                simpleRoots.Should().Contain(r => r.Data == "foo");
+                simpleRoots.Should().Contain(r => r.Data == "zoo");
+            }
+        }
     }
     // ReSharper restore InconsistentNaming
 

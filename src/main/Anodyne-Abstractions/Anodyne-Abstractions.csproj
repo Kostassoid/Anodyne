@@ -48,6 +48,9 @@
     <Compile Include="DataAccess\DataAccessProviderSelector.cs" />
     <Compile Include="DataAccess\DataAccessContextConfigurator.cs" />
     <Compile Include="DataAccess\DataAccessTargetSelector.cs" />
+    <Compile Include="DataAccess\IdentifiedBy.cs" />
+    <Compile Include="DataAccess\Internal\DefaultDataAccessContextSession.cs" />
+    <Compile Include="DataAccess\IDataAccessContextSession.cs" />
     <Compile Include="DataAccess\Internal\DefaultDataAccessContext.cs" />
     <Compile Include="DataAccess\IDataAccessContext.cs" />
     <Compile Include="DataAccess\IDataAccessProvider.cs" />
@@ -56,6 +59,7 @@
     <Compile Include="DataAccess\IDataSessionFactory.cs" />
     <Compile Include="DataAccess\IPersistable.cs" />
     <Compile Include="DataAccess\IPersistableRoot.cs" />
+    <Compile Include="DataAccess\PersistableRoot.cs" />
     <Compile Include="Dependency\DynamicResolver.cs" />
     <Compile Include="Dependency\IBinding.cs" />
     <Compile Include="Dependency\IContainer.cs" />

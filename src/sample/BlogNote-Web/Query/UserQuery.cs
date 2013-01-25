@@ -30,12 +30,12 @@ namespace Kostassoid.BlogNote.Web.Query
 
         public IList<User> GetAll()
         {
-            return _dataAccessContext.Query<User>().ToList();
+            return _dataAccessContext.GetSession().Query<User>().ToList();
         }
 
         public User GetOne(Guid user)
         {
-            return _dataAccessContext.Query<User>().FirstOrDefault(u => u.Id == user);
+            return _dataAccessContext.GetSession().Query<User>().FirstOrDefault(u => u.Id == user);
         }
 
     }

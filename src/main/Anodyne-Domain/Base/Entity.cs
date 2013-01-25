@@ -14,38 +14,11 @@
 namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
+    using Abstractions.DataAccess;
 
     [Serializable]
-    public abstract class Entity : IEntity
+    public abstract class Entity<TKey> : PersistableRoot<TKey>, IEntity
     {
-        //TODO: bad
-        object IEntity.IdObject
-        {
-            get { throw new NotSupportedException("Not supported for Entity-derived classes. Use Entity<> instead."); }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-            if (obj.GetType() != GetType()) return false;
-
-            var thisEntity = this as IEntity;
-            var thatEntity = (IEntity)obj;
-
-            return thisEntity.IdObject.Equals(thatEntity.IdObject);
-        }
-
-        public override int GetHashCode()
-        {
-            return (this as IEntity).IdObject.GetHashCode();
-        }
-    }
-
-    [Serializable]
-    public abstract class Entity<TKey> : Entity, IEntity
-    {
-        public TKey Id { get; protected set; }
-
         object IEntity.IdObject
         {
             get { return Id; }

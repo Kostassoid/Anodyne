@@ -20,7 +20,7 @@ namespace Kostassoid.Anodyne.MongoDb
     using System;
     using MongoDB.Driver.Linq;
 
-    public class MongoDataSession : IDataSession
+    internal class MongoDataSession : IDataSession
     {
         private readonly MongoDatabase _nativeSession;
 

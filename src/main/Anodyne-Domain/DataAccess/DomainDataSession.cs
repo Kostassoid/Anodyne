@@ -34,10 +34,10 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         protected AggregateRootChangeSet GetChangeSetFor(IAggregateRoot aggregate)
         {
             AggregateRootChangeSet changeSet;
-            if (!ChangeSets.TryGetValue(aggregate.IdObject, out changeSet))
+            if (!ChangeSets.TryGetValue(((IEntity) aggregate).IdObject, out changeSet))
             {
                 changeSet = new AggregateRootChangeSet(aggregate);
-                ChangeSets.Add(aggregate.IdObject, changeSet);
+                ChangeSets.Add(((IEntity) aggregate).IdObject, changeSet);
             }
 
             return changeSet;
@@ -57,7 +57,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             var type = changeSet.Aggregate.GetType();
 
-            var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, changeSet.Aggregate.IdObject);
+            var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, ((IEntity) changeSet.Aggregate).IdObject);
 
             if (!ignoreConflicts)
             {
@@ -71,7 +71,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             _dataSession.SaveOne(changeSet.Aggregate);
 
             if (changeSet.IsDeleted)
-                _dataSession.RemoveOne(type, changeSet.Aggregate.IdObject);
+                _dataSession.RemoveOne(type, ((IEntity) changeSet.Aggregate).IdObject);
 
             return true;
         }

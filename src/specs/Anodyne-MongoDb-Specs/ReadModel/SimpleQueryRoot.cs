@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Anodyne.
+﻿// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,21 +11,29 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-using Kostassoid.Anodyne.Domain.Base;
-
-namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
+namespace Kostassoid.Anodyne.MongoDb.Specs.ReadModel
 {
-    [Serializable]
-    public class ConcurrencyException : Exception
-    {
-        public IAggregateRoot Aggregate { get; protected set; }
+    using System;
+    using Abstractions.DataAccess;
+    using Common.Tools;
 
-        public ConcurrencyException(IAggregateRoot aggregate)
-            :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
-                        ((IEntity) aggregate).IdObject, aggregate.GetType().Name))
+    public class SimpleQueryRoot : PersistableRoot<Guid>
+    {
+        public string Data { get; private set; }
+
+        protected SimpleQueryRoot()
         {
-            Aggregate = aggregate;
+        }
+
+        protected SimpleQueryRoot(string data)
+        {
+            Id = SeqGuid.NewGuid();
+            Data = data;
+        }
+
+        public static SimpleQueryRoot Create(string data)
+        {
+            return new SimpleQueryRoot(data);
         }
     }
 }

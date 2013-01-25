@@ -11,21 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Abstractions.Dependency
+namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
     /// <summary>
-    /// Resolver using a pre-built object instance.
+    /// Identifiable object.
     /// </summary>
-    public class InstanceResolver : IImplementationResolver
+    /// <typeparam name="TKey">Identity key type.</typeparam>
+    // ReSharper disable InconsistentNaming
+    public interface IdentifiedBy<out TKey>
+    // ReSharper restore InconsistentNaming
     {
         /// <summary>
-        /// Component implementation instance.
+        /// Identity key.
         /// </summary>
-        public object Instance { get; protected set; }
-
-        internal InstanceResolver(object instance)
-        {
-            Instance = instance;
-        }
+        TKey Id { get; }
     }
 }

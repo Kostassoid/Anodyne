@@ -22,7 +22,7 @@ namespace Kostassoid.Anodyne.MongoDb
     {
         private static MongoDatabase GetMongoNativeSessionFrom(IDataAccessContext dataAccessContext)
         {
-            var nativeSession = dataAccessContext.GetCurrentSession().NativeSession;
+            var nativeSession = dataAccessContext.GetSession().NativeSession;
             Requires.True(nativeSession is MongoDatabase, message: string.Format("Expected MongoDatabase session, not {0}.", nativeSession.GetType().Name));
 
             return (MongoDatabase) nativeSession;

@@ -62,6 +62,8 @@
     </Compile>
     <Compile Include="AggregateRootSpecs.cs" />
     <Compile Include="EntitySpecs.cs" />
+    <Compile Include="UnitOfWorkBasicSpecs.cs" />
+    <Compile Include="UnitOfWorkSpecialSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -82,6 +84,10 @@
     <ProjectReference Include="..\..\Main\Anodyne-Wiring\Anodyne-Wiring.csproj">
       <Project>{321BB928-1A81-40BF-8BA9-644F95B8CD5A}</Project>
       <Name>Anodyne-Wiring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Anodyne-Specs-Shared\Anodyne-Specs-Shared.csproj">
+      <Project>{e70cf538-55c5-4e75-be80-fccdf6db3631}</Project>
+      <Name>Anodyne-Specs-Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

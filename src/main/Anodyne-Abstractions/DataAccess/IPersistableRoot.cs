@@ -13,6 +13,8 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
+    using System;
+
     /// <summary>
     /// Represents persistable entity which can be used as a root.
     /// </summary>
@@ -21,6 +23,6 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         /// <summary>
         /// Root identity.
         /// </summary>
-        object Identity { get; }
+        object IdObject { get; }
     }
 }

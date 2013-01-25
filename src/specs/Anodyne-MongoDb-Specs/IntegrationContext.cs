@@ -16,11 +16,13 @@ using Kostassoid.Anodyne.Windsor;
 
 namespace Kostassoid.Anodyne.MongoDb.Specs
 {
+    using Abstractions.DataAccess;
     using Anodyne.Domain.DataAccess;
 
     public static class IntegrationContext
     {
         public static Node.Node System;
+        public static IDataAccessContext DataContext { get; set; }
 
         class TestSystem : Node.Node
         {
@@ -30,8 +32,15 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
                 c.ForDataAccess()
                     .Use(MongoProvider.Instance("localhost:27001", "Anodyne-Testing"))
                     .AsDomainStorage();
+                c.ForDataAccess("ReadModel")
+                    .Use(MongoProvider.Instance("localhost:27001", "Anodyne-Testing-Read"))
+                    .AsInjectedContext();
 
-                c.OnStartupPerform(i => i.DefaultDataAccess.OnNative(d => d.Drop()));
+                c.OnStartupPerform(i =>
+                    {
+                        i.DefaultDataAccess.OnNative(d => d.Drop());
+                        i.GetDataAccessProvider("ReadModel").OnNative(d => d.Drop());
+                    });
             }
         }
 
@@ -39,6 +48,8 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
         {
             System = new TestSystem();
             System.Start();
+
+            DataContext = System.Configuration.Container.Get<IDataAccessContext>();
         }
 
     }

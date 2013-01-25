@@ -30,7 +30,7 @@ namespace Kostassoid.Anodyne.Web
             ((WebNode)node).Application.EndRequest += (sender, args) =>
             {
                 if (container.Has<IDataAccessContext>())
-                    container.Get<IDataAccessContext>().CloseCurrentSession();
+                    container.Get<IDataAccessContext>().CloseSession();
             };
         }
     }

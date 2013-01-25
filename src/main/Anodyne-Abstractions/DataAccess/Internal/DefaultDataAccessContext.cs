@@ -13,13 +13,12 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
 {
-    using System.Linq;
     using Common;
     using Common.ExecutionContext;
 
     internal class DefaultDataAccessContext : IDataAccessContext
     {
-        private const string ContextValueName = "DataAccessContext-Session";
+        private const string ContextKey = "DataAccessContext-Session";
 
         private readonly IDataAccessProvider _dataAccessProvider;
 
@@ -28,31 +27,26 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
             _dataAccessProvider = dataAccessProvider;
         }
 
-        public IDataSession GetCurrentSession()
+        public IDataSession GetSession()
         {
-            var session = Context.FindAs<IDataSession>(ContextValueName);
+            var session = Context.FindAs<IDataSession>(ContextKey);
             if (session.IsNone)
             {
                 session = _dataAccessProvider.SessionFactory.Open().AsOption();
-                Context.Set(ContextValueName, session.Value);
+                Context.Set(ContextKey, session.Value);
             }
             return session.Value;
         }
 
-        public void CloseCurrentSession()
+        public void CloseSession()
         {
-            if (Context.FindAs<IDataSession>(ContextValueName).IsSome)
-                Context.Release(ContextValueName);
-        }
-
-        public IQueryable<T> Query<T>() where T : class, IPersistableRoot
-        {
-            return GetCurrentSession().Query<T>();
+            if (Context.FindAs<IDataSession>(ContextKey).IsSome)
+                Context.Release(ContextKey);
         }
 
         public virtual void Dispose()
         {
-            CloseCurrentSession();
+            CloseSession();
         }
 
         ~DefaultDataAccessContext()

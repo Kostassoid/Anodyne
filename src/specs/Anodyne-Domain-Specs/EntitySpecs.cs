@@ -21,9 +21,14 @@ namespace Kostassoid.Anodyne.Domain.Specs
     // ReSharper disable InconsistentNaming
     public class EntitySpecs
     {
-        public class SimpleEntity : Entity
+        public class SimpleEntity : Entity<Guid>
         {
             public int X { get; set; }
+
+            public SimpleEntity()
+            {
+                Id = Guid.NewGuid();
+            }
         }
 
         public class BaseEntity : Entity<int>
@@ -55,35 +60,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
             }
 
             public int Z { get; set; }
-        }
-
-        [TestFixture]
-        [Category("Unit")]
-        public class when_getting_id_object_of_entites_directly_derived_from_untyped_Entity
-        {
-            [Test]
-            public void should_throw()
-            {
-                var entity = new SimpleEntity();
-
-                entity.As<IEntity>().Invoking(e => { var x = e.IdObject; }).ShouldThrow<NotSupportedException>();
-            }
-        }
-
-        [TestFixture]
-        [Category("Unit")]
-        public class when_comparing_entities_directly_derived_from_untyped_entity
-        {
-            [Test]
-            public void should_throw()
-            {
-                var entity1 = new SimpleEntity();
-                var entity2 = new SimpleEntity();
-
-                // ReSharper disable ReturnValueOfPureMethodIsNotUsed
-                entity1.Invoking(e => e.Equals(entity2)).ShouldThrow<NotSupportedException>();
-                // ReSharper restore ReturnValueOfPureMethodIsNotUsed
-            }
         }
 
         [TestFixture]

@@ -18,7 +18,7 @@ namespace Kostassoid.BlogNote.Web.Models.Persistent
 
     public class User : IPersistableRoot
     {
-        public object Identity { get { return Id; } }
+        public object IdObject { get { return Id; } }
 
         public Guid Id { get; protected set; }
         public int Version { get; protected set; }
