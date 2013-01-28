@@ -52,6 +52,7 @@
     <Compile Include="DataAccess\AggregateRootChangeSet.cs" />
     <Compile Include="DataAccess\DataAccessTargetSelectorEx.cs" />
     <Compile Include="DataAccess\DataChangeSet.cs" />
+    <Compile Include="DataAccess\DomainDataAccessConfigurator.cs" />
     <Compile Include="DataAccess\DomainDataSession.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkCompletedEvent.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkCompletingEvent.cs" />

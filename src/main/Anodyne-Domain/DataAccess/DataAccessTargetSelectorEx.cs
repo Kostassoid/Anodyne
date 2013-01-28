@@ -15,12 +15,12 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 {
     using System;
     using Abstractions.DataAccess;
-    using Common.CodeContracts;
     using Operations;
-    using Policy;
 
     public static class DataAccessTargetSelectorEx
     {
+        private static bool _aggregateRootsRegistered;
+
         public static void AsDomainStorage(this DataAccessTargetSelector selector, Action<DomainDataAccessConfigurator> cc = null)
         {
             //TODO: check without failing tests
@@ -31,21 +31,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             if (cc != null)
                 cc(new DomainDataAccessConfigurator());
-        }
-    }
-
-    public class DomainDataAccessConfigurator
-    {
-        /// <summary>
-        /// Define default data action policy when working with domain entities through UnitOfWork.
-        /// </summary>
-        /// <param name="policyAction">Data access policy configurator.</param>
-        public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)
-        {
-            var dataPolicy = new DataAccessPolicy();
-            policyAction(dataPolicy);
-
-            UnitOfWork.EnforcePolicy(dataPolicy);
         }
     }
 }
