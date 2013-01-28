@@ -44,6 +44,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Base\AggregateRoot.cs" />
+    <Compile Include="Base\AggregateRootHandlersRegistrator.cs" />
     <Compile Include="Base\Entity.cs" />
     <Compile Include="Base\IAggregateRoot.cs" />
     <Compile Include="Base\IEntity.cs" />

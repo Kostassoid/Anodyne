@@ -102,6 +102,8 @@ namespace Kostassoid.Anodyne.Domain.Specs
             {
                 const int tasksCount = 1000000;
 
+                TestRoot.Create(); // cold-start
+
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 

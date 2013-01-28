@@ -14,9 +14,6 @@
 namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
-    using System.Linq;
-    using Common.Extentions;
-    using Common.Reflection;
     using Events;
     using Wiring;
 
@@ -27,14 +24,9 @@ namespace Kostassoid.Anodyne.Domain.Base
 
         public virtual int Version { get; protected set; }
 
-        // ReSharper disable StaticFieldInGenericType
-        private static bool _handlersBinded;
-        private static readonly object _locker = new object();
-        // ReSharper restore StaticFieldInGenericType
-
-        protected AggregateRoot()
+        static AggregateRoot()
         {
-            if (!_handlersBinded) EnsureAggregateEventsAreBinded();
+            AggregateRootHandlersRegistrator.EnsureRegistration();
         }
 
         public virtual int NewVersion()
@@ -45,19 +37,6 @@ namespace Kostassoid.Anodyne.Domain.Base
         protected static void Apply(IAggregateEvent @event)
         {
             EventBus.Publish(@event);
-        }
-
-        private static void EnsureAggregateEventsAreBinded()
-        {
-            lock (_locker)
-            {
-                if (_handlersBinded) return;
-                _handlersBinded = true;
-
-                AllTypes.BasedOn<IAggregateRoot>()
-                    .Where(r => !r.IsAbstract && !r.IsInterface)
-                    .ForEach(r => EventBus.Extentions.BindDomainEvents(r));
-            }
         }
     }
 }

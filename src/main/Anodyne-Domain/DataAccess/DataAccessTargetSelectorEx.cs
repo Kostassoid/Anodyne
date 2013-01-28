@@ -15,12 +15,11 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 {
     using System;
     using Abstractions.DataAccess;
+    using Base;
     using Operations;
 
     public static class DataAccessTargetSelectorEx
     {
-        private static bool _aggregateRootsRegistered;
-
         public static void AsDomainStorage(this DataAccessTargetSelector selector, Action<DomainDataAccessConfigurator> cc = null)
         {
             //TODO: check without failing tests
@@ -28,6 +27,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             UnitOfWork.SetDataSessionFactory(selector.DataProvider.SessionFactory);
             UnitOfWork.SetOperationResolver(new ContainerOperationResolver(selector.Selector.Container));
+
+            //duplicated call to avoid lost static context loss in web environment
+            AggregateRootHandlersRegistrator.EnsureRegistration();
 
             if (cc != null)
                 cc(new DomainDataAccessConfigurator());
