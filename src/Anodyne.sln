@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{86F9AFD2-2287-4BD1-B2F8-9D9D379BDF36}"
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
@@ -61,6 +61,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Abstractions", "main\Anodyne-Abstractions\Anodyne-Abstractions.csproj", "{B67FA75E-6807-4639-9A11-9155DE5520D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{053E788D-14DE-4272-9065-69D9AC67B43D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anodyne-Web-Mvc4", "main\Anodyne-Web-Mvc4\Anodyne-Web-Mvc4.csproj", "{6225AA0D-B538-4FCE-A63E-AE66556E9093}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -272,6 +274,16 @@ Global
 		{B67FA75E-6807-4639-9A11-9155DE5520D8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B67FA75E-6807-4639-9A11-9155DE5520D8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B67FA75E-6807-4639-9A11-9155DE5520D8}.Release|x86.ActiveCfg = Release|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -297,5 +309,6 @@ Global
 		{B3E5199B-F192-497A-A3D0-80FCFA77BDD8} = {4EECE57F-8F73-4D5C-8ADE-D17AE595CB4D}
 		{6203CAB3-E221-4620-B07C-A33E19046345} = {053E788D-14DE-4272-9065-69D9AC67B43D}
 		{62F26DB0-4F2D-4280-90E5-559F85358724} = {053E788D-14DE-4272-9065-69D9AC67B43D}
+		{6225AA0D-B538-4FCE-A63E-AE66556E9093} = {053E788D-14DE-4272-9065-69D9AC67B43D}
 	EndGlobalSection
 EndGlobal
