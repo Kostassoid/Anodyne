@@ -28,24 +28,19 @@ namespace Kostassoid.Anodyne.Wiring.Specs
         {
         }
 
-        public class TestHandler : IHandlerOf<DerivedTestEvent>
+        public class AsyncTestHandler : IHandlerOf<DerivedTestEvent>
         {
+            public AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
 
-            public int Fired1 { get; set; }
-            public int Fired2 { get; set; }
-
-            public void SomeMethod(TestEvent ev)
-            {
-                Thread.Sleep(30);
-                lock(this)
-                    Fired1++;
-            }
+            public int Fired { get; set; }
 
             void IHandlerOf<DerivedTestEvent>.Handle(DerivedTestEvent ev)
             {
-                Thread.Sleep(30);
+                Thread.Sleep(200);
                 lock (this)
-                    Fired2++;
+                    Fired++;
+
+                AutoResetEvent.Set();
             }
         }
 
@@ -56,15 +51,15 @@ namespace Kostassoid.Anodyne.Wiring.Specs
             [Test]
             public void should_call_handler_async()
             {
-                var handler = new TestHandler();
+                var handler = new AsyncTestHandler();
                 EventBus.SubscribeTo<DerivedTestEvent>().WithAsync(handler);
                 EventBus.Publish(new DerivedTestEvent());
 
-                handler.Fired2.Should().Be(0);
+                handler.Fired.Should().Be(0);
 
-                Thread.Sleep(30);
+                handler.AutoResetEvent.WaitOne(1000);
 
-                handler.Fired2.Should().Be(1);
+                handler.Fired.Should().Be(1);
             }
         }
 
