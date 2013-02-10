@@ -28,6 +28,7 @@ copy src\main\Anodyne-Windsor\bin\Release\Anodyne-Windsor.* output\bin
 copy src\main\Anodyne-MongoDb\bin\Release\Anodyne-MongoDb.* output\bin
 copy src\main\Anodyne-Web\bin\Release\Anodyne-Web.* output\bin
 copy src\main\Anodyne-Web-Mvc\bin\Release\Anodyne-Web-Mvc.* output\bin
+copy src\main\Anodyne-Web-Mvc4\bin\Release\Anodyne-Web-Mvc4.* output\bin
 
 echo Done.
 
