@@ -373,6 +373,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         [TestFixture]
         [Category("Unit")]
+        [Explicit("Not CI-friendly")]
         public class when_trying_to_save_many_roots_at_the_same_time : UnitOfWorkScenario
         {
             [Test]
