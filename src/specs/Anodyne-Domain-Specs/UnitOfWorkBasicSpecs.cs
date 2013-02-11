@@ -373,11 +373,10 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         [TestFixture]
         [Category("Unit")]
-        [Explicit("Not CI-friendly")]
         public class when_trying_to_save_many_roots_at_the_same_time : UnitOfWorkScenario
         {
             [Test]
-            [MaxTime(1000)]
+            //[MaxTime(1000)]
             public void should_save_all_roots_without_fail()
             {
                 const int testingThreadsCount = 100;
@@ -400,7 +399,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
         public class when_trying_to_update_root_from_one_thread_with_ignore_stale_policy : UnitOfWorkScenario
         {
             [Test]
-            [MaxTime(1000)]
+            //[MaxTime(1000)]
             public void should_not_fail()
             {
                 const int testingCount = 100;
@@ -433,7 +432,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
         public class when_trying_to_update_root_from_many_threads_with_ignore_stale_policy : UnitOfWorkScenario
         {
             [Test]
-            [MaxTime(1000)]
+            //[MaxTime(1000)]
             public void should_not_fail()
             {
                 const int testingThreadsCount = 100;
