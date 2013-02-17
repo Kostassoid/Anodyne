@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Web
 {
+    using System;
     using System.Web;
 
     using Common.ExecutionContext;
@@ -20,27 +21,28 @@ namespace Kostassoid.Anodyne.Web
     public class HttpContextProvider : IContextProvider
     {
         public void Set(string name, object value)
-        {            
-            if (HasContext())
+        {
+            EnsureContextIsAvailable();
             HttpContext.Current.Items[name] = value;
         }
 
         public object Find(string name)
         {
-            if (HasContext())
-              return HttpContext.Current.Items.Contains(name) ? HttpContext.Current.Items[name] : null;
-            return null;
+            EnsureContextIsAvailable();
+            return HttpContext.Current.Items.Contains(name) ? HttpContext.Current.Items[name] : null;
         }
 
         public void Release(string name)
         {
-            if (HasContext())
-             HttpContext.Current.Items.Remove(name);
+            EnsureContextIsAvailable();
+            HttpContext.Current.Items.Remove(name);
         }
 
-        private static bool HasContext()
+        private static void EnsureContextIsAvailable()
         {
-            return HttpContext.Current != null;
+            if (HttpContext.Current != null) return;
+
+            throw new InvalidOperationException("HttpContext is not available. Make sure you don't work with context outside of http application request.");
         }
     }
 }

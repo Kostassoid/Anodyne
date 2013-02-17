@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
 {
+    using System;
     using Common;
     using Common.ExecutionContext;
 
@@ -21,6 +22,7 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
         private const string ContextKey = "DataAccessContext-Session";
 
         private readonly IDataAccessProvider _dataAccessProvider;
+        private bool _isDisposed;
 
         public DefaultDataAccessContext(IDataAccessProvider dataAccessProvider)
         {
@@ -47,11 +49,14 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
         public virtual void Dispose()
         {
             CloseSession();
+            _isDisposed = true;
         }
 
         ~DefaultDataAccessContext()
         {
-            Dispose();
+            if (_isDisposed) return;
+
+            throw new InvalidOperationException("DataAccessContext should be properly disposed when not needed anymore.");
         }
     }
 }
