@@ -20,18 +20,27 @@ namespace Kostassoid.Anodyne.Web
     public class HttpContextProvider : IContextProvider
     {
         public void Set(string name, object value)
-        {
+        {            
+            if (HasContext())
             HttpContext.Current.Items[name] = value;
         }
 
         public object Find(string name)
         {
-            return HttpContext.Current.Items.Contains(name) ? HttpContext.Current.Items[name] : null;
+            if (HasContext())
+              return HttpContext.Current.Items.Contains(name) ? HttpContext.Current.Items[name] : null;
+            return null;
         }
 
         public void Release(string name)
         {
-            HttpContext.Current.Items.Remove(name);
+            if (HasContext())
+             HttpContext.Current.Items.Remove(name);
+        }
+
+        private static bool HasContext()
+        {
+            return HttpContext.Current != null;
         }
     }
 }
