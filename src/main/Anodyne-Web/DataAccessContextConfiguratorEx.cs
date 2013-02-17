@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.Web
             }
 
             var container = node.Configuration.Container;
-            ((WebNode)node).Application.EndRequest += (sender, args) =>
+            ((WebNode)node).EndRequest += () =>
             {
                 if (container.Has<IDataAccessContext>())
                     container.Get<IDataAccessContext>().CloseSession();

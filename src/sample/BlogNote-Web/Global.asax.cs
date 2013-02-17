@@ -3,22 +3,15 @@ using System.Web.Routing;
 
 namespace Kostassoid.BlogNote.Web
 {
+    using System.Web;
     using Node;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
-        private BlogNoteWebNode _node;
-
-        public override void Init()
-        {
-            base.Init();
-
-            _node = new BlogNoteWebNode(this);
-            _node.Start();
-        }
+        public static BlogNoteWebNode Node { get; private set; }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -34,7 +27,6 @@ namespace Kostassoid.BlogNote.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
-
         }
 
         protected void Application_Start()
@@ -43,11 +35,21 @@ namespace Kostassoid.BlogNote.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            Node = new BlogNoteWebNode();
+            Node.Start();
+        }
+
+        public override void Init()
+        {
+            base.Init();
+
+            Node.AttachTo(this);
         }
 
         protected void Application_End()
         {
-            if (_node != null) _node.Shutdown();
+            if (Node != null) Node.Shutdown();
         }
     }
 }

@@ -13,18 +13,23 @@
 
 namespace Kostassoid.Anodyne.Web
 {
+    using System;
     using System.Web;
 
     public abstract class WebNode : Node.Node
     {
-        private readonly HttpApplication _application;
-        public HttpApplication Application { get { return _application; } }
+        public event Action BeginRequest = () => { };
+        public event Action EndRequest = () => { };
 
-        protected WebNode(HttpApplication application)
+        protected WebNode()
         {
-            _application = application;
-
             ConfigurationIsReady += cfg => cfg.UseHttpContext();
+        }
+
+        public void AttachTo(HttpApplication application)
+        {
+            application.BeginRequest += (sender, args) => BeginRequest();
+            application.EndRequest += (sender, args) => EndRequest();
         }
     }
 }

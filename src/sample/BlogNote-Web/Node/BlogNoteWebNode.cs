@@ -13,7 +13,6 @@
 
 namespace Kostassoid.BlogNote.Web.Node
 {
-    using System.Web;
     using Anodyne.Node.Configuration;
     using Anodyne.Web;
     using Anodyne.Web.Mvc;
@@ -22,10 +21,6 @@ namespace Kostassoid.BlogNote.Web.Node
 
     public class BlogNoteWebNode : MvcNode
     {
-        public BlogNoteWebNode(HttpApplication application) : base(application)
-        {
-        }
-
         public override void OnConfigure(INodeConfigurator c)
         {
             c.UseWindsorContainer();

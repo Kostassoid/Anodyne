@@ -11,14 +11,13 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System.Web;
 using Kostassoid.Anodyne.Web.Mvc;
 
 namespace Kostassoid.Anodyne.Web.Mvc4
 {    
     public abstract class Mvc4Node : MvcNode
     {
-        protected Mvc4Node(HttpApplication application) : base(application)
+        protected Mvc4Node()
         {
             ConfigurationIsReady += cfg => cfg.SetWebApiDependencyResolver();
         }

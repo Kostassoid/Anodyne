@@ -14,12 +14,11 @@
 namespace Kostassoid.Anodyne.Web.Mvc
 {
     using System.Linq;
-    using System.Web;
     using Common.Reflection;
 
     public abstract class MvcNode : WebNode
     {
-        protected MvcNode(HttpApplication application) : base(application)
+        protected MvcNode()
         {
             ConfigurationIsReady += cfg =>
             {
