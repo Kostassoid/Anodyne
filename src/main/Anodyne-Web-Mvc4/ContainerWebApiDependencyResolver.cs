@@ -18,7 +18,9 @@ using Kostassoid.Anodyne.Abstractions.Dependency;
 
 namespace Kostassoid.Anodyne.Web.Mvc4
 {
-    public class ContainerWebApiDependencyResolver : System.Web.Http.Dependencies.IDependencyResolver 
+    using System.Web.Http.Dependencies;
+
+    public class ContainerWebApiDependencyResolver : IDependencyResolver 
     {
         private readonly IContainer _container;
 
@@ -27,7 +29,7 @@ namespace Kostassoid.Anodyne.Web.Mvc4
             _container = container;
         }
         
-        public System.Web.Http.Dependencies.IDependencyScope BeginScope()
+        public IDependencyScope BeginScope()
         {
             return this;
         }
