@@ -28,6 +28,9 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
 
         internal DataAccessProviderSelector(string name, IContainer container)
         {
+            Requires.NotNullOrEmpty(name, "name");
+            Requires.NotNull(container, "container");
+
             Name = name;
             Container = container;
         }

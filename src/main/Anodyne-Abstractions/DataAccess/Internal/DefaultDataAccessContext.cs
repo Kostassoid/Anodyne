@@ -13,7 +13,6 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
 {
-    using System;
     using Common;
     using Common.ExecutionContext;
 
@@ -28,6 +27,8 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
             _dataAccessProvider = dataAccessProvider;
         }
 
+        public bool HasOpenSession { get { return Context.FindAs<IDataSession>(ContextKey).IsSome; } }
+
         public IDataSession GetSession()
         {
             var session = Context.FindAs<IDataSession>(ContextKey);
@@ -41,7 +42,7 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
 
         public void CloseSession()
         {
-            if (Context.FindAs<IDataSession>(ContextKey).IsSome)
+            if (HasOpenSession)
                 Context.Release(ContextKey);
         }
 

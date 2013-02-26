@@ -56,3 +56,4 @@ using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("Anodyne-Node")]
 [assembly: InternalsVisibleTo("Anodyne-Domain")]
+[assembly: InternalsVisibleTo("Anodyne-DataAccess-Specs")]
