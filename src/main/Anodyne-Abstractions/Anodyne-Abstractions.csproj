@@ -49,8 +49,6 @@
     <Compile Include="DataAccess\DataAccessContextConfigurator.cs" />
     <Compile Include="DataAccess\DataAccessTargetSelector.cs" />
     <Compile Include="DataAccess\IdentifiedBy.cs" />
-    <Compile Include="DataAccess\Internal\DefaultDataAccessContextSession.cs" />
-    <Compile Include="DataAccess\IDataAccessContextSession.cs" />
     <Compile Include="DataAccess\Internal\DefaultDataAccessContext.cs" />
     <Compile Include="DataAccess\IDataAccessContext.cs" />
     <Compile Include="DataAccess\IDataAccessProvider.cs" />

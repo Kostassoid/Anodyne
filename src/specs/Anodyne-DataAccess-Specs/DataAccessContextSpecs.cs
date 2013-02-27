@@ -135,6 +135,56 @@ namespace Kostassoid.Anodyne.DataAccess.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_disposing_default_DataAccessContext_with_open_session : DataAccessContextScenario
+        {
+            [Test]
+            public void should_close_session_and_free_context_storage()
+            {
+                IDataAccessContext context;
+                using (context = new DefaultDataAccessContext(Provider))
+                {
+                    context.GetSession();
+                }
+
+                context.HasOpenSession.Should().BeFalse();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_using_multiple_instances_of_default_DataAccessContext : DataAccessContextScenario
+        {
+            [Test]
+            public void they_should_use_separate_sessions()
+            {
+                IDataAccessContext context1 = new DefaultDataAccessContext(Provider);
+                IDataAccessContext context2 = new DefaultDataAccessContext(Provider);
+
+                context1.HasOpenSession.Should().BeFalse();
+                context2.HasOpenSession.Should().BeFalse();
+
+                var session1 = context1.GetSession();
+                context1.HasOpenSession.Should().BeTrue();
+                context2.HasOpenSession.Should().BeFalse();
+
+                var session2 = context2.GetSession();
+                context1.HasOpenSession.Should().BeTrue();
+                context2.HasOpenSession.Should().BeTrue();
+
+                session1.Should().NotBe(session2);
+
+                context1.CloseSession();
+                context1.HasOpenSession.Should().BeFalse();
+                context2.HasOpenSession.Should().BeTrue();
+
+                context2.CloseSession();
+                context1.HasOpenSession.Should().BeFalse();
+                context2.HasOpenSession.Should().BeFalse();
+            }
+        }
+
 
     }
     // ReSharper restore InconsistentNaming
