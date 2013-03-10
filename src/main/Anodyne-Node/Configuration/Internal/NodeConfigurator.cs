@@ -11,6 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using System.IO;
 using System.Linq;
 using Kostassoid.Anodyne.Common.Reflection;
 
@@ -63,8 +64,8 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
         public void DefineSystemNamespaceAs(string systemNamespace)
         {
             _configuration.SystemNamespace = systemNamespace;
-             
-            AssemblyPreloader.Preload(From.AllFilesIn(AppDomain.CurrentDomain.BaseDirectory).Where(f => f.Extension == ".dll" && f.Name.StartsWith(systemNamespace)));                        
+            
+            AssemblyPreloader.Preload(From.AllFilesInApplicationFolder().Where(f => f.Extension == ".dll" && f.Name.StartsWith(systemNamespace)));                        
         }
 
         private bool CanContinue(ConfigurationPredicate when)
