@@ -13,36 +13,40 @@
 
 namespace Kostassoid.Anodyne.Abstractions.DataAccess.Internal
 {
-    using System;
     using Common;
     using Common.ExecutionContext;
+    using Common.Tools;
 
     internal class DefaultDataAccessContext : IDataAccessContext
     {
-        private const string ContextKey = "DataAccessContext-Session";
+        private const string ContextKeyFormat = "DataAccessContext-{0}";
 
         private readonly IDataAccessProvider _dataAccessProvider;
+        private readonly string _contextKey;
 
         public DefaultDataAccessContext(IDataAccessProvider dataAccessProvider)
         {
             _dataAccessProvider = dataAccessProvider;
+            _contextKey = string.Format(ContextKeyFormat, SeqGuid.NewGuid().ToString("n"));
         }
+
+        public bool HasOpenSession { get { return Context.FindAs<IDataSession>(_contextKey).IsSome; } }
 
         public IDataSession GetSession()
         {
-            var session = Context.FindAs<IDataSession>(ContextKey);
+            var session = Context.FindAs<IDataSession>(_contextKey);
             if (session.IsNone)
             {
                 session = _dataAccessProvider.SessionFactory.Open().AsOption();
-                Context.Set(ContextKey, session.Value);
+                Context.Set(_contextKey, session.Value);
             }
             return session.Value;
         }
 
         public void CloseSession()
         {
-            if (Context.FindAs<IDataSession>(ContextKey).IsSome)
-                Context.Release(ContextKey);
+            if (HasOpenSession)
+                Context.Release(_contextKey);
         }
 
         public virtual void Dispose()

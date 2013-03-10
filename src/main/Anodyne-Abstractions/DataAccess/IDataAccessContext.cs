@@ -30,6 +30,10 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         IQueryable<T> Query<T>() where T : class, IPersistableRoot;
 */
         /// <summary>
+        /// True if there's an open data access session initialized in current context.
+        /// </summary>
+        bool HasOpenSession { get; }
+        /// <summary>
         /// Get DataSession for current context (open new if needed).
         /// </summary>
         /// <returns>Open DataSession.</returns>
