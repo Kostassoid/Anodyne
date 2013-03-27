@@ -36,6 +36,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         internal SingleBinding(Type service)
         {
             Service = service;
+			SetResolver(new StaticResolver(service));
         }
 
         internal void SetResolver(IImplementationResolver resolver)

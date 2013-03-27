@@ -62,7 +62,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
         }
     }
 
-    internal class SingleBindingSyntax : ISingleBindingSyntax, IBindingSyntax
+    internal class SingleBindingSyntax : ISingleBindingSyntax
     {
         private readonly SingleBinding _binding;
         IBinding IBindingSyntax.Binding { get { return _binding; } }
