@@ -15,49 +15,41 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
 {
     using System;
 
-    internal class SingleBindingSyntax<TService> : ISingleBindingSyntax<TService> where TService : class
+	internal class SingleBindingSyntax<TImpl> : ISingleBindingSyntax<TImpl> where TImpl : class
     {
         private readonly SingleBinding _binding;
         IBinding IBindingSyntax.Binding { get { return _binding; } }
 
-        public SingleBindingSyntax()
+        public SingleBindingSyntax(IImplementationResolver resolver)
         {
-            _binding = new SingleBinding(typeof(TService));
+			_binding = new SingleBinding
+				{
+					Service = typeof(TImpl),
+					Resolver = resolver
+				};
         }
 
-        public ISingleBindingSyntax<TService> Use<TImpl>() where TImpl : TService
+		public ISingleBindingSyntax<TImpl> As<TService>() where TService : class
+	    {
+			_binding.Service = typeof(TService);
+			return this;
+		}
+
+		public ISingleBindingSyntax<TImpl> As(Type service)
+	    {
+			_binding.Service = service;
+			return this;
+		}
+
+		public ISingleBindingSyntax<TImpl> With(Lifestyle lifestyle)
         {
-            _binding.SetResolver(new StaticResolver(typeof(TImpl)));
+            _binding.Lifestyle = lifestyle;
             return this;
         }
 
-        public ISingleBindingSyntax<TService> Use(Func<TService> bindingFunc)
+		public ISingleBindingSyntax<TImpl> Named(string name)
         {
-            _binding.SetResolver(new DynamicResolver(bindingFunc));
-            return this;
-        }
-
-        public ISingleBindingSyntax<TService> UseSelf()
-        {
-            _binding.SetResolver(new StaticResolver(_binding.Service));
-            return this;
-        }
-
-        public ISingleBindingSyntax<TService> UseInstance<TImpl>(TImpl instance) where TImpl : class, TService
-        {
-            _binding.SetResolver(new InstanceResolver(instance));
-            return this;
-        }
-
-        public ISingleBindingSyntax<TService> With(Lifestyle lifestyle)
-        {
-            _binding.SetLifestyle(lifestyle);
-            return this;
-        }
-
-        public ISingleBindingSyntax<TService> Named(string name)
-        {
-            _binding.SetName(name);
+            _binding.Name = name;
             return this;
         }
     }
@@ -67,44 +59,36 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
         private readonly SingleBinding _binding;
         IBinding IBindingSyntax.Binding { get { return _binding; } }
 
-        public SingleBindingSyntax(Type service)
+		public SingleBindingSyntax(Type implementation, IImplementationResolver resolver)
         {
-            _binding = new SingleBinding(service);
-        }
+			_binding = new SingleBinding
+			{
+				Service = implementation,
+				Resolver = resolver
+			};
+		}
 
-        public ISingleBindingSyntax Use<TImpl>() where TImpl : class
-        {
-            _binding.SetResolver(new StaticResolver(typeof(TImpl)));
-            return this;
-        }
+	    public ISingleBindingSyntax As<TService>() where TService : class
+	    {
+		    _binding.Service = typeof (TService);
+		    return this;
+	    }
 
-        public ISingleBindingSyntax Use(Func<object> bindingFunc)
-        {
-            _binding.SetResolver(new DynamicResolver(bindingFunc));
-            return this;
-        }
+	    public ISingleBindingSyntax As(Type service)
+	    {
+			_binding.Service = service;
+			return this;
+		}
 
-        public ISingleBindingSyntax UseSelf()
+	    public ISingleBindingSyntax With(Lifestyle lifestyle)
         {
-            _binding.SetResolver(new StaticResolver(_binding.Service));
-            return this;
-        }
-
-        public ISingleBindingSyntax UseInstance<TImpl>(TImpl instance) where TImpl : class
-        {
-            _binding.SetResolver(new InstanceResolver(instance));
-            return this;
-        }
-
-        public ISingleBindingSyntax With(Lifestyle lifestyle)
-        {
-            _binding.SetLifestyle(lifestyle);
+            _binding.Lifestyle = lifestyle;
             return this;
         }
 
         public ISingleBindingSyntax Named(string name)
         {
-            _binding.SetName(name);
+            _binding.Name = name;
             return this;
         }
     }

@@ -57,7 +57,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <typeparam name="TConfiguration">Concrete ConfigurationAction implementation.</typeparam>
         /// <param name="when">Optional configuration-time predicate.</param>
-        void ConfigureUsing<TConfiguration>(ConfigurationPredicate when = null) where TConfiguration : IConfigurationAction;
+        void ConfigureUsing<TConfiguration>(ConfigurationPredicate when = null) where TConfiguration : class, IConfigurationAction;
 
         /// <summary>
         /// Add configuration action, which should be performed once on Node startup.
@@ -71,7 +71,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <typeparam name="TStartup">Concrete StartupAction implementation.</typeparam>
         /// <param name="when">Optional configuration-time predicate.</param>
-        void OnStartupPerform<TStartup>(ConfigurationPredicate when = null) where TStartup : IStartupAction;
+        void OnStartupPerform<TStartup>(ConfigurationPredicate when = null) where TStartup : class, IStartupAction;
         /// <summary>
         /// Add startup action, which should be performed every time on Node startup.
         /// </summary>
@@ -84,7 +84,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         /// <typeparam name="TShutdown">Concrete ShutdownAction implementation.</typeparam>
         /// <param name="when">Optional configuration-time predicate.</param>
-        void OnShutdownPerform<TShutdown>(ConfigurationPredicate when = null) where TShutdown : IShutdownAction;
+        void OnShutdownPerform<TShutdown>(ConfigurationPredicate when = null) where TShutdown : class, IShutdownAction;
         /// <summary>
         /// Add shutdown action, which should be performed every time on Node shutdown.
         /// </summary>
@@ -96,7 +96,7 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// Register high-level Subsystem.
         /// </summary>
         /// <typeparam name="TSubsystem">Subsystem implementation.</typeparam>
-        void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem;
+        void RegisterSubsystem<TSubsystem>() where TSubsystem : class, ISubsystem;
 
         /// <summary>
         /// Configure new data access endpoint.

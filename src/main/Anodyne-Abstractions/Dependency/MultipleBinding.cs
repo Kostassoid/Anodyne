@@ -15,8 +15,9 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
 {
     using System;
     using System.Collections.Generic;
+    using Common.Extentions;
 
-    /// <summary>
+	/// <summary>
     /// Binding configuration for multiple components registration.
     /// </summary>
     public class MultipleBinding : LifestyleBasedBinding
@@ -45,9 +46,14 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
             BindAsSelf = true;
         }
 
-        internal void ForwardTo<TService>() where TService : class
-        {
-            BindTo.Add(typeof(TService));
-        }
-    }
+		internal void ForwardTo<TService>() where TService : class
+		{
+			BindTo.Add(typeof(TService));
+		}
+
+		internal void ForwardTo(params Type[] services)
+		{
+			services.ForEach(t => BindTo.Add(t));
+		}
+	}
 }

@@ -44,8 +44,8 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         {
             var providerName = "DataAccessProvider-" + Name;
             Requires.True(!Container.Has(providerName), message: string.Format("DataAccessProvider with name '{0}' is already registered, use another name.", Name));
-            
-            Container.Put(Binding.For<IDataAccessProvider>().UseInstance(dataAccessProvider).Named(providerName));
+
+			Container.Put(Binding.Use(dataAccessProvider).As<IDataAccessProvider>().Named(providerName));
 
             return new DataAccessTargetSelector(this, dataAccessProvider);
         }

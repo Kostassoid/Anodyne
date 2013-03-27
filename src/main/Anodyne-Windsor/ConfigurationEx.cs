@@ -35,8 +35,9 @@ namespace Kostassoid.Anodyne.Windsor
         public static void UseWindsorWcfProxyFactory(this INodeConfigurator nodeConfigurator)
         {
             nodeConfigurator.Configuration.Container.Put(
-                Binding.For<IWcfProxyFactory>()
+                Binding
                 .Use(() => new WindsorWcfProxyFactory(nodeConfigurator))
+				.As<IWcfProxyFactory>()
                 .With(Lifestyle.Singleton));
         }
 

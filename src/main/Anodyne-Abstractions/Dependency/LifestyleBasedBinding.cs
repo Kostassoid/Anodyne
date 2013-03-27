@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// <summary>
         /// Defined lifestyle.
         /// </summary>
-        public Lifestyle Lifestyle { get; protected set; }
+		public Lifestyle Lifestyle { get; internal set; }
 
         /// <summary>
         /// Default constructor.
@@ -29,15 +29,6 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         protected LifestyleBasedBinding()
         {
             Lifestyle = Lifestyle.ProviderDefault;
-        }
-
-        /// <summary>
-        /// Set component lifestyle.
-        /// </summary>
-        /// <param name="lifestyle">Desired lifestyle for a component.</param>
-        public void SetLifestyle(Lifestyle lifestyle)
-        {
-            Lifestyle = lifestyle;
         }
     }
 }

@@ -32,9 +32,15 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
             return this;
         }
 
-        public IMultipleBindingSyntax With(Lifestyle lifestyle)
+	    public IMultipleBindingSyntax As(params Type[] services)
+	    {
+			_binding.ForwardTo(services);
+			return this;
+		}
+
+	    public IMultipleBindingSyntax With(Lifestyle lifestyle)
         {
-            _binding.SetLifestyle(lifestyle);
+            _binding.Lifestyle = lifestyle;
             return this;
         }
     }

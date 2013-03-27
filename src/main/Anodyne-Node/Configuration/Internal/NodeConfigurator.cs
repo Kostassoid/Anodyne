@@ -73,14 +73,14 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             return when == null || when(_configuration);
         }
 
-        public void ConfigureUsing<TConfiguration>(ConfigurationPredicate when) where TConfiguration : IConfigurationAction
+        public void ConfigureUsing<TConfiguration>(ConfigurationPredicate when) where TConfiguration : class, IConfigurationAction
         {
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
 
             _configuration.Container.Put(
-                Binding.For<IConfigurationAction>()
-                .Use<TConfiguration>().With(Lifestyle.Unmanaged)
+                Binding
+				.Use<TConfiguration>().As<IConfigurationAction>().With(Lifestyle.Unmanaged)
                 .Named(GetTypeUniqueName<TConfiguration>("Configuration")));
         }
 
@@ -90,8 +90,9 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             EnsureContainerIsSet();
 
             _configuration.Container.Put(
-                Binding.For<IConfigurationAction>()
+                Binding
                 .Use(() => new ConfigurationActionWrapper(configurationAction))
+				.As<IConfigurationAction>()
                 .With(Lifestyle.Unmanaged)
                 .Named("Configuration-" + SeqGuid.NewGuid()));
         }
@@ -101,14 +102,15 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             return prefix + "-" + typeof (T).Name;
         }
 
-        public void OnStartupPerform<TStartup>(ConfigurationPredicate when) where TStartup : IStartupAction
+        public void OnStartupPerform<TStartup>(ConfigurationPredicate when) where TStartup : class, IStartupAction
         {
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
 
             _configuration.Container.Put(
-                Binding.For<IStartupAction>()
+                Binding
                 .Use<TStartup>()
+				.As<IStartupAction>()
                 .With(Lifestyle.Singleton)
                 .Named(GetTypeUniqueName<TStartup>("Startup")));
         }
@@ -119,20 +121,22 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
             EnsureContainerIsSet();
 
             _configuration.Container.Put(
-                Binding.For<IStartupAction>()
+                Binding
                 .Use(() => new StartupActionWrapper(startupAction))
+				.As<IStartupAction>()
                 .With(Lifestyle.Unmanaged)
                 .Named("Startup-" + SeqGuid.NewGuid()));
         }
 
-        public void OnShutdownPerform<TShutdown>(ConfigurationPredicate when) where TShutdown : IShutdownAction
+        public void OnShutdownPerform<TShutdown>(ConfigurationPredicate when) where TShutdown : class, IShutdownAction
         {
             if (!CanContinue(when)) return;
             EnsureContainerIsSet();
 
             _configuration.Container.Put(
-                Binding.For<IShutdownAction>()
+                Binding
                 .Use<TShutdown>()
+				.As<IShutdownAction>()
                 .With(Lifestyle.Unmanaged)
                 .Named(GetTypeUniqueName<TShutdown>("Shutdown")));
         }
@@ -141,17 +145,19 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
         {
             if (!CanContinue(when)) return;
             _configuration.Container.Put(
-                Binding.For<IShutdownAction>()
+                Binding
                 .Use(() => new ShutdownActionWrapper(shutdownAction))
+				.As<IShutdownAction>()
                 .With(Lifestyle.Unmanaged)
                 .Named("Shutdown-" + SeqGuid.NewGuid()));
         }
 
-        public void RegisterSubsystem<TSubsystem>() where TSubsystem : ISubsystem
+        public void RegisterSubsystem<TSubsystem>() where TSubsystem : class, ISubsystem
         {
             _configuration.Container.Put(
-                Binding.For<ISubsystem>()
+                Binding
                 .Use<TSubsystem>()
+				.As<ISubsystem>()
                 .With(Lifestyle.Unmanaged));
         }
 

@@ -22,27 +22,49 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration
     /// </summary>
     public static class Binding
     {
-        /// <summary>
-        /// Register single component.
-        /// </summary>
-        /// <typeparam name="TService">Component service type.</typeparam>
-        /// <returns>Additional registration options.</returns>
-        public static ISingleBindingSyntax<TService> For<TService>() where TService : class
-        {
-            return new SingleBindingSyntax<TService>();
-        }
+		/// <summary>
+		/// Register single component using concrete type.
+		/// </summary>
+		/// <param name="implementation">Component implementation type.</param>
+		/// <returns>Additional registration options.</returns>
+		public static ISingleBindingSyntax Use(Type implementation)
+		{
+			return new SingleBindingSyntax(implementation, new StaticResolver(implementation));
+		}
 
-        /// <summary>
-        /// Register single component.
-        /// </summary>
-        /// <param name="service">Component service type.</param>
-        /// <returns>Additional registration options.</returns>
-        public static ISingleBindingSyntax For(Type service)
-        {
-            return new SingleBindingSyntax(service);
-        }
+		/// <summary>
+		/// Register single component using concrete type.
+		/// </summary>
+		/// <typeparam name="TImpl">Component implementation type.</typeparam>
+		/// <returns>Additional registration options.</returns>
+		public static ISingleBindingSyntax<TImpl> Use<TImpl>() where TImpl : class
+		{
+			return new SingleBindingSyntax<TImpl>(new StaticResolver(typeof(TImpl)));
+		}
 
-        /// <summary>
+		/// <summary>
+		/// Register single component using factory method.
+		/// </summary>
+		/// <typeparam name="TImpl">Component implementation type.</typeparam>
+		/// <param name="factoryFunc">Factory method to build component.</param>
+		/// <returns>Additional registration options.</returns>
+		public static ISingleBindingSyntax<TImpl> Use<TImpl>(Func<TImpl> factoryFunc) where TImpl : class
+		{
+			return new SingleBindingSyntax<TImpl>(new DynamicResolver(factoryFunc));
+		}
+
+		/// <summary>
+		/// Register single component using component instance.
+		/// </summary>
+		/// <typeparam name="TImpl">Component implementation type.</typeparam>
+		/// <param name="instance">Component instance.</param>
+		/// <returns>Additional registration options.</returns>
+		public static ISingleBindingSyntax<TImpl> Use<TImpl>(TImpl instance) where TImpl : class
+		{
+			return new SingleBindingSyntax<TImpl>(new InstanceResolver(instance));
+		}
+
+		/// <summary>
         /// Register multiple components for specific service type.
         /// </summary>
         /// <param name="services">Components service type.</param>

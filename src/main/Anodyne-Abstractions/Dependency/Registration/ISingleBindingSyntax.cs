@@ -17,21 +17,17 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration
 
     public interface ISingleBindingSyntax : IBindingSyntax
     {
-        ISingleBindingSyntax Use<TImpl>() where TImpl : class;
-        ISingleBindingSyntax Use(Func<object> bindingFunc);
-        ISingleBindingSyntax UseSelf();
-        ISingleBindingSyntax UseInstance<TImpl>(TImpl instance) where TImpl : class;
+        ISingleBindingSyntax As<TService>() where TService : class;
+        ISingleBindingSyntax As(Type service);
         ISingleBindingSyntax With(Lifestyle lifestyle);
         ISingleBindingSyntax Named(string name);
     }
 
-    public interface ISingleBindingSyntax<in TService> : IBindingSyntax where TService : class
+    public interface ISingleBindingSyntax<in TImpl> : IBindingSyntax where TImpl : class
     {
-        ISingleBindingSyntax<TService> Use<TImpl>() where TImpl : TService;
-        ISingleBindingSyntax<TService> Use(Func<TService> bindingFunc);
-        ISingleBindingSyntax<TService> UseSelf();
-        ISingleBindingSyntax<TService> UseInstance<TImpl>(TImpl instance) where TImpl : class, TService;
-        ISingleBindingSyntax<TService> With(Lifestyle lifestyle);
-        ISingleBindingSyntax<TService> Named(string name);
+		ISingleBindingSyntax<TImpl> As<TService>() where TService : class;
+		ISingleBindingSyntax<TImpl> As(Type service);
+        ISingleBindingSyntax<TImpl> With(Lifestyle lifestyle);
+        ISingleBindingSyntax<TImpl> Named(string name);
     }
 }

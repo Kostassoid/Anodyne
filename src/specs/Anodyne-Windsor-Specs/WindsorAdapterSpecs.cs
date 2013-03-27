@@ -37,12 +37,16 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             }
         }
 
-        public interface IBoo : IDisposable
-        {
-            bool IsDisposed { get; }
-        }
+		public interface IBoo : IDisposable
+		{
+			bool IsDisposed { get; }
+		}
 
-        public class Boo : IBoo
+		public interface IBooEx
+		{
+		}
+
+		public class Boo : IBoo, IBooEx
         {
             public bool IsDisposed { get; private set; }
             public void Dispose()
@@ -51,7 +55,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             }
         }
 
-        public class AnotherBoo : IBoo
+        public class AnotherBoo : IBoo, IBooEx
         {
             public bool IsDisposed { get; private set; }
             public void Dispose()
@@ -82,7 +86,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			[Test]
 			public void should_be_available_from_container_by_interface()
 			{
-				Container.Put(Binding.For<IBoo>().Use<Boo>());
+				Container.Put(Binding.Use<Boo>().As<IBoo>());
 
 				Container.Has<IBoo>().Should().BeTrue();
 				Container.Get<IBoo>().Should().BeOfType<Boo>();
@@ -94,13 +98,30 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 
 		[TestFixture]
 		[Category("Unit")]
+		public class when_resolving_single_object_using_factory_method : WindsorScenario
+		{
+			[Test]
+			public void should_be_available_from_container_by_factory_parameter_type()
+			{
+				Container.Put(Binding.Use(() => new AnotherBoo()).As<IBoo>());
+
+				Container.Has<IBoo>().Should().BeTrue();
+				Container.Get<IBoo>().Should().BeOfType<AnotherBoo>();
+
+				Container.Has(typeof(IBoo)).Should().BeTrue();
+				Container.Get(typeof(IBoo)).Should().BeOfType<AnotherBoo>();
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
 		public class when_resolving_objects_registered_with_valid_name : WindsorScenario
 		{
 			[Test]
 			public void should_resolve_using_name()
 			{
-				Container.Put(Binding.For<IBoo>().Use<Boo>());
-				Container.Put(Binding.For<IBoo>().Use<AnotherBoo>().Named("Special"));
+				Container.Put(Binding.Use<Boo>().As<IBoo>());
+				Container.Put(Binding.Use<AnotherBoo>().As<IBoo>().Named("Special"));
 
 				Container.Has<IBoo>().Should().BeTrue();
 				Container.Has("Special").Should().BeTrue();
@@ -120,7 +141,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			[Test]
 			public void should_throw()
 			{
-				Container.Put(Binding.For<IBoo>().Use<AnotherBoo>().Named("Special"));
+				Container.Put(Binding.Use<AnotherBoo>().As<IBoo>().Named("Special"));
 
 				Container.Has("Ololo").Should().BeFalse();
 
@@ -136,7 +157,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_be_registered_as_transient()
             {
-                Container.Put(Binding.For<IBoo>().Use<Boo>().With(Lifestyle.Transient));
+				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Transient));
 
                 Container.OnNative(c => c.Kernel.GetHandler(typeof(IBoo))
                                          .ComponentModel.LifestyleType.Should()
@@ -151,7 +172,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_release()
             {
-                Container.Put(Binding.For<IBoo>().Use<Boo>().With(Lifestyle.Transient));
+				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Transient));
 
                 var boo = Container.Get<IBoo>();
 
@@ -168,7 +189,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			[Test]
 			public void should_no_nothing()
 			{
-				Container.Put(Binding.For<IBoo>().Use<Boo>().With(Lifestyle.Unmanaged));
+				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Unmanaged));
 
 				var boo = Container.Get<IBoo>();
 
@@ -185,7 +206,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			[Test]
 			public void should_resolve_by_type()
 			{
-				Container.Put(Binding.For<Boo>());
+				Container.Put(Binding.Use<Boo>());
 
 				var boo = Container.Get<Boo>();
 				boo.Should().NotBeNull();
@@ -208,26 +229,47 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             }
         }
 
-        [TestFixture]
-        [Category("Unit")]
-        public class when_registering_multiple_types_as_base_interface : WindsorScenario
-        {
-            [Test]
-            public void each_type_should_be_available_from_container_by_base_interface()
-            {
-                Container.Put(Binding.Use(AllTypes.BasedOn<IBoo>()).As<IBoo>());
+		[TestFixture]
+		[Category("Unit")]
+		public class when_registering_multiple_types_with_forward_type : WindsorScenario
+		{
+			[Test]
+			public void each_type_should_be_available_from_container_by_forward_type()
+			{
+				Container.Put(Binding.Use(AllTypes.BasedOn<IBoo>()).As<IBoo>());
 
-                Container.Has<IBoo>().Should().BeTrue();
-                Container.Has<Boo>().Should().BeFalse();
-                Container.Has<AnotherBoo>().Should().BeFalse();
-                Container.Get<IBoo>().Should().BeOfType<Boo>();
+				Container.Has<IBoo>().Should().BeTrue();
+				Container.Has<Boo>().Should().BeFalse();
+				Container.Has<AnotherBoo>().Should().BeFalse();
+				Container.Get<IBoo>().Should().BeOfType<Boo>();
 
-                Container.GetAll<IBoo>().Should().HaveCount(2);
+				Container.GetAll<IBoo>().Should().HaveCount(2);
 				Container.GetAll(typeof(IBoo)).Should().HaveCount(2);
 			}
-        }
+		}
 
-        [TestFixture]
+		[TestFixture]
+		[Category("Unit")]
+		public class when_registering_multiple_types_with_multiple_forward_types : WindsorScenario
+		{
+			[Test]
+			public void each_type_should_be_available_from_container_by_any_forward_type()
+			{
+				Container.Put(Binding.Use(AllTypes.BasedOn<IBoo>()).As(typeof(IBoo), typeof(IBooEx)));
+
+				Container.Has<IBoo>().Should().BeTrue();
+				Container.Has<Boo>().Should().BeFalse();
+				Container.Has<AnotherBoo>().Should().BeFalse();
+				Container.Get<IBoo>().Should().BeOfType<Boo>();
+
+				Container.GetAll<IBoo>().Should().HaveCount(2);
+				Container.GetAll(typeof(IBoo)).Should().HaveCount(2);
+				Container.GetAll<IBooEx>().Should().HaveCount(2);
+				Container.GetAll(typeof(IBooEx)).Should().HaveCount(2);
+			}
+		}
+
+		[TestFixture]
         [Category("Unit")]
         public class when_resolving_single_non_registered_component : WindsorScenario
         {
@@ -258,10 +300,10 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			{
 				var boo = new Boo();
 
-				Container.Put(Binding.For<AnotherBoo>().Use<AnotherBoo>());
-				Container.Put(Binding.For<IBoo>().Use<Boo>());
-				Container.Put(Binding.For<IBoo>().UseInstance(boo).Named("SpecialBoo"));
-				Container.Put(Binding.For<Xoo>().Use<Xoo>());
+				Container.Put(Binding.Use<AnotherBoo>());
+				Container.Put(Binding.Use<Boo>().As<IBoo>());
+				Container.Put(Binding.Use(boo).As<IBoo>().Named("SpecialBoo"));
+				Container.Put(Binding.Use<Xoo>());
 
 				var xoo = Container.Get<Xoo>();
 

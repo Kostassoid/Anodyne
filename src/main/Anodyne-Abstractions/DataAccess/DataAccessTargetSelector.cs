@@ -43,8 +43,8 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
                 throw new InvalidOperationException("Only one DataAccessContext is allowed.");
 
             Selector.Container.Put(
-                Binding.For<IDataAccessContext>()
-                .Use(() => new DefaultDataAccessContext(DataProvider))
+                Binding.Use(() => new DefaultDataAccessContext(DataProvider))
+				.As<IDataAccessContext>()
                 .With(Lifestyle.Singleton));
 
             if (cc != null)

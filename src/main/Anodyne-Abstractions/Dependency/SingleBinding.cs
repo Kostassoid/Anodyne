@@ -23,30 +23,19 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// <summary>
         /// Component service type.
         /// </summary>
-        public Type Service { get; protected set; }
+        public Type Service { get; internal set; }
         /// <summary>
         /// Implementation resolver.
         /// </summary>
-        public IImplementationResolver Resolver { get; protected set; }
+		public IImplementationResolver Resolver { get; internal set; }
         /// <summary>
         /// Optional name for component.
         /// </summary>
-        public string Named { get; protected set; }
+		public string Name { get; internal set; }
 
-        internal SingleBinding(Type service)
+        internal SingleBinding()
         {
-            Service = service;
-			SetResolver(new StaticResolver(service));
         }
 
-        internal void SetResolver(IImplementationResolver resolver)
-        {
-            Resolver = resolver;
-        }
-
-        internal void SetName(string name)
-        {
-            Named = name;
-        }
     }
 }

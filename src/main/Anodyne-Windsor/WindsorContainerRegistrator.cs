@@ -29,7 +29,7 @@ namespace Kostassoid.Anodyne.Windsor
 
             registration = ApplyLifestyle(registration, binding.Lifestyle);
 
-            registration = ApplyName(registration, binding.Named);
+            registration = ApplyName(registration, binding.Name);
 
             container.Register(registration);
         }
