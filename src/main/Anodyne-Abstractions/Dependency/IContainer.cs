@@ -74,23 +74,34 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// <param name="binding">Binding specification.</param>
         void Put(IBindingSyntax binding);
 
-        /// <summary>
-        /// Check if component for specific type is registered in container.
-        /// </summary>
-        /// <typeparam name="T">Component service type.</typeparam>
-        /// <returns>True if component is registered.</returns>
-        bool Has<T>();
-        /// <summary>
-        /// Check if component for specific type is registered in container.
-        /// </summary>
-        /// <param name="type">Component service type.</param>
-        /// <returns>True if component is registered.</returns>
-        bool Has(Type type);
-        /// <summary>
-        /// Check if component with specific name is registered in container.
-        /// </summary>
-        /// <param name="name">Component name.</param>
-        /// <returns>True if component is registered.</returns>
-        bool Has(string name);
+		/// <summary>
+		/// Check if component for specific type is registered in container.
+		/// </summary>
+		/// <typeparam name="T">Component service type.</typeparam>
+		/// <returns>True if component is registered.</returns>
+		bool Has<T>();
+
+		/// <summary>
+		/// Check if component for specific type is registered in container.
+		/// </summary>
+		/// <param name="type">Component service type.</param>
+		/// <returns>True if component is registered.</returns>
+		bool Has(Type type);
+
+		/// <summary>
+		/// Check if component for specific type is registered in container.
+		/// </summary>
+		/// <typeparam name="T">Component service type.</typeparam>
+		/// <param name="name">Component name.</param>
+		/// <returns>True if component is registered.</returns>
+		bool Has<T>(string name);
+
+		/// <summary>
+		/// Check if component for specific type is registered in container.
+		/// </summary>
+		/// <param name="type">Component service type.</param>
+		/// <param name="name">Component name.</param>
+		/// <returns>True if component is registered.</returns>
+		bool Has(Type type, string name);
     }
 }

@@ -87,9 +87,14 @@ namespace Kostassoid.Anodyne.Windsor
             return NativeContainer.Kernel.HasComponent(type);
         }
 
-        public bool Has(string name)
-        {
-            return NativeContainer.Kernel.HasComponent(name);
-        }
+	    public bool Has<T>(string name)
+	    {
+			return NativeContainer.Kernel.HasComponent(name);
+	    }
+
+	    public bool Has(Type type, string name)
+	    {
+			return NativeContainer.Kernel.HasComponent(name);
+		}
     }
 }
