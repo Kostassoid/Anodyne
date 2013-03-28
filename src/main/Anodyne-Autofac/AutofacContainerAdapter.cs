@@ -15,7 +15,6 @@ namespace Kostassoid.Anodyne.Autofac
 {
 	using System.Collections;
 	using System.Linq;
-	using System.Reflection;
 	using Abstractions.Dependency.Registration;
 	using System;
 	using System.Collections.Generic;
@@ -54,12 +53,10 @@ namespace Kostassoid.Anodyne.Autofac
         public IList GetAll(Type type)
         {
 	        var enumerableType = typeof (IEnumerable<>).MakeGenericType(type);
-			var enumerableToListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
-			var genericToListMethod = enumerableToListMethod.MakeGenericMethod(new[] { type });
 
-	        var enumerable = ((IEnumerable) NativeContainer.Resolve(enumerableType));
+	        var enumerable = (IEnumerable)NativeContainer.Resolve(enumerableType);
 
-	        return (IList)genericToListMethod.Invoke(null, new[] { enumerable });
+            return enumerable.Cast<object>().ToList();
         }
 
         public object Get(Type type)
@@ -74,11 +71,14 @@ namespace Kostassoid.Anodyne.Autofac
 
         public void Release(object instance)
         {
+            // not perfect but there's not much that can be done
+/*
 			// emulating disposal
 	        var disposable = instance as IDisposable;
 
 	        if (disposable != null)
 				disposable.Dispose();
+*/
         }
 
 		public void Put(IBindingSyntax binding)

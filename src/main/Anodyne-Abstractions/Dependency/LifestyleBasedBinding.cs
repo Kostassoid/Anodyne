@@ -28,7 +28,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// </summary>
         protected LifestyleBasedBinding()
         {
-            Lifestyle = Lifestyle.ProviderDefault;
+            Lifestyle = Lifestyle.Default;
         }
     }
 }

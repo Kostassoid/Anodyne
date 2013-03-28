@@ -17,7 +17,6 @@ namespace Kostassoid.Anodyne.Windsor.Specs
     using Abstractions.Dependency.Registration;
     using Common.Reflection;
     using Abstractions.Dependency;
-    using Anodyne.Specs.Shared;
     using FluentAssertions;
     using NUnit.Framework;
 
@@ -30,9 +29,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 
             public WindsorScenario()
             {
-                IntegrationContext.Init();
-
-                Container = IntegrationContext.System.Configuration.Container;
+                Container = new WindsorContainerAdapter();
             }
         }
 
@@ -149,19 +146,35 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			}
 		}
 
-		[TestFixture]
+        [TestFixture]
         [Category("Unit")]
-        public class when_registering_using_transient_lifestyle : WindsorScenario
+        public class when_resolving_multiple_objects_using_transient_lifestyle : WindsorScenario
         {
             [Test]
-            public void should_be_registered_as_transient()
+            public void should_use_multiple_instances()
             {
-				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Transient));
+                Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Transient));
 
-				var boo1 = Container.Get<IBoo>();
-				var boo2 = Container.Get<IBoo>();
+                var boo1 = Container.Get<IBoo>();
+                var boo2 = Container.Get<IBoo>();
 
-				boo1.Should().NotBe(boo2);
+                boo1.Should().NotBe(boo2);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_resolving_multiple_objects_using_singleton_lifestyle : WindsorScenario
+        {
+            [Test]
+            public void should_use_one_instance()
+            {
+                Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Singleton));
+
+                var boo1 = Container.Get<IBoo>();
+                var boo2 = Container.Get<IBoo>();
+
+                boo1.Should().Be(boo2);
             }
         }
 
@@ -276,7 +289,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_throw()
             {
-                Container.Invoking(c => c.Get<Boo>()).ShouldThrow<Exception>();
+                Container.Invoking(c => c.Get<Boo>()).ShouldThrow<Castle.MicroKernel.ComponentNotFoundException>();
             }
         }
 
@@ -285,7 +298,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
         public class when_resolving_all_components_for_non_registered_service : WindsorScenario
         {
             [Test]
-            public void should_throw()
+            public void should_return_empty_list()
             {
                 Container.GetAll<Boo>().Should().HaveCount(0);
             }
@@ -315,7 +328,18 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			}
 		}
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_accessing_native_container : WindsorScenario
+        {
+            [Test]
+            public void should_provide_the_actual_container()
+            {
+                Container.Put(Binding.Use<Boo>().As<IBoo>());
 
+                Container.OnNative(c => c.Kernel.HasComponent(typeof(IBoo)).Should().BeTrue());
+            }
+        }
     }
     // ReSharper restore InconsistentNaming
 

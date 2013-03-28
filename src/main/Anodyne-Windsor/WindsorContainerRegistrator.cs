@@ -75,8 +75,11 @@ namespace Kostassoid.Anodyne.Windsor
             if (lifestyle.Name == Lifestyle.Unmanaged.Name)
                 return registration.LifeStyle.Custom<UnmanagedLifestyleManager>();
 
+            if (lifestyle.Name == Lifestyle.Default.Name)
+                return registration.LifeStyle.Singleton;
+
             if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
-                return registration;//.LifeStyle.Is(LifestyleType.Undefined);
+                return registration;
 
             throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
         }
@@ -94,6 +97,9 @@ namespace Kostassoid.Anodyne.Windsor
 
             if (lifestyle.Name == Lifestyle.Unmanaged.Name)
                 return registration.LifestyleCustom<UnmanagedLifestyleManager>();
+
+            if (lifestyle.Name == Lifestyle.Default.Name)
+                return registration.LifestyleSingleton();
 
             if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
                 return registration;

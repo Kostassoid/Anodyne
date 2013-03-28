@@ -37,6 +37,10 @@ namespace Kostassoid.Anodyne.Windsor
             NativeContainer.AddFacility<StartableFacility>();
         }
 
+        public WindsorContainerAdapter():this(new WindsorContainer())
+        {
+        }
+
         public IList<T> GetAll<T>()
         {
             return NativeContainer.ResolveAll<T>();

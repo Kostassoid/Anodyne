@@ -29,7 +29,7 @@ namespace Kostassoid.Anodyne.Windsor
 
         public static void UseWindsorContainer(this INodeConfigurator nodeConfigurator)
         {
-            ((INodeConfiguratorEx)nodeConfigurator).SetContainerAdapter(new WindsorContainerAdapter(new WindsorContainer()));
+            ((INodeConfiguratorEx)nodeConfigurator).SetContainerAdapter(new WindsorContainerAdapter());
         }
 
         public static void UseWindsorWcfProxyFactory(this INodeConfigurator nodeConfigurator)

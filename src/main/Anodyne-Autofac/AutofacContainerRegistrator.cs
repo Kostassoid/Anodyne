@@ -32,7 +32,7 @@ namespace Kostassoid.Anodyne.Autofac
 
             registration = ApplyLifestyleSingle(registration, binding.Lifestyle);
 
-            registration = ApplyName(registration, binding.Name, binding.Service);
+            ApplyName(registration, binding.Name, binding.Service);
 
 			builder.Update(container);
         }
@@ -46,7 +46,7 @@ namespace Kostassoid.Anodyne.Autofac
             if (binding.BindTo.Count > 0)
                 registration = registration.As(binding.BindTo.ToArray());
 
-            registration = ApplyLifestyleMultiple(registration, binding.Lifestyle);
+            ApplyLifestyleMultiple(registration, binding.Lifestyle);
 
 			builder.Update(container);
 		}
@@ -80,8 +80,11 @@ namespace Kostassoid.Anodyne.Autofac
 			if (lifestyle.Name == Lifestyle.Unmanaged.Name)
 				return registration.ExternallyOwned();
 
-			if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
-				return registration.SingleInstance();
+            if (lifestyle.Name == Lifestyle.Default.Name)
+                return registration.SingleInstance();
+
+            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+                return registration;
 
             throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
         }
@@ -100,8 +103,11 @@ namespace Kostassoid.Anodyne.Autofac
             if (lifestyle.Name == Lifestyle.Unmanaged.Name)
                 return registration.ExternallyOwned();
 
-            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+            if (lifestyle.Name == Lifestyle.Default.Name)
                 return registration.SingleInstance();
+
+            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+                return registration;
 
             throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
         }

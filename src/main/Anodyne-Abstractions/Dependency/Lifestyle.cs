@@ -19,6 +19,10 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     public class Lifestyle
     {
         /// <summary>
+        /// Default lifestyle (singleton).
+        /// </summary>
+        public static Lifestyle Default = new Lifestyle("Default");
+        /// <summary>
         /// Default provider lifestyle.
         /// </summary>
         public static Lifestyle ProviderDefault = new Lifestyle("ProviderDefault");
