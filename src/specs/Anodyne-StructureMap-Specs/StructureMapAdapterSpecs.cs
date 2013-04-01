@@ -11,7 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Autofac.Specs
+namespace Kostassoid.Anodyne.StructureMap.Specs
 {
 	using System;
 	using Abstractions.Dependency.Registration;
@@ -20,20 +20,18 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 	using Abstractions.Dependency;
 	using FluentAssertions;
 	using NUnit.Framework;
-    using global::Autofac;
-	using global::Autofac.Core.Registration;
-	using IContainer = Abstractions.Dependency.IContainer;
+	using StructureMap;
 
 	// ReSharper disable InconsistentNaming
-    public class AutofacAdapterSpecs
+    public class StructureMapAdapterSpecs
     {
-        public class AutofacScenario
+        public class StructureMapScenario
         {
             protected IContainer Container;
 
-            public AutofacScenario()
+            public StructureMapScenario()
             {
-                Container = new AutofacContainerAdapter();
+                Container = new StructureMapContainerAdapter();
             }
         }
 
@@ -89,7 +87,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_registering_single_service_using_single_type : AutofacScenario
+		public class when_registering_single_service_using_single_type : StructureMapScenario
 		{
 			[Test]
 			public void should_be_available_from_container_by_interface()
@@ -106,7 +104,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_resolving_single_object_using_factory_method : AutofacScenario
+		public class when_resolving_single_object_using_factory_method : StructureMapScenario
 		{
 			[Test]
 			public void should_be_available_from_container_by_factory_parameter_type()
@@ -123,9 +121,10 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_resolving_objects_registered_with_valid_name : AutofacScenario
+		public class when_resolving_objects_registered_with_valid_name : StructureMapScenario
 		{
 			[Test]
+			[Ignore("Not implemented")]
 			public void should_resolve_using_name()
 			{
 				Container.Put(Binding.Use<Boo>().As<IBoo>());
@@ -144,7 +143,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_resolving_objects_using_invalid_name : AutofacScenario
+		public class when_resolving_objects_using_invalid_name : StructureMapScenario
 		{
 			[Test]
 			public void should_throw()
@@ -160,7 +159,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_resolving_multiple_objects_using_transient_lifestyle : AutofacScenario
+        public class when_resolving_multiple_objects_using_transient_lifestyle : StructureMapScenario
         {
             [Test]
             public void should_use_multiple_instances()
@@ -176,7 +175,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_resolving_multiple_objects_using_singleton_lifestyle : AutofacScenario
+        public class when_resolving_multiple_objects_using_singleton_lifestyle : StructureMapScenario
         {
             [Test]
             public void should_use_one_instance()
@@ -192,7 +191,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_releasing_object_with_transient_lifestyle : AutofacScenario
+        public class when_releasing_object_with_transient_lifestyle : StructureMapScenario
         {
             [Test]
             [Ignore("Not implemented")]
@@ -210,7 +209,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_releasing_object_with_unmanaged_lifestyle : AutofacScenario
+		public class when_releasing_object_with_unmanaged_lifestyle : StructureMapScenario
 		{
 			[Test]
 			[Ignore("Not implemented")]
@@ -228,7 +227,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_resolving_object_registered_as_is : AutofacScenario
+		public class when_resolving_object_registered_as_is : StructureMapScenario
 		{
 			[Test]
 			public void should_resolve_by_type()
@@ -242,7 +241,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_resolving_multiple_implementations_registered_separately : AutofacScenario
+		public class when_resolving_multiple_implementations_registered_separately : StructureMapScenario
 		{
 			[Test]
 			public void should_resolve_in_registration_order()
@@ -259,7 +258,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
         [Category("Unit")]
-        public class when_registering_multiple_types_as_is : AutofacScenario
+        public class when_registering_multiple_types_as_is : StructureMapScenario
         {
             [Test]
             public void each_type_should_be_available_from_container_by_its_type()
@@ -275,7 +274,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_registering_multiple_types_with_forward_type : AutofacScenario
+		public class when_registering_multiple_types_with_forward_type : StructureMapScenario
 		{
 			[Test]
 			public void each_type_should_be_available_from_container_by_forward_type()
@@ -294,7 +293,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_registering_multiple_types_with_multiple_forward_types : AutofacScenario
+		public class when_registering_multiple_types_with_multiple_forward_types : StructureMapScenario
 		{
 			[Test]
 			public void each_type_should_be_available_from_container_by_any_forward_type()
@@ -315,7 +314,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
         [Category("Unit")]
-        public class when_resolving_single_non_registered_component : AutofacScenario
+        public class when_resolving_single_non_registered_component : StructureMapScenario
         {
             [Test]
             public void should_throw()
@@ -326,7 +325,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_resolving_all_components_for_non_registered_service : AutofacScenario
+        public class when_resolving_all_components_for_non_registered_service : StructureMapScenario
         {
             [Test]
             public void should_return_empty_list()
@@ -337,7 +336,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
 		[TestFixture]
 		[Category("Unit")]
-		public class when_resolving_object_with_dependencies_from_app_settings : AutofacScenario
+		public class when_resolving_object_with_dependencies_from_app_settings : StructureMapScenario
 		{
 			[Test]
 			[Ignore("Not implemented")]
@@ -362,14 +361,14 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_accessing_native_container : AutofacScenario
+        public class when_accessing_native_container : StructureMapScenario
         {
             [Test]
             public void should_provide_the_actual_container()
             {
                 Container.Put(Binding.Use<Boo>().As<IBoo>());
 
-                Container.OnNative(c => c.IsRegistered(typeof(IBoo)).Should().BeTrue());
+                Container.OnNative(c => c.Model.HasImplementationsFor<IBoo>().Should().BeTrue());
             }
         }
 

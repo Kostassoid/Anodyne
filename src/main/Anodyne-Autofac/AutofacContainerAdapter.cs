@@ -15,10 +15,12 @@ namespace Kostassoid.Anodyne.Autofac
 {
 	using System.Collections;
 	using System.Linq;
+	using Abstractions.Dependency;
 	using Abstractions.Dependency.Registration;
 	using System;
 	using System.Collections.Generic;
 	using global::Autofac;
+	using global::Autofac.Core.Registration;
 	using IContainer = Abstractions.Dependency.IContainer;
 
 	public class AutofacContainerAdapter : IContainer
@@ -40,45 +42,65 @@ namespace Kostassoid.Anodyne.Autofac
 			return NativeContainer.Resolve<IEnumerable<T>>().ToList();
         }
 
-        public T Get<T>()
+		public IList GetAll(Type type)
+		{
+			var enumerableType = typeof(IEnumerable<>).MakeGenericType(type);
+
+			var enumerable = (IEnumerable)NativeContainer.Resolve(enumerableType);
+
+			return enumerable.Cast<object>().ToList();
+		}
+
+		public T Get<T>()
         {
-            return NativeContainer.Resolve<T>();
+	        try
+	        {
+				return NativeContainer.Resolve<T>();
+	        }
+	        catch (ComponentNotRegisteredException ex)
+	        {
+		        throw new BindingNotRegisteredException(typeof (T), ex);
+	        }
         }
 
         public T Get<T>(string name)
         {
-            return NativeContainer.ResolveNamed<T>(name);
-        }
-
-        public IList GetAll(Type type)
-        {
-	        var enumerableType = typeof (IEnumerable<>).MakeGenericType(type);
-
-	        var enumerable = (IEnumerable)NativeContainer.Resolve(enumerableType);
-
-            return enumerable.Cast<object>().ToList();
-        }
+	        try
+	        {
+			    return NativeContainer.ResolveNamed<T>(name);
+			}
+			catch (ComponentNotRegisteredException ex)
+			{
+				throw new BindingNotRegisteredException(typeof(T), name, ex);
+			}
+		}
 
         public object Get(Type type)
         {
-            return NativeContainer.Resolve(type);
-        }
+	        try
+	        {
+	            return NativeContainer.Resolve(type);
+			}
+			catch (ComponentNotRegisteredException ex)
+			{
+				throw new BindingNotRegisteredException(type, ex);
+			}
+		}
 
         public object Get(Type type, string name)
         {
-            return NativeContainer.ResolveNamed(name, type);
-        }
+	        try
+	        {
+			    return NativeContainer.ResolveNamed(name, type);
+			}
+			catch (ComponentNotRegisteredException ex)
+			{
+				throw new BindingNotRegisteredException(type, name, ex);
+			}
+		}
 
         public void Release(object instance)
         {
-            // not perfect but there's not much that can be done
-/*
-			// emulating disposal
-	        var disposable = instance as IDisposable;
-
-	        if (disposable != null)
-				disposable.Dispose();
-*/
         }
 
 		public void Put(IBindingSyntax binding)

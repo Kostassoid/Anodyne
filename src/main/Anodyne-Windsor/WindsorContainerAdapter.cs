@@ -17,6 +17,7 @@ namespace Kostassoid.Anodyne.Windsor
     using Abstractions.Dependency;
     using Abstractions.Dependency.Registration;
     using Castle.Facilities.Startable;
+    using Castle.MicroKernel;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
     using System;
@@ -46,30 +47,58 @@ namespace Kostassoid.Anodyne.Windsor
             return NativeContainer.ResolveAll<T>();
         }
 
-        public T Get<T>()
-        {
-            return NativeContainer.Resolve<T>();
+		public IList GetAll(Type type)
+		{
+			return NativeContainer.ResolveAll(type);
+		}
+		
+		public T Get<T>()
+		{
+			try
+			{
+				return NativeContainer.Resolve<T>();
+			}
+			catch (ComponentNotFoundException ex)
+			{
+				throw new BindingNotRegisteredException(typeof(T), ex);
+			}
         }
 
         public T Get<T>(string name)
         {
-            return NativeContainer.Resolve<T>(name);
-        }
-
-        public IList GetAll(Type type)
-        {
-            return NativeContainer.ResolveAll(type);
-        }
+			try
+			{
+			    return NativeContainer.Resolve<T>(name);
+			}
+			catch (ComponentNotFoundException ex)
+			{
+				throw new BindingNotRegisteredException(typeof(T), name, ex);
+			}
+		}
 
         public object Get(Type type)
         {
-            return NativeContainer.Resolve(type);
-        }
+			try
+			{
+	            return NativeContainer.Resolve(type);
+			}
+			catch (ComponentNotFoundException ex)
+			{
+				throw new BindingNotRegisteredException(type, ex);
+			}
+		}
 
         public object Get(Type type, string name)
         {
-            return NativeContainer.Resolve(name, type);
-        }
+			try
+			{
+	            return NativeContainer.Resolve(name, type);
+			}
+			catch (ComponentNotFoundException ex)
+			{
+				throw new BindingNotRegisteredException(type, name, ex);
+			}
+		}
 
         public void Release(object instance)
         {

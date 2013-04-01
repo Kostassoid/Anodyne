@@ -14,7 +14,9 @@
 namespace Kostassoid.Anodyne.Windsor.Specs
 {
     using System;
+    using System.Linq;
     using Abstractions.Dependency.Registration;
+    using Common.Extentions;
     using Common.Reflection;
     using Abstractions.Dependency;
     using FluentAssertions;
@@ -51,14 +53,22 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             }
         }
 
-        public class AnotherBoo : IBoo, IBooEx
-        {
-            public bool IsDisposed { get; private set; }
-            public void Dispose()
-            {
-                IsDisposed = true;
-            }
-        }
+		public class AnotherBoo : IBoo, IBooEx
+		{
+			public bool IsDisposed { get; private set; }
+			public void Dispose()
+			{
+				IsDisposed = true;
+			}
+		}
+
+		public class ChildBoo1 : Boo
+		{
+		}
+
+		public class ChildBoo2 : Boo
+		{
+		}
 
 		public class Xoo
 		{
@@ -141,8 +151,8 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 
 				Container.Has<IBoo>("Ololo").Should().BeFalse();
 
-				Container.Invoking(c => c.Get<IBoo>("Ololo")).ShouldThrow<Castle.MicroKernel.ComponentNotFoundException>();
-				Container.Invoking(c => c.Get(typeof(IBoo), "Ololo")).ShouldThrow<Castle.MicroKernel.ComponentNotFoundException>();
+				Container.Invoking(c => c.Get<IBoo>("Ololo")).ShouldThrow<BindingNotRegisteredException>();
+				Container.Invoking(c => c.Get(typeof(IBoo), "Ololo")).ShouldThrow<BindingNotRegisteredException>();
 			}
 		}
 
@@ -227,6 +237,23 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 		}
 
 		[TestFixture]
+		[Category("Unit")]
+		public class when_resolving_multiple_implementations_registered_separately : WindsorScenario
+		{
+			[Test]
+			public void should_resolve_in_registration_order()
+			{
+				var instances = new IBoo[] {new AnotherBoo(), new ChildBoo2(), new Boo(), new ChildBoo1()};
+
+				instances.ForEach(i => Container.Put(Binding.Use(i).As<IBoo>()));
+
+				var resolved = Container.GetAll<IBoo>();
+
+				resolved.Should().ContainInOrder(instances);
+			}
+		}
+
+		[TestFixture]
         [Category("Unit")]
         public class when_registering_multiple_types_as_is : WindsorScenario
         {
@@ -256,8 +283,8 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 				Container.Has<AnotherBoo>().Should().BeFalse();
 				Container.Get<IBoo>().Should().BeOfType<Boo>();
 
-				Container.GetAll<IBoo>().Should().HaveCount(2);
-				Container.GetAll(typeof(IBoo)).Should().HaveCount(2);
+				Container.GetAll<IBoo>().Should().HaveCount(4);
+				Container.GetAll(typeof(IBoo)).Should().HaveCount(4);
 			}
 		}
 
@@ -275,10 +302,10 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 				Container.Has<AnotherBoo>().Should().BeFalse();
 				Container.Get<IBoo>().Should().BeOfType<Boo>();
 
-				Container.GetAll<IBoo>().Should().HaveCount(2);
-				Container.GetAll(typeof(IBoo)).Should().HaveCount(2);
-				Container.GetAll<IBooEx>().Should().HaveCount(2);
-				Container.GetAll(typeof(IBooEx)).Should().HaveCount(2);
+				Container.GetAll<IBoo>().Should().HaveCount(4);
+				Container.GetAll(typeof(IBoo)).Should().HaveCount(4);
+				Container.GetAll<IBooEx>().Should().HaveCount(4);
+				Container.GetAll(typeof(IBooEx)).Should().HaveCount(4);
 			}
 		}
 
@@ -289,7 +316,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_throw()
             {
-                Container.Invoking(c => c.Get<Boo>()).ShouldThrow<Castle.MicroKernel.ComponentNotFoundException>();
+				Container.Invoking(c => c.Get<Boo>()).ShouldThrow<BindingNotRegisteredException>();
             }
         }
 

@@ -11,28 +11,19 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Autofac.Specs
+namespace Kostassoid.Anodyne.StructureMap
 {
-	using Node;
-	using Node.Configuration;
+	using Abstractions.Dependency;
+	using System;
 
-	public static class IntegrationContext
+	public static class ContainerEx
     {
-        public static Node System;
-
-        class TestSystem : Node
+        public static void OnNative(this IContainer provider,  Action<global::StructureMap.IContainer> nativeAction)
         {
-            public override void OnConfigure(INodeConfigurator c)
-            {
-                c.UseAutofacContainer();
-            }
-        }
+            if (!(provider is StructureMapContainerAdapter))
+                throw new InvalidOperationException("Exprected StructureMapContainerAdapter, but was {0}" + provider.GetType().Name);
 
-        public static void Init()
-        {
-            System = new TestSystem();
-            System.Start();
+			nativeAction(((StructureMapContainerAdapter)provider).NativeContainer);
         }
-
     }
 }
