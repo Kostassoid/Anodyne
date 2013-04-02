@@ -130,6 +130,7 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 			{
 				Container.Put(Binding.Use<Boo>().As<IBoo>());
 				Container.Put(Binding.Use<AnotherBoo>().As<IBoo>().Named("Special"));
+				Container.Put(Binding.Use<ChildBoo1>().As<IBoo>());
 
 				Container.Has<IBoo>().Should().BeTrue();
 				Container.Has<IBoo>("Special").Should().BeTrue();

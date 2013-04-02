@@ -45,11 +45,11 @@ namespace Kostassoid.Anodyne.StructureMap
 					foreach (var implementation in binding.Services.Where(t => !t.IsInterface && !t.IsAbstract))
 					{
 						var tempImplementation = implementation;
-						binding.BindTo.ForEach(t => ApplyLifestyleSingle(ce.For(t), binding.Lifestyle).Use(tempImplementation));
+						binding.BindTo.ForEach(t => ApplyLifestyleSingle(ce.For(t), binding.Lifestyle).Add(tempImplementation));
 
 						if (binding.BindTo.Count == 0)
 						{
-							ApplyLifestyleSingle(ce.For(implementation), binding.Lifestyle).Use(implementation);
+							ApplyLifestyleSingle(ce.For(implementation), binding.Lifestyle).Add(implementation);
 						}
 					}
 				});
@@ -57,17 +57,17 @@ namespace Kostassoid.Anodyne.StructureMap
 
 		private static ConfiguredInstance ApplyResolver(GenericFamilyExpression builder, StaticResolver resolver)
 		{
-			return builder.Use(resolver.Target);
+			return builder.Add(resolver.Target);
 		}
 
 		private static ObjectInstance ApplyResolver(GenericFamilyExpression builder, InstanceResolver resolver)
 		{
-			return builder.Use(resolver.Instance);
+			return builder.Add(resolver.Instance);
 		}
 
 		private static LambdaInstance<object> ApplyResolver(GenericFamilyExpression builder, DynamicResolver resolver)
 		{
-			return builder.Use(c => resolver.FactoryFunc());
+			return builder.Add(c => resolver.FactoryFunc());
 		}
 
 		private static GenericFamilyExpression ApplyLifestyleSingle(GenericFamilyExpression registration, Lifestyle lifestyle)

@@ -124,19 +124,19 @@ namespace Kostassoid.Anodyne.StructureMap.Specs
 		public class when_resolving_objects_registered_with_valid_name : StructureMapScenario
 		{
 			[Test]
-			[Ignore("Not implemented")]
 			public void should_resolve_using_name()
 			{
 				Container.Put(Binding.Use<Boo>().As<IBoo>());
 				Container.Put(Binding.Use<AnotherBoo>().As<IBoo>().Named("Special"));
+				Container.Put(Binding.Use<ChildBoo1>().As<IBoo>());
 
 				Container.Has<IBoo>().Should().BeTrue();
 				Container.Has<IBoo>("Special").Should().BeTrue();
-				Container.Get<IBoo>().Should().BeOfType<Boo>();
+				//Container.Get<IBoo>().Should().BeOfType<Boo>(); // undefined actually
 				Container.Get<IBoo>("Special").Should().BeOfType<AnotherBoo>();
 
 				Container.Has(typeof(IBoo)).Should().BeTrue();
-				Container.Get(typeof(IBoo)).Should().BeOfType<Boo>();
+				//Container.Get(typeof(IBoo)).Should().BeOfType<Boo>(); // undefined actually
 				Container.Get(typeof(IBoo), "Special").Should().BeOfType<AnotherBoo>();
 			}
 		}
