@@ -23,6 +23,11 @@ namespace Kostassoid.Anodyne.MongoDb
 			return dataAccessProviderSelector.Use(new MongoDataProvider(connectionString, databaseName));
 		}
 
+		public static DataAccessTargetSelector UseMongoDatabase(this DataAccessProviderSelector dataAccessProviderSelector, string connectionString)
+		{
+			return dataAccessProviderSelector.Use(new MongoDataProvider(connectionString));
+		}
+
 		public static DataAccessTargetSelector UseMongoDatabase(this DataAccessProviderSelector dataAccessProviderSelector, Tuple<string, string> connectionStringAndDatabaseName)
 		{
 			return dataAccessProviderSelector.Use(new MongoDataProvider(connectionStringAndDatabaseName));

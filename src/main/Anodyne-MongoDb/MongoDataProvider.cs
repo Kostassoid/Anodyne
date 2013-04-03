@@ -18,16 +18,26 @@ namespace Kostassoid.Anodyne.MongoDb
 {
     using System;
     using Abstractions.DataAccess;
+    using MongoDB.Driver;
 
-    public class MongoDataProvider : IDataAccessProvider
+	public class MongoDataProvider : IDataAccessProvider
     {
         public IDataSessionFactory SessionFactory { get; private set; }
 
-		public MongoDataProvider(string connectionString, string databaseName)
+		private MongoDataProvider()
 		{
 			RegisterClassMaps();
+		}
 
+		public MongoDataProvider(string connectionString, string databaseName)
+			:this()
+		{
 			SessionFactory = new MongoDataSessionFactory(NormalizeConnectionString(connectionString), databaseName);
+		}
+
+		public MongoDataProvider(string connectionString)
+			: this(connectionString, MongoUrl.Create(NormalizeConnectionString(connectionString)).DatabaseName)
+		{
 		}
 
 		public MongoDataProvider(Tuple<string, string> connectionStringAndDatabaseName)
@@ -46,7 +56,7 @@ namespace Kostassoid.Anodyne.MongoDb
         private static string NormalizeConnectionString(string connectionString)
         {
             const string connectionStringPrefix = "mongodb://";
-            if (connectionString.StartsWith(connectionStringPrefix))
+            if (connectionString.ToLower().StartsWith(connectionStringPrefix))
                 return connectionString;
 
             return connectionStringPrefix + connectionString;
