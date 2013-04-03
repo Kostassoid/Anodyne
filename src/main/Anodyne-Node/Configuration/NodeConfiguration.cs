@@ -13,11 +13,12 @@
 
 namespace Kostassoid.Anodyne.Node.Configuration
 {
-    using Abstractions.DataAccess;
-    using Abstractions.Dependency;
+	using Abstractions.DataAccess;
+	using Abstractions.Dependency;
     using Abstractions.Wcf;
+	using Common.CodeContracts;
 
-    /// <summary>
+	/// <summary>
     /// Access to base Node configuration and depencencies.
     /// </summary>
     public class NodeConfiguration
@@ -35,22 +36,27 @@ namespace Kostassoid.Anodyne.Node.Configuration
         /// </summary>
         public IWcfProxyFactory WcfProxyFactory { get { return Container.Get<IWcfProxyFactory>(); } }
         /// <summary>
-        /// Default data Access adapter (named 'default').
-        /// </summary>
-        public IDataAccessProvider DefaultDataAccess { get { return GetDataAccessProvider("default"); } }
-        /// <summary>
         /// System (project) namespace.
         /// </summary>
         public string SystemNamespace { get; internal set; }
 
-        /// <summary>
-        /// Return registered data access provider.
-        /// </summary>
-        /// <param name="name">Data access provider name.</param>
-        /// <returns>Data access provider.</returns>
-        public IDataAccessProvider GetDataAccessProvider(string name)
-        {
-            return Container.Get<IDataAccessProvider>("DataAccessProvider-" + name);
-        }
+		private DataAccessProviderResolver _dataAccessProviderResolver;
+
+		/// <summary>
+		/// Provides access to registered data access providers.
+		/// </summary>
+		public DataAccessProviderResolver DataAccess
+		{
+			get
+			{
+				if (_dataAccessProviderResolver == null)
+				{
+					Assumes.True(Container != null, "Container should be set before using any DataAccess related methods/properties.");
+					_dataAccessProviderResolver = new DataAccessProviderResolver(Container);
+				}
+
+				return _dataAccessProviderResolver;
+			}
+		}
     }
 }

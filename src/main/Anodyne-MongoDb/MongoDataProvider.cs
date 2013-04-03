@@ -19,35 +19,23 @@ namespace Kostassoid.Anodyne.MongoDb
     using System;
     using Abstractions.DataAccess;
 
-    public class MongoProvider : IDataAccessProvider
+    public class MongoDataProvider : IDataAccessProvider
     {
         public IDataSessionFactory SessionFactory { get; private set; }
 
-        public static IDataAccessProvider Instance(Tuple<string, string> databaseServerAndName)
-        {
-            return new MongoProvider(databaseServerAndName.Item1, databaseServerAndName.Item2);
-        }
+		public MongoDataProvider(string connectionString, string databaseName)
+		{
+			RegisterClassMaps();
 
-        public static IDataAccessProvider Instance(string databaseServer, string databaseName)
-        {
-            return new MongoProvider(databaseServer, databaseName);
-        }
+			SessionFactory = new MongoDataSessionFactory(NormalizeConnectionString(connectionString), databaseName);
+		}
 
-/*
-        public static IDataAccessProvider Instance(string connectionString)
-        {
-            return new MongoProvider(databaseServer, databaseName);
-        }
-*/
+		public MongoDataProvider(Tuple<string, string> connectionStringAndDatabaseName)
+			: this(connectionStringAndDatabaseName.Item1, connectionStringAndDatabaseName.Item2)
+		{
+		}
 
-        protected MongoProvider(string databaseServer, string databaseName)
-        {
-            RegisterClassMaps();
-
-            SessionFactory = new MongoDataSessionFactory(NormalizeConnectionString(databaseServer), databaseName);
-        }
-
-        private static void RegisterClassMaps()
+		private static void RegisterClassMaps()
         {
             //TODO: limit assembly selection
             var assemblies = From.AllAssemblies().ToList();//.Where(a => a.FullName.StartsWith("Anodyne") || a.FullName.StartsWith(systemNamespace)).ToList();

@@ -42,7 +42,7 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         /// <returns>Data access target selector.</returns>
         public DataAccessTargetSelector Use(IDataAccessProvider dataAccessProvider)
         {
-            var providerName = "DataAccessProvider-" + Name;
+            var providerName = DataAccessProviderResolver.BuildContainerName(Name);
             Requires.True(!Container.Has<IDataAccessProvider>(providerName), message: string.Format("DataAccessProvider with name '{0}' is already registered, use another name.", Name));
 
 			Container.Put(Binding.Use(dataAccessProvider).As<IDataAccessProvider>().Named(providerName));

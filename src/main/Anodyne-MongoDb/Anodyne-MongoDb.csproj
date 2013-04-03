@@ -55,7 +55,8 @@
     </Compile>
     <Compile Include="DataAccessContextEx.cs" />
     <Compile Include="DataAccessProviderEx.cs" />
-    <Compile Include="MongoProvider.cs" />
+    <Compile Include="DataAccessProviderSelectorEx.cs" />
+    <Compile Include="MongoDataProvider.cs" />
     <Compile Include="MongoDataSessionFactory.cs" />
     <Compile Include="MongoCollectionEx.cs" />
     <Compile Include="MongoDatabaseEx.cs" />

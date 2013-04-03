@@ -10,29 +10,27 @@ For example, typical application server configuration with Anodyne looks like th
 
         public override void OnConfigure(IConfiguration c)
         {
-            c.UseLog4Net();
             c.UseWindsorContainer();
             c.UseWindsorWcfServicePublisher();
-            c.UseMongoDataAccess(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
+            c.ForDataAccess().UseMongoDatabase(Configured.From.AppSettings("DatabaseServer", "DatabaseName"));
 
             c.OnStartupPerform<DataAccessConfiguration>();
             c.OnStartupPerform<WcfServicesRegistration>();
             c.OnStartupPerform<CommandConsumersRegistration>();
         }
 
-See [Wiki](https://github.com/Kostassoid/Anodyne/wiki) for more details.
+See [documentation](https://anodyne.readthedocs.org) for more details.
 
 Current Status
 ==============
 
-Early development.
+Alpha (usable and used in production environments, but be prepared for many breaking changes).
 
 Requirements
 ============
 
 * .NET 4.0
-* MVC 3 (for web application)
-* Windows 7 / 2008 (R2)
+* ASP.NET MVC 3 / 4 (for web application)
 * Visual Studio 2010 SP1 for working with solution
 * NuGet
 
@@ -46,6 +44,7 @@ Amazing projects in use
 * [NUnit](http://www.nunit.org/)
 * [FakeItEasy](https://github.com/patrik-hagne/FakeItEasy)
 
+...and many others.
 
 License
 =======

@@ -20,15 +20,9 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
         private readonly IDataSessionFactory _sessionFactory;
         public IDataSessionFactory SessionFactory { get { return _sessionFactory; } }
 
-        protected InMemoryDataAccessProvider()
+        public InMemoryDataAccessProvider()
         {
             _sessionFactory = new InMemoryDataSessionFactory();
         }
-
-        public static IDataAccessProvider Instance()
-        {
-            return new InMemoryDataAccessProvider();
-        }
-
     }
 }

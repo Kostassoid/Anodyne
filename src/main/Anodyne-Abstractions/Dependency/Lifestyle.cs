@@ -35,7 +35,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
         /// </summary>
         public static Lifestyle Singleton = new Lifestyle("Singleton");
         /// <summary>
-        /// New instance is created upon every resolving but explicit release is required.
+        /// New instance is created upon every resolving but explicit release may be required.
         /// </summary>
         public static Lifestyle Transient = new Lifestyle("Transient");
         /// <summary>

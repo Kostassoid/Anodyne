@@ -30,16 +30,16 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 c.UseWindsorContainer();
                 c.ForDataAccess()
-                    .Use(MongoProvider.Instance("localhost:27001", "Anodyne-Testing"))
+                    .UseMongoDatabase("localhost:27001", "Anodyne-Testing")
                     .AsDomainStorage();
                 c.ForDataAccess("ReadModel")
-                    .Use(MongoProvider.Instance("localhost:27001", "Anodyne-Testing-Read"))
+                    .UseMongoDatabase("localhost:27001", "Anodyne-Testing-Read")
                     .AsInjectedContext();
 
                 c.OnStartupPerform(i =>
                     {
-                        i.DefaultDataAccess.OnNative(d => d.Drop());
-                        i.GetDataAccessProvider("ReadModel").OnNative(d => d.Drop());
+                        i.DataAccess.Default.OnNative(d => d.Drop());
+                        i.DataAccess["ReadModel"].OnNative(d => d.Drop());
                     });
             }
         }

@@ -18,9 +18,8 @@ namespace Kostassoid.Anodyne.Specs.Shared
     using Node;
     using Node.Configuration;
     using Windsor;
-    using Wiring;
 
-    public static class IntegrationContext
+	public static class IntegrationContext
     {
         public static Node System;
 
@@ -29,7 +28,7 @@ namespace Kostassoid.Anodyne.Specs.Shared
             public override void OnConfigure(INodeConfigurator c)
             {
                 c.UseWindsorContainer();
-                c.ForDataAccess().Use(InMemoryDataAccessProvider.Instance()).AsDomainStorage();
+                c.ForDataAccess().Use(new InMemoryDataAccessProvider()).AsDomainStorage();
             }
         }
 

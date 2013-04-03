@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
-// 
+//  
 //      http://www.apache.org/licenses/LICENSE-2.0 
 //  
 // Unless required by applicable law or agreed to in writing, software distributed 
@@ -11,23 +11,29 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.BlogNote.Host.Startup
+namespace Kostassoid.Anodyne.Abstractions.DataAccess
 {
-    using Anodyne.MongoDb;
-    using Anodyne.Node;
-    using Anodyne.Node.Configuration;
-    using Domain;
+	using Dependency;
 
-    public class DataAccessConfiguration : IStartupAction
-    {
-        public void OnStartup(NodeConfiguration configuration)
-        {
-            configuration.DataAccess.Default
-                .OnNative(db =>
-                {
-                    db.EnsureUniqueIndexFor<User>(u => u.Name);
-                    db.EnsureUniqueIndexFor<Post>(u => u.Created);
-                });
-        }
-    }
+	public class DataAccessProviderResolver
+	{
+		private readonly IContainer _container;
+
+		internal static string BuildContainerName(string name)
+		{
+			return "DataAccessProvider-" + name;
+		}
+
+		public IDataAccessProvider this[string name] { get
+		{
+			return _container.Get<IDataAccessProvider>(BuildContainerName(name));
+		}}
+
+		public IDataAccessProvider Default { get { return this["default"]; } }
+
+		public DataAccessProviderResolver(IContainer container)
+		{
+			_container = container;
+		}
+	}
 }
