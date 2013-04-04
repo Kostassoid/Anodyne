@@ -16,12 +16,11 @@ namespace Kostassoid.BlogNote.Web.Models.Persistent
     using System;
     using Anodyne.Abstractions.DataAccess;
 
-    public class User : IPersistableRoot
+    public class User : PersistableRoot
     {
         public object IdObject { get { return Id; } }
 
         public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
 
         public string Name { get; protected set; }
         public string Email { get; protected set; }

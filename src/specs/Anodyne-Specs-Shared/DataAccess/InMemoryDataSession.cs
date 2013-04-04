@@ -43,14 +43,38 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
             return Roots.ContainsKey(id) ? Roots[id].DeepCloneAs(type) : null;
         }
 
-        public void SaveOne(IPersistableRoot o)
+		private bool CanUpdate(object id, long? specificVersion)
+		{
+			if (!specificVersion.HasValue)
+				return true;
+
+			if (specificVersion.Value > 0)
+				if (!Roots.ContainsKey(id) || Roots[id].Version != specificVersion)
+					return false;
+
+			if (specificVersion == 0)
+				if (Roots.ContainsKey(id))
+					return false;
+
+			return true;
+		}
+
+        public bool SaveOne(IPersistableRoot o, long? specificVersion)
         {
-            Roots[o.IdObject] = o;
+	        if (!CanUpdate(o.IdObject, specificVersion))
+		        return false;
+
+			Roots[o.IdObject] = o;
+	        return true;
         }
 
-        public void RemoveOne(Type type, object id)
+		public bool RemoveOne(Type type, object id, long? specificVersion)
         {
-            Roots.Remove(id);
+			if (!CanUpdate(id, specificVersion))
+				return false;
+
+			Roots.Remove(id);
+			return true;
         }
 
         public object NativeSession { get { throw new InvalidOperationException("InMemoryDataSession doesn't need any native session");} }

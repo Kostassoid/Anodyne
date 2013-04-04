@@ -21,8 +21,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     public class AggregateRootChangeSet
     {
         public IAggregateRoot Aggregate { get; protected set; }
-        public int TargetVersion { get; protected set; }
-        public int CurrentVersion { get; protected set; }
+        public long TargetVersion { get; protected set; }
+        public long CurrentVersion { get; protected set; }
         public bool IsDeleted { get; protected set; }
         public bool IsNew { get { return TargetVersion == 0; } }
 

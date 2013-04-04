@@ -17,8 +17,5 @@ namespace Kostassoid.Anodyne.Domain.Base
 
     public interface IAggregateRoot : IEntity, IPersistableRoot
     {
-        int Version { get; }
-
-        int NewVersion();
     }
 }

@@ -26,19 +26,13 @@ namespace Kostassoid.Anodyne.Domain.Events
 
         public DateTime Happened { get; protected set; }
 
-        // we don't want version-tracking events
-        public override int Version
-        {
-            get { return 0; }
-        }
-
         // should not be stored!
         public TRoot Target { get { return _aggregate; } }
 
         // should not be stored!
         IAggregateRoot IAggregateEvent.Aggregate { get { return _aggregate; } }
 
-        public int AggregateVersion { get; protected set; }
+        public long AggregateVersion { get; protected set; }
 
         private bool _isReplaying;
         public bool IsReplaying { get { return _isReplaying; } }
@@ -51,7 +45,7 @@ namespace Kostassoid.Anodyne.Domain.Events
             Happened = happened;
 
             AggregateId = ((IEntity) aggregate).IdObject;
-            AggregateVersion = aggregate.NewVersion();
+            AggregateVersion = aggregate.BumpVersion();
         }
 
         protected AggregateEvent(TRoot aggregate)

@@ -11,13 +11,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-using System.Linq;
-
-
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
-    using Abstractions.DataAccess;
+	using System;
+	using System.Linq;
+	using Abstractions.DataAccess;
     using Common;
     using Common.CodeContracts;
     using Common.ExecutionContext;

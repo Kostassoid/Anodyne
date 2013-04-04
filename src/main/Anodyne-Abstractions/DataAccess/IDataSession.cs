@@ -41,16 +41,20 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         /// <param name="id">Entity identity.</param>
         /// <returns>Found entity or null if nothing is found.</returns>
         IPersistableRoot FindOne(Type type, object id);
-        /// <summary>
-        /// Persist entity. Update if entity with the same id already exists.
-        /// </summary>
-        /// <param name="o">Entity to save.</param>
-        void SaveOne(IPersistableRoot o);
+
+	    /// <summary>
+	    /// Persist entity. Update if entity with the same id already exists.
+	    /// </summary>
+	    /// <param name="o">Entity to save.</param>
+	    /// <param name="specificVersion">Specific root version to update.</param>
+	    bool SaveOne(IPersistableRoot o, long? specificVersion);
+
         /// <summary>
         /// Remove entity from persistence storage.
         /// </summary>
         /// <param name="type">Persistable root type.</param>
         /// <param name="id">Entity identity.</param>
-        void RemoveOne(Type type, object id);
+		/// <param name="specificVersion">Specific root version to remove.</param>
+		bool RemoveOne(Type type, object id, long? specificVersion);
     }
 }

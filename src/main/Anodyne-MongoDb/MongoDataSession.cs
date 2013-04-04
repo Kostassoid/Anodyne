@@ -16,8 +16,10 @@ namespace Kostassoid.Anodyne.MongoDb
     using System.Linq;
     using Abstractions.DataAccess;
     using Common.CodeContracts;
+    using MongoDB.Bson;
     using MongoDB.Driver;
     using System;
+    using MongoDB.Driver.Builders;
     using MongoDB.Driver.Linq;
 
     internal class MongoDataSession : IDataSession
@@ -46,7 +48,7 @@ namespace Kostassoid.Anodyne.MongoDb
 
         private static void EnsureTypeIsPersistable(Type type)
         {
-            Requires.True(typeof(IPersistableRoot).IsAssignableFrom(type), "type", "type should be IPersistable");
+            Requires.True(typeof(IPersistableRoot).IsAssignableFrom(type), "type", "type should be IPersistableRoot");
         }
 
         public IPersistableRoot FindOne(Type type, object id)
@@ -57,19 +59,40 @@ namespace Kostassoid.Anodyne.MongoDb
             return (IPersistableRoot)collection.FindOneByIdAs(type, id.AsIdValue());
         }
 
-        public void SaveOne(IPersistableRoot o)
+		private static IMongoQuery BuildRootQuery(object id, long? specificVersion)
+		{
+			var idMatch = MongoDB.Driver.Builders.Query.EQ("_id", id.AsIdValue());
+
+			return
+				specificVersion.HasValue
+				? MongoDB.Driver.Builders.Query.And(idMatch, MongoDB.Driver.Builders.Query.EQ("Version", new BsonInt64(specificVersion.Value)))
+				: idMatch;
+		}
+
+	    public bool SaveOne(IPersistableRoot o, long? specificVersion)
         {
             var collection = _nativeSession.GetCollection(o.GetType());
-            collection.Save(o);
+		    try
+		    {
+				var result = collection.Update(BuildRootQuery(o.IdObject, specificVersion), Update.Replace(o), UpdateFlags.Upsert);
+				return result.DocumentsAffected == 1;
+		    }
+			catch (WriteConcernException)
+			{
+				//TODO: can we do more?
+				return false;
+		    }
         }
 
-        public void RemoveOne(Type type, object id)
+		public bool RemoveOne(Type type, object id, long? specificVersion)
         {
             EnsureTypeIsPersistable(type);
 
             var collection = _nativeSession.GetCollection(type);
-            collection.Remove(MongoDB.Driver.Builders.Query.EQ("_id", id.AsIdValue()));
-        }
+			var result = collection.Remove(BuildRootQuery(id, specificVersion));
+
+			return result.DocumentsAffected == 1;
+		}
 
         public void Dispose()
         { }

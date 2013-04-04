@@ -22,16 +22,9 @@ namespace Kostassoid.Anodyne.Domain.Base
     {
         object IEntity.IdObject { get { return Id; } }
 
-        public virtual int Version { get; protected set; }
-
         static AggregateRoot()
         {
             AggregateRootHandlersRegistrator.EnsureRegistration();
-        }
-
-        public virtual int NewVersion()
-        {
-            return Version++;
         }
 
         protected static void Apply(IAggregateEvent @event)

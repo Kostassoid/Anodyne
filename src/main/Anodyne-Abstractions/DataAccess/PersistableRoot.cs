@@ -24,7 +24,14 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
             get { throw new NotSupportedException("Not supported for Entity-derived classes. Use Entity<> instead."); }
         }
 
-        public override bool Equals(object obj)
+	    public long Version { get; private set; }
+
+	    public long BumpVersion()
+	    {
+		    return Version++;
+	    }
+
+	    public override bool Equals(object obj)
         {
             if (obj == null) return false;
             if (obj.GetType() != GetType()) return false;

@@ -171,9 +171,9 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 using (var session = IntegrationContext.DataContext.GetSession())
                 {
-                    session.SaveOne(SimpleQueryRoot.Create("boo"));
-                    session.SaveOne(SimpleQueryRoot.Create("foo"));
-                    session.SaveOne(SimpleQueryRoot.Create("zoo"));
+                    session.SaveOne(SimpleQueryRoot.Create("boo"), null);
+					session.SaveOne(SimpleQueryRoot.Create("foo"), null);
+					session.SaveOne(SimpleQueryRoot.Create("zoo"), null);
                 }
             }
 
@@ -192,7 +192,119 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
                 simpleRoots.Should().Contain(r => r.Data == "zoo");
             }
         }
-    }
+
+		[TestFixture]
+		[Category("Integration")]
+		public class when_updating_roots_using_specific_version : MongoDbScenario
+		{
+			[Test]
+			public void should_fail_if_version_mismatch()
+			{
+				var root1 = TestRoot.Create("boo");
+				var root2 = TestRoot.Create("foo");
+
+				root2.BumpVersion(); // emulating some activity
+
+				// creating
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					session.SaveOne(root1, 0).Should().BeTrue();
+					session.SaveOne(root2, 0).Should().BeTrue();
+				}
+
+				// attempting to create again
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					session.SaveOne(root1, 0).Should().BeFalse();
+					session.SaveOne(root2, 0).Should().BeFalse();
+				}
+
+				// updating
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					root1.BumpVersion();
+					root2.BumpVersion();
+
+					session.SaveOne(root1, 1).Should().BeTrue();
+					session.SaveOne(root2, 1).Should().BeFalse(); // actual version is 2
+				}
+
+				// removing
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					root1.BumpVersion();
+					root2.BumpVersion();
+
+					session.RemoveOne(typeof(TestRoot), root1.Id, 3).Should().BeFalse(); // actual version is 2
+					session.RemoveOne(typeof(TestRoot), root2.Id, 2).Should().BeTrue();
+				}
+
+				// checking
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					var availableRoots = session.Query<TestRoot>().ToList();
+					availableRoots.Should().HaveCount(1);
+					availableRoots.First().Id.Should().Be(root1.Id);
+				}
+			}
+		}
+
+		[TestFixture]
+		[Category("Integration")]
+		public class when_updating_roots_using_non_specific_version : MongoDbScenario
+		{
+			[Test]
+			public void should_fail_if_version_mismatch()
+			{
+				var root1 = TestRoot.Create("boo");
+				var root2 = TestRoot.Create("foo");
+
+				root2.BumpVersion(); // emulating some activity
+
+				// creating
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					session.SaveOne(root1, null).Should().BeTrue();
+					session.SaveOne(root2, null).Should().BeTrue();
+				}
+
+				// attempting to create again
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					session.SaveOne(root1, null).Should().BeTrue();
+					session.SaveOne(root2, null).Should().BeTrue();
+				}
+
+				// updating
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					root1.BumpVersion();
+					root2.BumpVersion();
+
+					session.SaveOne(root1, null).Should().BeTrue();
+					session.SaveOne(root2, null).Should().BeTrue(); // actual version is 2
+				}
+
+				// removing
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					root1.BumpVersion();
+					root2.BumpVersion();
+
+					session.RemoveOne(typeof(TestRoot), root1.Id, null).Should().BeTrue(); // actual version is 2
+					session.RemoveOne(typeof(TestRoot), root2.Id, null).Should().BeTrue();
+				}
+
+				// checking
+				using (var session = IntegrationContext.DataContext.GetSession())
+				{
+					var availableRoots = session.Query<TestRoot>().ToList();
+					availableRoots.Should().HaveCount(0);
+				}
+			}
+		}
+
+	}
     // ReSharper restore InconsistentNaming
 
 }

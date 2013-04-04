@@ -57,26 +57,28 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             var type = changeSet.Aggregate.GetType();
 
-            var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, ((IEntity) changeSet.Aggregate).IdObject);
-
+/*
+			//TODO: eliminate race condition
             if (!ignoreConflicts)
             {
-                if (storedAggregate == null && !changeSet.IsNew)
+				var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, ((IEntity)changeSet.Aggregate).IdObject);
+
+				if (storedAggregate == null && !changeSet.IsNew)
                     return false;
 
                 if (storedAggregate != null && storedAggregate.Version != changeSet.TargetVersion)
                     return false;
             }
+*/
 
-            _dataSession.SaveOne(changeSet.Aggregate);
+	        var targetVersion = ignoreConflicts ? (long?) null : changeSet.TargetVersion;
 
-            if (changeSet.IsDeleted)
-                _dataSession.RemoveOne(type, ((IEntity) changeSet.Aggregate).IdObject);
+			if (changeSet.IsDeleted)
+				return _dataSession.RemoveOne(type, ((IEntity)changeSet.Aggregate).IdObject, targetVersion);
 
-            return true;
+			return _dataSession.SaveOne(changeSet.Aggregate, targetVersion);
         }
 
-        //TODO: use stale data policy
         public DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy)
         {
             var appliedEvent = new List<IAggregateEvent>();
