@@ -70,6 +70,20 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public static bool IsConfigured { get { return _dataSessionFactory != null; } }
 
+        internal event Action WhenCompleted = () => { };
+        public event Action Completed
+        {
+            add { Head.WhenCompleted += value; }
+            remove { Head.WhenCompleted -= value; }
+        }
+        
+        internal event Action WhenCancelled = () => { };
+        public event Action Cancelled
+        {
+            add { Head.WhenCancelled += value; }
+            remove { Head.WhenCancelled -= value; }
+        }
+
         public static void SetDataSessionFactory(IDataSessionFactory dataSessionFactory)
         {
             _dataSessionFactory = dataSessionFactory;
@@ -152,7 +166,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             if (!IsRoot) return;
 
             DomainDataSession.ForgetChanges();
+
             EventBus.Publish(new UnitOfWorkCancelled(this));
+            WhenCancelled();
         }
 
         public void Complete()
@@ -165,10 +181,11 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             EventBus.Publish(new UnitOfWorkCompleting(this));
             var changeSet = DomainDataSession.SaveChanges(_staleDataPolicy);
-            EventBus.Publish(new UnitOfWorkCompleted(this, changeSet));
-
             if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
                 throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
+
+            EventBus.Publish(new UnitOfWorkCompleted(this, changeSet));
+            WhenCompleted();
         }
 
         public virtual void Dispose()

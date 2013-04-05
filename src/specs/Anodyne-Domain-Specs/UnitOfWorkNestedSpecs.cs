@@ -83,10 +83,13 @@ namespace Kostassoid.Anodyne.Domain.Specs
         [Category("Unit")]
         public class when_updating_root_from_nested_unit_of_work : UnitOfWorkScenario
         {
-            [Test]
-            public void should_update_root_version_and_correctly_dispose_unit_of_work()
+            private Guid rootId;
+            private bool completedEventFired;
+            private bool cancelledEventFired;
+
+            [TestFixtureSetUp]
+            public void SetUp()
             {
-                Guid rootId;
                 using (new UnitOfWork())
                 {
                     rootId = TestRoot.Create().Id;
@@ -96,30 +99,43 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 {
                     using (var nestedUow = new UnitOfWork())
                     {
+                        nestedUow.Completed += () => { completedEventFired = true; };
+                        nestedUow.Cancelled += () => { cancelledEventFired = true; };
+
                         var root = nestedUow.Query<TestRoot>().GetOne(rootId);
                         root.Update();
                     }
                 }
+            }
 
-                using (new UnitOfWork())
-                {
-                    using (var nestedUow = new UnitOfWork())
-                    {
-                        var root = nestedUow.Query<TestRoot>().GetOne(rootId);
-                        root.Update();
-                    }
-                }
-
+            [Test]
+            public void should_update_root_version()
+            {
                 using (var uow = new UnitOfWork())
                 {
                     var updatedRoot = uow.Query<TestRoot>().GetOne(rootId);
-                    updatedRoot.Version.Should().Be(3);
+                    updatedRoot.Version.Should().Be(2);
                 }
+            }
 
+            [Test]
+            public void should_correctly_dispose_unit_of_work()
+            {
                 UnitOfWork.Current.IsNone.Should().BeTrue();
             }
-        }
 
+            [Test]
+            public void should_not_fire_cancelled_event()
+            {
+                cancelledEventFired.Should().BeFalse();
+            }
+
+            [Test]
+            public void should_fire_completed_event()
+            {
+                completedEventFired.Should().BeTrue();
+            }
+        }
 
 		[TestFixture]
 		[Category("Unit")]

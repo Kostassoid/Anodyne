@@ -90,17 +90,27 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_working_with_root_from_one_unit_of_work : UnitOfWorkScenario
+        public class when_creating_root_within_unit_of_work : UnitOfWorkScenario
         {
-            [Test]
-            public void should_save_root_and_update_version()
+            private Guid rootId;
+            private bool completedEventFired;
+            private bool cancelledEventFired;
+
+            [TestFixtureSetUp]
+            public void SetUp()
             {
-                Guid rootId;
-                using (new UnitOfWork())
+                using (var uow = new UnitOfWork())
                 {
+                    uow.Completed += () => { completedEventFired = true; };
+                    uow.Cancelled += () => { cancelledEventFired = true; };
+
                     rootId = TestRoot.Create().Id;
                 }
+            }
 
+            [Test]
+            public void should_persist_root()
+            {
                 using (var uow = new UnitOfWork())
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
@@ -109,6 +119,18 @@ namespace Kostassoid.Anodyne.Domain.Specs
                     root.Value.Id.Should().Be(rootId);
                     root.Value.Version.Should().Be(1);
                 }
+            }
+
+            [Test]
+            public void should_not_fire_cancelled_event()
+            {
+                cancelledEventFired.Should().BeFalse();
+            }
+
+            [Test]
+            public void should_fire_completed_event()
+            {
+                completedEventFired.Should().BeTrue();
             }
         }
 
@@ -375,10 +397,13 @@ namespace Kostassoid.Anodyne.Domain.Specs
         [Category("Unit")]
         public class when_cancelling_unit_of_work : UnitOfWorkScenario
         {
-            [Test]
-            public void should_ignore_any_changesets()
+            private Guid rootId;
+            private bool completedEventFired;
+            private bool cancelledEventFired;
+
+            [TestFixtureSetUp]
+            public void SetUp()
             {
-                Guid rootId;
                 using (new UnitOfWork())
                 {
                     rootId = TestRoot.Create().Id;
@@ -386,17 +411,36 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 using (var uow = new UnitOfWork())
                 {
+                    uow.Completed += () => { completedEventFired = true; };
+                    uow.Cancelled += () => { cancelledEventFired = true; };
+
                     var root = uow.Query<TestRoot>().GetOne(rootId);
                     root.Update();
 
                     uow.Cancel();
                 }
+            }
 
+            [Test]
+            public void should_ignore_any_changesets()
+            {
                 using (var uow = new UnitOfWork())
                 {
                     var root = uow.Query<TestRoot>().GetOne(rootId);
                     root.Version.Should().Be(1);
                 }
+            }
+
+            [Test]
+            public void should_fire_cancelled_event()
+            {
+                cancelledEventFired.Should().BeTrue();
+            }
+
+            [Test]
+            public void should_not_fire_completed_event()
+            {
+                completedEventFired.Should().BeFalse();
             }
         }
 

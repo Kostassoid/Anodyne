@@ -16,7 +16,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #if DEBUG
-
 [assembly: AssemblyConfiguration("Debug")]
 #else
 [assembly: AssemblyConfiguration("Release")]
@@ -50,8 +49,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.9.1.0")]
-[assembly: AssemblyFileVersion("0.9.1.0")]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
 //[assembly: AssemblyKeyFile("..\\..\\Anodyne.snk")]
 
 [assembly: InternalsVisibleTo("Anodyne-Node")]

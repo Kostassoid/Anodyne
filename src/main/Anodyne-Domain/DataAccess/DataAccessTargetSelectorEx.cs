@@ -20,13 +20,13 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
     public static class DataAccessTargetSelectorEx
     {
-        public static void AsDomainStorage(this DataAccessTargetSelector selector, Action<DomainDataAccessConfigurator> cc = null)
+        public static void AsDomainStorage(this DataAccessTargetSelector targetSelector, Action<DomainDataAccessConfigurator> cc = null)
         {
             //TODO: check without failing tests
             //Requires.True(!UnitOfWork.IsConfigured, "Domain data access is already configured.");
 
-            UnitOfWork.SetDataSessionFactory(selector.DataProvider.SessionFactory);
-            UnitOfWork.SetOperationResolver(new ContainerOperationResolver(selector.Selector.Container));
+            UnitOfWork.SetDataSessionFactory(targetSelector.DataProvider.SessionFactory);
+            UnitOfWork.SetOperationResolver(new ContainerOperationResolver(targetSelector.ProviderSelector.Container));
 
             //duplicated call to avoid lost static context loss in web environment
             AggregateRootHandlersRegistrator.EnsureRegistration();
