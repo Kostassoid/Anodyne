@@ -57,7 +57,7 @@ namespace Kostassoid.Anodyne.Wiring.Specs
 
                 handler.Fired.Should().Be(0);
 
-                handler.AutoResetEvent.WaitOne(1000);
+                handler.AutoResetEvent.WaitOne(5000);
 
                 handler.Fired.Should().Be(1);
             }

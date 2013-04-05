@@ -200,10 +200,13 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 			[Test]
 			public void should_fail_if_version_mismatch()
 			{
-				var root1 = TestRoot.Create("boo");
-				var root2 = TestRoot.Create("foo");
+                var root1 = SimpleQueryRoot.Create("boo");
+                var root2 = SimpleQueryRoot.Create("foo");
 
-				root2.BumpVersion(); // emulating some activity
+                // emulating some activity
+                root2.BumpVersion();
+                root1.BumpVersion(); 
+                root2.BumpVersion();
 
 				// creating
 				using (var session = IntegrationContext.DataContext.GetSession())
@@ -235,14 +238,14 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 					root1.BumpVersion();
 					root2.BumpVersion();
 
-					session.RemoveOne(typeof(TestRoot), root1.Id, 3).Should().BeFalse(); // actual version is 2
-					session.RemoveOne(typeof(TestRoot), root2.Id, 2).Should().BeTrue();
+                    session.RemoveOne(typeof(SimpleQueryRoot), root1.Id, 3).Should().BeFalse(); // actual version is 2
+                    session.RemoveOne(typeof(SimpleQueryRoot), root2.Id, 2).Should().BeTrue();
 				}
 
 				// checking
 				using (var session = IntegrationContext.DataContext.GetSession())
 				{
-					var availableRoots = session.Query<TestRoot>().ToList();
+                    var availableRoots = session.Query<SimpleQueryRoot>().ToList();
 					availableRoots.Should().HaveCount(1);
 					availableRoots.First().Id.Should().Be(root1.Id);
 				}
@@ -254,12 +257,15 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 		public class when_updating_roots_using_non_specific_version : MongoDbScenario
 		{
 			[Test]
-			public void should_fail_if_version_mismatch()
+			public void should_ignore_version_mismatch()
 			{
-				var root1 = TestRoot.Create("boo");
-				var root2 = TestRoot.Create("foo");
+				var root1 = SimpleQueryRoot.Create("boo");
+                var root2 = SimpleQueryRoot.Create("foo");
 
-				root2.BumpVersion(); // emulating some activity
+                // emulating some activity
+                root2.BumpVersion();
+                root1.BumpVersion();
+                root2.BumpVersion();
 
 				// creating
 				using (var session = IntegrationContext.DataContext.GetSession())
@@ -291,14 +297,14 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 					root1.BumpVersion();
 					root2.BumpVersion();
 
-					session.RemoveOne(typeof(TestRoot), root1.Id, null).Should().BeTrue(); 
-					session.RemoveOne(typeof(TestRoot), root2.Id, null).Should().BeTrue();
+                    session.RemoveOne(typeof(SimpleQueryRoot), root1.Id, null).Should().BeTrue();
+                    session.RemoveOne(typeof(SimpleQueryRoot), root2.Id, null).Should().BeTrue();
 				}
 
 				// checking
 				using (var session = IntegrationContext.DataContext.GetSession())
 				{
-					var availableRoots = session.Query<TestRoot>().ToList();
+                    var availableRoots = session.Query<SimpleQueryRoot>().ToList();
 					availableRoots.Should().HaveCount(0);
 				}
 			}

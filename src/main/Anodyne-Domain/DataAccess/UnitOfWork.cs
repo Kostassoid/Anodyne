@@ -28,6 +28,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     using Domain.Events;
     using Wiring;
 
+    //TODO: refactor this ugly pile of code
     public class UnitOfWork : IUnitOfWorkEx, IDisposable
     {
         private const string HeadContextKey = "head-unit-of-work";
@@ -40,6 +41,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         private readonly string _contextKey = HeadContextKey;
         private readonly UnitOfWork _parent;
+
+        public UnitOfWork Head { get; protected set; }
 
         public IDomainDataSession DomainDataSession { get; protected set; }
 
@@ -56,7 +59,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             get { return _parent == null; }
         }
 
-        public bool IsFinished { get; protected set; }
+        public bool IsCompleted { get; protected set; }
+        public bool IsCancelled { get; protected set; }
+        public bool IsFinished { get { return IsCompleted || IsCancelled; } }
 
         public bool IsDisposed
         {
@@ -87,6 +92,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             if (Current.IsSome)
             {
                 _parent = Current.Value;
+                Head = Current.Value.Head;
                 DomainDataSession = _parent.DomainDataSession;
 
                 _contextKey = String.Format("{0}-{1}", _contextKey, Guid.NewGuid().ToString("N"));
@@ -96,6 +102,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
                 DomainDataSession = new DomainDataSession(_dataSessionFactory.Open());
                 if (DomainDataSession == null)
                     throw new Exception("Unable to create IDataSession (bad configuration?)");
+
+                Head = this;
             }
 
             _staleDataPolicy = staleDataPolicy.HasValue
@@ -104,8 +112,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             Context.Set(_contextKey, this);
             Current = this;
-
-            IsFinished = false;
         }
 
         protected static void EnsureAggregateEventHandlersAreSet()
@@ -122,7 +128,13 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
                         throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
 
                     if (Current.IsSome && !Current.Value.IsFinished)
-                        ((UnitOfWork)Current).DomainDataSession.Handle(e);
+                    {
+                        ((UnitOfWork) Current).DomainDataSession.Handle(e);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("There's no active UnitOfWork.");
+                    }
                 }, Priority.Exact(1000));
         }
 
@@ -131,11 +143,23 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             Assumes.True(!IsFinished, "This UnitOfWork is finished");
         }
 
+        public void Cancel()
+        {
+            AssertIfFinished();
+
+            IsCancelled = true;
+
+            if (!IsRoot) return;
+
+            DomainDataSession.ForgetChanges();
+            EventBus.Publish(new UnitOfWorkCancelled(this));
+        }
+
         public void Complete()
         {
             AssertIfFinished();
 
-            IsFinished = true;
+            IsCompleted = true;
 
             if (!IsRoot) return;
 
@@ -145,18 +169,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
                 throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
-        }
-
-        public void Rollback()
-        {
-            AssertIfFinished();
-
-            IsFinished = true;
-
-            if (!IsRoot) return;
-
-            DomainDataSession.Rollback();
-            EventBus.Publish(new UnitOfWorkRollbacked(this));
         }
 
         public virtual void Dispose()
@@ -178,6 +190,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
                 Context.Release(_contextKey);
                 Current = _parent;
+
+                if (Current.IsSome && IsCancelled)
+                    Current.Value.Cancel();
             }
         }
 

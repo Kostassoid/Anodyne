@@ -67,27 +67,27 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy)
         {
-            var appliedEvent = new List<IAggregateEvent>();
-            var staleDate = new List<IAggregateRoot>();
+            var appliedEvents = new List<IAggregateEvent>();
+            var staleData = new List<IAggregateRoot>();
 
             foreach (var changeSet in ChangeSets.Values)
             {
                 if (ApplyChangeSet(changeSet, staleDataPolicy == StaleDataPolicy.Ignore))
                 {
-                    appliedEvent.AddRange(changeSet.Events);
+                    appliedEvents.AddRange(changeSet.Events);
                 }
                 else
                 {
-                    staleDate.Add(changeSet.Aggregate);
+                    staleData.Add(changeSet.Aggregate);
                 }
             }
 
             ChangeSets.Clear();
 
-            return new DataChangeSet(appliedEvent, staleDate);
+            return new DataChangeSet(appliedEvents, staleData);
         }
 
-        public void Rollback()
+        public void ForgetChanges()
         {
             ChangeSets.Clear();
         }

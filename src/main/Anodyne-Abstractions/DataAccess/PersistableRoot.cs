@@ -21,7 +21,7 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
         //TODO: bad
         object IPersistableRoot.IdObject
         {
-            get { throw new NotSupportedException("Not supported for Entity-derived classes. Use Entity<> instead."); }
+            get { throw new NotSupportedException("Not supported for PersistableRoot-derived classes. Use PersistableRoot<> instead."); }
         }
 
 	    public long Version { get; private set; }

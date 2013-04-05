@@ -61,20 +61,26 @@ namespace Kostassoid.Anodyne.Specs.Shared.DataAccess
 
         public bool SaveOne(IPersistableRoot o, long? specificVersion)
         {
-	        if (!CanUpdate(o.IdObject, specificVersion))
-		        return false;
+            lock (Roots)
+            {
+                if (!CanUpdate(o.IdObject, specificVersion))
+                    return false;
 
-			Roots[o.IdObject] = o;
-	        return true;
+                Roots[o.IdObject] = o;
+                return true;
+            }
         }
 
 		public bool RemoveOne(Type type, object id, long? specificVersion)
         {
-			if (!CanUpdate(id, specificVersion))
-				return false;
+		    lock (Roots)
+		    {
+		        if (!CanUpdate(id, specificVersion))
+		            return false;
 
-			Roots.Remove(id);
-			return true;
+		        Roots.Remove(id);
+		        return true;
+		    }
         }
 
         public object NativeSession { get { throw new InvalidOperationException("InMemoryDataSession doesn't need any native session");} }

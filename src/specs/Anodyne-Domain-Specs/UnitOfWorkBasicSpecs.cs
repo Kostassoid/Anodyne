@@ -13,9 +13,11 @@
 
 namespace Kostassoid.Anodyne.Domain.Specs
 {
+    using System.Collections.Generic;
     using Anodyne.Specs.Shared;
     using Base;
     using DataAccess;
+    using DataAccess.Events;
     using DataAccess.Exceptions;
     using DataAccess.Policy;
     using Events;
@@ -26,6 +28,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
     using Common.Tools;
     using FluentAssertions;
     using NUnit.Framework;
+    using Wiring;
 
     // ReSharper disable InconsistentNaming
     public class UnitOfWorkBasicSpecs
@@ -332,10 +335,48 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_updating_root_from_nested_unit_of_work : UnitOfWorkScenario
+        public class when_mutating_root_after_completing_unit_of_work : UnitOfWorkScenario
         {
             [Test]
-            public void should_update_root_version_and_correctly_dispose_unit_of_work()
+            public void should_throw_invalid_operation_exception()
+            {
+                using (var uow = new UnitOfWork())
+                {
+                    var root = TestRoot.Create();
+                    root.Update();
+
+                    uow.Complete();
+
+                    root.Invoking(r => r.Update()).ShouldThrow<InvalidOperationException>();
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_mutating_root_after_cancelling_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_throw_invalid_operation_exception()
+            {
+                using (var uow = new UnitOfWork())
+                {
+                    var root = TestRoot.Create();
+                    root.Update();
+
+                    uow.Cancel();
+
+                    root.Invoking(r => r.Update()).ShouldThrow<InvalidOperationException>();
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_cancelling_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_ignore_any_changesets()
             {
                 Guid rootId;
                 using (new UnitOfWork())
@@ -343,31 +384,19 @@ namespace Kostassoid.Anodyne.Domain.Specs
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (new UnitOfWork())
+                using (var uow = new UnitOfWork())
                 {
-                    using (var nestedUow = new UnitOfWork())
-                    {
-                        var root = nestedUow.Query<TestRoot>().FindOne(rootId).Value;
-                        root.Update();
-                    }
-                }
+                    var root = uow.Query<TestRoot>().GetOne(rootId);
+                    root.Update();
 
-                using (new UnitOfWork())
-                {
-                    using (var nestedUow = new UnitOfWork())
-                    {
-                        var root = nestedUow.Query<TestRoot>().FindOne(rootId).Value;
-                        root.Update();
-                    }
+                    uow.Cancel();
                 }
 
                 using (var uow = new UnitOfWork())
                 {
-                    var updatedRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
-                    updatedRoot.Version.Should().Be(3);
+                    var root = uow.Query<TestRoot>().GetOne(rootId);
+                    root.Version.Should().Be(1);
                 }
-
-                UnitOfWork.Current.IsNone.Should().BeTrue();
             }
         }
 
@@ -446,9 +475,9 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 var tasks = Enumerable.Range(0, testingThreadsCount)
                     .Select(_ => Task.Factory.StartNew(() =>
-                        {
-                            using (var uow = new UnitOfWork(StaleDataPolicy.Ignore)) { uow.Query<TestRoot>().GetOne(id).Update(); }
-                        }))
+                    {
+                        using (var uow = new UnitOfWork(StaleDataPolicy.Ignore)) { uow.Query<TestRoot>().GetOne(id).Update(); }
+                    }))
                     .ToArray();
 
                 Task.WaitAll(tasks);
@@ -459,6 +488,103 @@ namespace Kostassoid.Anodyne.Domain.Specs
                     root.Version.Should().BeLessOrEqualTo(testingThreadsCount + 1);
                 }
             }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_trying_to_update_root_from_many_threads_with_strict_stale_policy : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_produce_sequential_event_stream()
+            {
+                const int testingThreadsCount = 100;
+
+                var appliedEvents = new List<IAggregateEvent>();
+                EventBus.SubscribeTo<UnitOfWorkCompleted>().With(e => appliedEvents.AddRange(e.ChangeSet.AppliedEvents));
+
+                Guid id;
+
+                using (new UnitOfWork())
+                {
+                    id = TestRoot.Create().Id;
+                }
+
+                var tasks = Enumerable.Range(0, testingThreadsCount) .Select(_ => Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        using (var uow = new UnitOfWork(StaleDataPolicy.Strict))
+                        {
+                            uow.Query<TestRoot>().GetOne(id).Update();
+                        }
+                    }
+                    // ReSharper disable EmptyGeneralCatchClause
+                    catch
+                    // ReSharper restore EmptyGeneralCatchClause
+                    {
+                        // just skip failed operations
+                    }
+                }))
+                .ToArray();
+
+                Task.WaitAll(tasks);
+
+                TestRoot root;
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().GetOne(id);
+
+                    root.Version.Should().BeLessOrEqualTo(testingThreadsCount + 1);
+                }
+
+                appliedEvents.Count.Should().Be((int) root.Version);
+                appliedEvents.Select(e => e.AggregateVersion).Distinct().Count().Should().Be((int) root.Version);
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_trying_to_update_root_from_many_threads_with_skip_stale_policy : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_produce_sequential_event_stream()
+            {
+                const int testingThreadsCount = 100;
+
+                var appliedEvents = new List<IAggregateEvent>();
+                EventBus.SubscribeTo<UnitOfWorkCompleted>().With(e => appliedEvents.AddRange(e.ChangeSet.AppliedEvents));
+
+                Guid id;
+
+                using (new UnitOfWork())
+                {
+                    id = TestRoot.Create().Id;
+                }
+
+                var tasks = Enumerable.Range(0, testingThreadsCount)
+                    .Select(_ => Task.Factory.StartNew(() =>
+                    {
+                        using (var uow = new UnitOfWork(StaleDataPolicy.SilentlySkip))
+                        {
+                            uow.Query<TestRoot>().GetOne(id).Update();
+                        }
+                    }))
+                    .ToArray();
+
+                Task.WaitAll(tasks);
+
+                TestRoot root;
+                using (var uow = new UnitOfWork())
+                {
+                    root = uow.Query<TestRoot>().GetOne(id);
+
+                    root.Version.Should().BeLessOrEqualTo(testingThreadsCount + 1);
+                }
+
+                appliedEvents.Count.Should().Be((int)root.Version);
+                appliedEvents.Select(e => e.AggregateVersion).Distinct().Count().Should().Be((int)root.Version);
+            }
+
         }
     }
     // ReSharper restore InconsistentNaming

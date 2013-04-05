@@ -21,7 +21,6 @@ namespace Kostassoid.Anodyne.Autofac.Specs
 	using FluentAssertions;
 	using NUnit.Framework;
     using global::Autofac;
-	using global::Autofac.Core.Registration;
 	using IContainer = Abstractions.Dependency.IContainer;
 
 	// ReSharper disable InconsistentNaming

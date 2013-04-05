@@ -15,11 +15,11 @@ using Kostassoid.Anodyne.Domain.Events;
 
 namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
-    public class UnitOfWorkRollbacked : IDomainEvent
+    public class UnitOfWorkCancelled : IDomainEvent
     {
         public UnitOfWork UnitOfWork { get; protected set; }
 
-        public UnitOfWorkRollbacked(UnitOfWork unitOfWork)
+        public UnitOfWorkCancelled(UnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

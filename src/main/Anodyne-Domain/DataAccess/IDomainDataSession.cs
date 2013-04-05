@@ -27,6 +27,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
 
         DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy);
-        void Rollback();
+        void ForgetChanges();
     }
 }

@@ -17,7 +17,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
     using Base;
     using DataAccess;
     using DataAccess.Exceptions;
-    using DataAccess.Policy;
     using Events;
     using System;
     using Common.Tools;
@@ -80,6 +79,48 @@ namespace Kostassoid.Anodyne.Domain.Specs
             }
         }
 
+        [TestFixture]
+        [Category("Unit")]
+        public class when_updating_root_from_nested_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_update_root_version_and_correctly_dispose_unit_of_work()
+            {
+                Guid rootId;
+                using (new UnitOfWork())
+                {
+                    rootId = TestRoot.Create().Id;
+                }
+
+                using (new UnitOfWork())
+                {
+                    using (var nestedUow = new UnitOfWork())
+                    {
+                        var root = nestedUow.Query<TestRoot>().GetOne(rootId);
+                        root.Update();
+                    }
+                }
+
+                using (new UnitOfWork())
+                {
+                    using (var nestedUow = new UnitOfWork())
+                    {
+                        var root = nestedUow.Query<TestRoot>().GetOne(rootId);
+                        root.Update();
+                    }
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var updatedRoot = uow.Query<TestRoot>().GetOne(rootId);
+                    updatedRoot.Version.Should().Be(3);
+                }
+
+                UnitOfWork.Current.IsNone.Should().BeTrue();
+            }
+        }
+
+
 		[TestFixture]
 		[Category("Unit")]
 		public class when_querying_and_updaing_same_root_within_nested_unit_of_work : UnitOfWorkScenario
@@ -101,9 +142,9 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
 					using (var uow2 = new UnitOfWork())
 					{
-						var sameRoot = uow2.Query<TestRoot>().FindOne(rootId);
+						var sameRoot = uow2.Query<TestRoot>().GetOne(rootId);
 
-						sameRoot.Value.Invoking(r => r.Update()).ShouldThrow<ConcurrencyException>();
+						sameRoot.Invoking(r => r.Update()).ShouldThrow<ConcurrencyException>();
 					}
 				}
 			}
@@ -142,14 +183,83 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
 				using (var uow = new UnitOfWork())
 				{
-					var root1 = uow.Query<TestRoot>().FindOne(root1Id);
-					var root2 = uow.Query<TestRoot>().FindOne(root2Id);
+					var root1 = uow.Query<TestRoot>().GetOne(root1Id);
+					var root2 = uow.Query<TestRoot>().GetOne(root2Id);
 
-					root1.Value.Version.Should().Be(3);
-					root2.Value.Version.Should().Be(2);
+					root1.Version.Should().Be(3);
+					root2.Version.Should().Be(2);
 				}
 			}
 		}
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_mutating_root_after_nested_unit_of_work_was_cancelled : UnitOfWorkScenario
+        {
+            [Test]
+            public void should_throw_invalid_operation_exception()
+            {
+                using (new UnitOfWork())
+                {
+                    var root = TestRoot.Create();
+
+                    root.Update();
+
+                    using (var nestedUow = new UnitOfWork())
+                    {
+                        nestedUow.Cancel();
+                    }
+
+                    root.Invoking(r => r.Update()).ShouldThrow<InvalidOperationException>();
+                }
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_cancelling_nested_unit_of_work : UnitOfWorkScenario
+        {
+            [Test]
+            public void all_changes_should_be_lost()
+            {
+                Guid root1Id;
+                Guid root2Id;
+                using (new UnitOfWork())
+                {
+                    root1Id = TestRoot.Create().Id;
+                    root2Id = TestRoot.Create().Id;
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var root1 = uow.Query<TestRoot>().GetOne(root1Id);
+                    root1.Update();
+
+                    using (var nestedUow1 = new UnitOfWork())
+                    {
+                        var root2 = nestedUow1.Query<TestRoot>().GetOne(root2Id);
+                        root2.Update();
+
+                        using (var nestedUow2 = new UnitOfWork())
+                        {
+                            nestedUow2.Cancel();
+                        }
+                    }
+                }
+
+                using (var uow = new UnitOfWork())
+                {
+                    var root1 = uow.Query<TestRoot>().GetOne(root1Id);
+                    var root2 = uow.Query<TestRoot>().GetOne(root2Id);
+
+                    root1.Version.Should().Be(1);
+                    root2.Version.Should().Be(1);
+                }
+
+            }
+        }
+
+
 	}
     // ReSharper restore InconsistentNaming
 

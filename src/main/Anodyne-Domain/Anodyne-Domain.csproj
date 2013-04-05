@@ -58,7 +58,7 @@
     <Compile Include="DataAccess\Events\UnitOfWorkCompleted.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkCompleting.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkDisposing.cs" />
-    <Compile Include="DataAccess\Events\UnitOfWorkRollbacked.cs" />
+    <Compile Include="DataAccess\Events\UnitOfWorkCancelled.cs" />
     <Compile Include="DataAccess\Exceptions\AggregateRootNotFoundException.cs" />
     <Compile Include="DataAccess\Exceptions\ConcurrencyException.cs" />
     <Compile Include="DataAccess\Exceptions\StaleDataException.cs" />
