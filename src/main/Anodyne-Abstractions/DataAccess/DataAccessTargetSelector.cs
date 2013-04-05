@@ -45,7 +45,7 @@ namespace Kostassoid.Anodyne.Abstractions.DataAccess
             Selector.Container.Put(
                 Binding.Use(() => new DefaultDataAccessContext(DataProvider))
 				.As<IDataAccessContext>()
-                .With(Lifestyle.Singleton));
+                .With(Lifecycle.Singleton));
 
             if (cc != null)
                 cc(new DataAccessContextConfigurator());

@@ -11,7 +11,6 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System.IO;
 using System.Linq;
 using Kostassoid.Anodyne.Common.Reflection;
 
@@ -80,7 +79,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
 
             _configuration.Container.Put(
                 Binding
-				.Use<TConfiguration>().As<IConfigurationAction>().With(Lifestyle.Unmanaged)
+				.Use<TConfiguration>().As<IConfigurationAction>().With(Lifecycle.Unmanaged)
                 .Named(GetTypeUniqueName<TConfiguration>("Configuration")));
         }
 
@@ -93,7 +92,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding
                 .Use(() => new ConfigurationActionWrapper(configurationAction))
 				.As<IConfigurationAction>()
-                .With(Lifestyle.Unmanaged)
+                .With(Lifecycle.Unmanaged)
                 .Named("Configuration-" + SeqGuid.NewGuid()));
         }
 
@@ -111,7 +110,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding
                 .Use<TStartup>()
 				.As<IStartupAction>()
-                .With(Lifestyle.Singleton)
+                .With(Lifecycle.Singleton)
                 .Named(GetTypeUniqueName<TStartup>("Startup")));
         }
 
@@ -124,7 +123,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding
                 .Use(() => new StartupActionWrapper(startupAction))
 				.As<IStartupAction>()
-                .With(Lifestyle.Unmanaged)
+                .With(Lifecycle.Unmanaged)
                 .Named("Startup-" + SeqGuid.NewGuid()));
         }
 
@@ -137,7 +136,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding
                 .Use<TShutdown>()
 				.As<IShutdownAction>()
-                .With(Lifestyle.Unmanaged)
+                .With(Lifecycle.Unmanaged)
                 .Named(GetTypeUniqueName<TShutdown>("Shutdown")));
         }
 
@@ -148,7 +147,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding
                 .Use(() => new ShutdownActionWrapper(shutdownAction))
 				.As<IShutdownAction>()
-                .With(Lifestyle.Unmanaged)
+                .With(Lifecycle.Unmanaged)
                 .Named("Shutdown-" + SeqGuid.NewGuid()));
         }
 
@@ -158,7 +157,7 @@ namespace Kostassoid.Anodyne.Node.Configuration.Internal
                 Binding
                 .Use<TSubsystem>()
 				.As<ISubsystem>()
-                .With(Lifestyle.Unmanaged));
+                .With(Lifecycle.Unmanaged));
         }
 
         public DataAccessProviderSelector ForDataAccess(string name = "default")

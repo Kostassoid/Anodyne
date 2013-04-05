@@ -20,7 +20,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
 	/// <summary>
     /// Binding configuration for multiple components registration.
     /// </summary>
-    public class MultipleBinding : LifestyleBasedBinding
+    public class MultipleBinding : LifecycleBasedBinding
     {
         /// <summary>
         /// Components service types.

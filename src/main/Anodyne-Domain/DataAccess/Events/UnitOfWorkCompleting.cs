@@ -11,24 +11,17 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Abstractions.Dependency
-{
-    /// <summary>
-    /// Lifestyle-based binding.
-    /// </summary>
-    public abstract class LifestyleBasedBinding : IBinding
-    {
-        /// <summary>
-        /// Defined lifestyle.
-        /// </summary>
-		public Lifestyle Lifestyle { get; internal set; }
+using Kostassoid.Anodyne.Domain.Events;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        protected LifestyleBasedBinding()
+namespace Kostassoid.Anodyne.Domain.DataAccess.Events
+{
+    public class UnitOfWorkCompleting : IDomainEvent
+    {
+        public UnitOfWork UnitOfWork { get; protected set; }
+
+        public UnitOfWorkCompleting(UnitOfWork unitOfWork)
         {
-            Lifestyle = Lifestyle.Default;
+            UnitOfWork = unitOfWork;
         }
     }
 }

@@ -38,9 +38,9 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
 			return this;
 		}
 
-	    public IMultipleBindingSyntax With(Lifestyle lifestyle)
+	    public IMultipleBindingSyntax With(Lifecycle lifecycle)
         {
-            _binding.Lifestyle = lifestyle;
+            _binding.Lifecycle = lifecycle;
             return this;
         }
     }

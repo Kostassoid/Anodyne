@@ -15,11 +15,11 @@ using Kostassoid.Anodyne.Domain.Events;
 
 namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
-    public class UnitOfWorkCompletingEvent : IDomainEvent
+    public class UnitOfWorkDisposing : IDomainEvent
     {
         public UnitOfWork UnitOfWork { get; protected set; }
 
-        public UnitOfWorkCompletingEvent(UnitOfWork unitOfWork)
+        public UnitOfWorkDisposing(UnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

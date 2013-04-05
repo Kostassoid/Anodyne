@@ -14,56 +14,56 @@
 namespace Kostassoid.Anodyne.Abstractions.Dependency
 {
     /// <summary>
-    /// Container component lifestyle.
+    /// Container component Lifecycle.
     /// </summary>
-    public class Lifestyle
+    public class Lifecycle
     {
         /// <summary>
-        /// Default lifestyle (singleton).
+        /// Default Lifecycle (singleton).
         /// </summary>
-        public static Lifestyle Default = new Lifestyle("Default");
+        public static Lifecycle Default = new Lifecycle("Default");
         /// <summary>
-        /// Default provider lifestyle.
+        /// Default provider Lifecycle.
         /// </summary>
-        public static Lifestyle ProviderDefault = new Lifestyle("ProviderDefault");
+        public static Lifecycle ProviderDefault = new Lifecycle("ProviderDefault");
         /// <summary>
         /// Resolved objects aren't managed and get garbage-collected when they're not referenced anymore.
         /// </summary>
-        public static Lifestyle Unmanaged = new Lifestyle("Unmanaged");
+        public static Lifecycle Unmanaged = new Lifecycle("Unmanaged");
         /// <summary>
         /// Singleton. Only one instance of component exists.
         /// </summary>
-        public static Lifestyle Singleton = new Lifestyle("Singleton");
+        public static Lifecycle Singleton = new Lifecycle("Singleton");
         /// <summary>
         /// New instance is created upon every resolving but explicit release may be required.
         /// </summary>
-        public static Lifestyle Transient = new Lifestyle("Transient");
+        public static Lifecycle Transient = new Lifecycle("Transient");
         /// <summary>
         /// Resolved instance will be disposed upon web request end.
         /// </summary>
-        public static Lifestyle PerWebRequest = new Lifestyle("PerWebRequest");
+        public static Lifecycle PerWebRequest = new Lifecycle("PerWebRequest");
 
         /// <summary>
-        /// Use provider-specific or user-defined lifestyle.
+        /// Use provider-specific or user-defined Lifecycle.
         /// </summary>
-        /// <param name="name">Lifestyle name.</param>
-        /// <returns>Custom lifestyle descriptor.</returns>
-        public static Lifestyle Custom(string name)
+        /// <param name="name">Lifecycle name.</param>
+        /// <returns>Custom Lifecycle descriptor.</returns>
+        public static Lifecycle Custom(string name)
         {
-            return new Lifestyle(name);
+            return new Lifecycle(name);
         }
 
         /// <summary>
-        /// Lifestyle name.
+        /// Lifecycle name.
         /// </summary>
         public string Name { get; private set; }
 
-        private Lifestyle(string name)
+        private Lifecycle(string name)
         {
             Name = name;
         }
 
-        protected bool Equals(Lifestyle other)
+        protected bool Equals(Lifecycle other)
         {
             return string.Equals(Name, other.Name);
         }
@@ -73,7 +73,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((Lifestyle) obj);
+            return Equals((Lifecycle) obj);
         }
 
         public override int GetHashCode()

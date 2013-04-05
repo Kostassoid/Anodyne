@@ -57,20 +57,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             var type = changeSet.Aggregate.GetType();
 
-/*
-			//TODO: eliminate race condition
-            if (!ignoreConflicts)
-            {
-				var storedAggregate = (IAggregateRoot)_dataSession.FindOne(type, ((IEntity)changeSet.Aggregate).IdObject);
-
-				if (storedAggregate == null && !changeSet.IsNew)
-                    return false;
-
-                if (storedAggregate != null && storedAggregate.Version != changeSet.TargetVersion)
-                    return false;
-            }
-*/
-
 	        var targetVersion = ignoreConflicts ? (long?) null : changeSet.TargetVersion;
 
 			if (changeSet.IsDeleted)

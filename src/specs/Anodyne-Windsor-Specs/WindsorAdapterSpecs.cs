@@ -164,7 +164,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_use_multiple_instances()
             {
-                Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Transient));
+                Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifecycle.Transient));
 
                 var boo1 = Container.Get<IBoo>();
                 var boo2 = Container.Get<IBoo>();
@@ -180,7 +180,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_use_one_instance()
             {
-                Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Singleton));
+                Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifecycle.Singleton));
 
                 var boo1 = Container.Get<IBoo>();
                 var boo2 = Container.Get<IBoo>();
@@ -196,7 +196,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
             [Test]
             public void should_release()
             {
-				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Transient));
+				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifecycle.Transient));
 
                 var boo = Container.Get<IBoo>();
 
@@ -213,7 +213,7 @@ namespace Kostassoid.Anodyne.Windsor.Specs
 			[Test]
 			public void should_no_nothing()
 			{
-				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifestyle.Unmanaged));
+				Container.Put(Binding.Use<Boo>().As<IBoo>().With(Lifecycle.Unmanaged));
 
 				var boo = Container.Get<IBoo>();
 

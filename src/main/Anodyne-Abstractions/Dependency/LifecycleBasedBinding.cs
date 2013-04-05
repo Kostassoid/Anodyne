@@ -11,17 +11,24 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.Events;
-
-namespace Kostassoid.Anodyne.Domain.DataAccess.Events
+namespace Kostassoid.Anodyne.Abstractions.Dependency
 {
-    public class UnitOfWorkDisposingEvent : IDomainEvent
+    /// <summary>
+    /// Lifecycle-based binding.
+    /// </summary>
+    public abstract class LifecycleBasedBinding : IBinding
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
+        /// <summary>
+        /// Defined Lifecycle.
+        /// </summary>
+		public Lifecycle Lifecycle { get; internal set; }
 
-        public UnitOfWorkDisposingEvent(UnitOfWork unitOfWork)
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected LifecycleBasedBinding()
         {
-            UnitOfWork = unitOfWork;
+            Lifecycle = Lifecycle.Default;
         }
     }
 }

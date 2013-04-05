@@ -38,7 +38,7 @@ namespace Kostassoid.Anodyne.Windsor
                 Binding
                 .Use(() => new WindsorWcfProxyFactory(nodeConfigurator))
 				.As<IWcfProxyFactory>()
-                .With(Lifestyle.Singleton));
+                .With(Lifecycle.Singleton));
         }
 
     }

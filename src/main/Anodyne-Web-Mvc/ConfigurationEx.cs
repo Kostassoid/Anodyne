@@ -34,7 +34,7 @@ namespace Kostassoid.Anodyne.Web.Mvc
         public static void RegisterControllers(this INodeConfigurator nodeConfigurator, IEnumerable<Assembly> assemblies)
         {
             nodeConfigurator.Configuration
-                .Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).With(Lifestyle.Transient));
+                .Container.Put(Binding.Use(AllTypes.BasedOn<IController>()).With(Lifecycle.Transient));
         }
     }
 }

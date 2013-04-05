@@ -65,8 +65,8 @@
     <Compile Include="Dependency\IContainer.cs" />
     <Compile Include="Dependency\IImplementationResolver.cs" />
     <Compile Include="Dependency\InstanceResolver.cs" />
-    <Compile Include="Dependency\Lifestyle.cs" />
-    <Compile Include="Dependency\LifestyleBasedBinding.cs" />
+    <Compile Include="Dependency\Lifecycle.cs" />
+    <Compile Include="Dependency\LifecycleBasedBinding.cs" />
     <Compile Include="Dependency\MultipleBinding.cs" />
     <Compile Include="Dependency\Registration\Binding.cs" />
     <Compile Include="Dependency\Registration\IBindingSyntax.cs" />

@@ -19,6 +19,6 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration
     {
         IMultipleBindingSyntax As<TService>() where TService : class;
 		IMultipleBindingSyntax As(params Type[] services);
-		IMultipleBindingSyntax With(Lifestyle lifestyle);
+		IMultipleBindingSyntax With(Lifecycle lifecycle);
     }
 }

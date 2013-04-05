@@ -139,9 +139,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             if (!IsRoot) return;
 
-            EventBus.Publish(new UnitOfWorkCompletingEvent(this));
+            EventBus.Publish(new UnitOfWorkCompleting(this));
             var changeSet = DomainDataSession.SaveChanges(_staleDataPolicy);
-            EventBus.Publish(new UnitOfWorkCompletedEvent(this, changeSet));
+            EventBus.Publish(new UnitOfWorkCompleted(this, changeSet));
 
             if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
                 throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
@@ -156,7 +156,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             if (!IsRoot) return;
 
             DomainDataSession.Rollback();
-            EventBus.Publish(new UnitOfWorkRollbackEvent(this));
+            EventBus.Publish(new UnitOfWorkRollbacked(this));
         }
 
         public virtual void Dispose()
@@ -172,7 +172,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             {
                 if (IsRoot)
                 {
-                    EventBus.Publish(new UnitOfWorkDisposingEvent(this));
+                    EventBus.Publish(new UnitOfWorkDisposing(this));
                     DomainDataSession.Dispose();
                 }
 

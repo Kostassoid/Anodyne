@@ -19,7 +19,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration
     {
         ISingleBindingSyntax As<TService>() where TService : class;
         ISingleBindingSyntax As(Type service);
-        ISingleBindingSyntax With(Lifestyle lifestyle);
+        ISingleBindingSyntax With(Lifecycle lifecycle);
         ISingleBindingSyntax Named(string name);
     }
 
@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration
     {
 		ISingleBindingSyntax<TImpl> As<TService>() where TService : class;
 		ISingleBindingSyntax<TImpl> As(Type service);
-        ISingleBindingSyntax<TImpl> With(Lifestyle lifestyle);
+        ISingleBindingSyntax<TImpl> With(Lifecycle lifecycle);
         ISingleBindingSyntax<TImpl> Named(string name);
     }
 }

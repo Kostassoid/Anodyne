@@ -26,7 +26,7 @@ namespace Kostassoid.BlogNote.Web.Node
         {
             configuration
                 .Container
-                .Put(Binding.Use(AllTypes.BasedOn<IQuery>(From.ThisAssembly)).With(Lifestyle.Unmanaged));
+                .Put(Binding.Use(AllTypes.BasedOn<IQuery>(From.ThisAssembly)).With(Lifecycle.Unmanaged));
         }
     }
 }

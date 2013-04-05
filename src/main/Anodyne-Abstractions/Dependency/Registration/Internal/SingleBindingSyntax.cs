@@ -41,9 +41,9 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
 			return this;
 		}
 
-		public ISingleBindingSyntax<TImpl> With(Lifestyle lifestyle)
+		public ISingleBindingSyntax<TImpl> With(Lifecycle lifecycle)
         {
-            _binding.Lifestyle = lifestyle;
+            _binding.Lifecycle = lifecycle;
             return this;
         }
 
@@ -80,9 +80,9 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency.Registration.Internal
 			return this;
 		}
 
-	    public ISingleBindingSyntax With(Lifestyle lifestyle)
+	    public ISingleBindingSyntax With(Lifecycle lifecycle)
         {
-            _binding.Lifestyle = lifestyle;
+            _binding.Lifecycle = lifecycle;
             return this;
         }
 

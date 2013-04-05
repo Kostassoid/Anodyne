@@ -29,7 +29,7 @@ namespace Kostassoid.Anodyne.StructureMap
 				{
 					var registration = ce.For(binding.Service);
 
-					registration = ApplyLifestyleSingle(registration, binding.Lifestyle);
+					registration = ApplyLifecycle(registration, binding.Lifecycle);
 
 					var unnamed = ApplyResolver(registration, (dynamic)binding.Resolver);
 
@@ -45,11 +45,11 @@ namespace Kostassoid.Anodyne.StructureMap
 					foreach (var implementation in binding.Services.Where(t => !t.IsInterface && !t.IsAbstract))
 					{
 						var tempImplementation = implementation;
-						binding.BindTo.ForEach(t => ApplyLifestyleSingle(ce.For(t), binding.Lifestyle).Add(tempImplementation));
+						binding.BindTo.ForEach(t => ApplyLifecycle(ce.For(t), binding.Lifecycle).Add(tempImplementation));
 
 						if (binding.BindTo.Count == 0)
 						{
-							ApplyLifestyleSingle(ce.For(implementation), binding.Lifestyle).Add(implementation);
+							ApplyLifecycle(ce.For(implementation), binding.Lifecycle).Add(implementation);
 						}
 					}
 				});
@@ -70,27 +70,27 @@ namespace Kostassoid.Anodyne.StructureMap
 			return builder.Add(c => resolver.FactoryFunc());
 		}
 
-		private static GenericFamilyExpression ApplyLifestyleSingle(GenericFamilyExpression registration, Lifestyle lifestyle)
+		private static GenericFamilyExpression ApplyLifecycle(GenericFamilyExpression registration, Lifecycle lifecycle)
         {
-            if (lifestyle.Name == Lifestyle.Singleton.Name)
+            if (lifecycle.Name == Lifecycle.Singleton.Name)
                 return registration.Singleton();
 
-            if (lifestyle.Name == Lifestyle.Transient.Name)
+            if (lifecycle.Name == Lifecycle.Transient.Name)
                 return registration.LifecycleIs(InstanceScope.PerRequest);
 
-            if (lifestyle.Name == Lifestyle.PerWebRequest.Name)
+            if (lifecycle.Name == Lifecycle.PerWebRequest.Name)
 				return registration.HttpContextScoped();
 
-			if (lifestyle.Name == Lifestyle.Unmanaged.Name)
+			if (lifecycle.Name == Lifecycle.Unmanaged.Name)
 				return registration;
 
-			if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+			if (lifecycle.Name == Lifecycle.ProviderDefault.Name)
 				return registration;
 
-			if (lifestyle.Name == Lifestyle.Default.Name)
+			if (lifecycle.Name == Lifecycle.Default.Name)
 				return registration.Singleton();
 
-			throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
+			throw new ArgumentException(string.Format("Unknown Lifecycle : {0}", lifecycle), "lifecycle");
         }
 
 		private static void ApplyName(dynamic registration, string name)

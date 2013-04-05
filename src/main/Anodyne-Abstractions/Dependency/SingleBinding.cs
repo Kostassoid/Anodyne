@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.Abstractions.Dependency
     /// <summary>
     /// Single component type binding specification.
     /// </summary>
-    public class SingleBinding : LifestyleBasedBinding
+    public class SingleBinding : LifecycleBasedBinding
     {
         /// <summary>
         /// Component service type.

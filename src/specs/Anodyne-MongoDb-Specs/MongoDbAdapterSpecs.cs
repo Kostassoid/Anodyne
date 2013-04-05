@@ -282,7 +282,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 					root2.BumpVersion();
 
 					session.SaveOne(root1, null).Should().BeTrue();
-					session.SaveOne(root2, null).Should().BeTrue(); // actual version is 2
+					session.SaveOne(root2, null).Should().BeTrue(); 
 				}
 
 				// removing
@@ -291,7 +291,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 					root1.BumpVersion();
 					root2.BumpVersion();
 
-					session.RemoveOne(typeof(TestRoot), root1.Id, null).Should().BeTrue(); // actual version is 2
+					session.RemoveOne(typeof(TestRoot), root1.Id, null).Should().BeTrue(); 
 					session.RemoveOne(typeof(TestRoot), root2.Id, null).Should().BeTrue();
 				}
 

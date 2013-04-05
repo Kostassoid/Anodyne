@@ -30,7 +30,7 @@ namespace Kostassoid.Anodyne.Autofac
 
 			registration = registration.As(binding.Service).PreserveExistingDefaults();
 
-            registration = ApplyLifestyleSingle(registration, binding.Lifestyle);
+            registration = ApplyLifecycleSingle(registration, binding.Lifecycle);
 
             ApplyName(registration, binding.Name, binding.Service);
 
@@ -46,7 +46,7 @@ namespace Kostassoid.Anodyne.Autofac
             if (binding.BindTo.Count > 0)
                 registration = registration.As(binding.BindTo.ToArray());
 
-            ApplyLifestyleMultiple(registration, binding.Lifestyle);
+            ApplyLifecycleMultiple(registration, binding.Lifecycle);
 
 			builder.Update(container);
 		}
@@ -66,50 +66,50 @@ namespace Kostassoid.Anodyne.Autofac
 			return builder.Register(ctx => resolver.FactoryFunc());
         }
 
-		private static IRegistrationBuilder<object, IConcreteActivatorData, SingleRegistrationStyle> ApplyLifestyleSingle(IRegistrationBuilder<object, IConcreteActivatorData, SingleRegistrationStyle> registration, Lifestyle lifestyle)
+		private static IRegistrationBuilder<object, IConcreteActivatorData, SingleRegistrationStyle> ApplyLifecycleSingle(IRegistrationBuilder<object, IConcreteActivatorData, SingleRegistrationStyle> registration, Lifecycle lifecycle)
         {
-            if (lifestyle.Name == Lifestyle.Singleton.Name)
+            if (lifecycle.Name == Lifecycle.Singleton.Name)
                 return registration.SingleInstance();
 
-            if (lifestyle.Name == Lifestyle.Transient.Name)
+            if (lifecycle.Name == Lifecycle.Transient.Name)
                 return registration.InstancePerDependency();
 
-            if (lifestyle.Name == Lifestyle.PerWebRequest.Name)
+            if (lifecycle.Name == Lifecycle.PerWebRequest.Name)
 				return registration.InstancePerMatchingLifetimeScope("httpRequest");
 
-			if (lifestyle.Name == Lifestyle.Unmanaged.Name)
+			if (lifecycle.Name == Lifecycle.Unmanaged.Name)
 				return registration.ExternallyOwned();
 
-            if (lifestyle.Name == Lifestyle.Default.Name)
+            if (lifecycle.Name == Lifecycle.Default.Name)
                 return registration.SingleInstance();
 
-            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+            if (lifecycle.Name == Lifecycle.ProviderDefault.Name)
                 return registration;
 
-            throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
+            throw new ArgumentException(string.Format("Unknown Lifecycle : {0}", lifecycle), "lifecycle");
         }
 
-		private static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> ApplyLifestyleMultiple(IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> registration, Lifestyle lifestyle)
+		private static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> ApplyLifecycleMultiple(IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> registration, Lifecycle lifecycle)
         {
-            if (lifestyle.Name == Lifestyle.Singleton.Name)
+            if (lifecycle.Name == Lifecycle.Singleton.Name)
                 return registration.SingleInstance();
 
-            if (lifestyle.Name == Lifestyle.Transient.Name)
+            if (lifecycle.Name == Lifecycle.Transient.Name)
                 return registration.InstancePerDependency();
 
-            if (lifestyle.Name == Lifestyle.PerWebRequest.Name)
+            if (lifecycle.Name == Lifecycle.PerWebRequest.Name)
 				return registration.InstancePerMatchingLifetimeScope("httpRequest");
 
-            if (lifestyle.Name == Lifestyle.Unmanaged.Name)
+            if (lifecycle.Name == Lifecycle.Unmanaged.Name)
                 return registration.ExternallyOwned();
 
-            if (lifestyle.Name == Lifestyle.Default.Name)
+            if (lifecycle.Name == Lifecycle.Default.Name)
                 return registration.SingleInstance();
 
-            if (lifestyle.Name == Lifestyle.ProviderDefault.Name)
+            if (lifecycle.Name == Lifecycle.ProviderDefault.Name)
                 return registration;
 
-            throw new ArgumentException(string.Format("Unknown lifestyle : {0}", lifestyle), "lifestyle");
+            throw new ArgumentException(string.Format("Unknown Lifecycle : {0}", lifecycle), "lifecycle");
         }
 
 		private static IRegistrationBuilder<object, IConcreteActivatorData, SingleRegistrationStyle> ApplyName(IRegistrationBuilder<object, IConcreteActivatorData, SingleRegistrationStyle> registration, string name, Type service)
