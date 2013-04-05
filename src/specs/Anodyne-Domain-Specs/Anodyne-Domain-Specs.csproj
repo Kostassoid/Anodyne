@@ -63,6 +63,7 @@
     <Compile Include="AggregateRootSpecs.cs" />
     <Compile Include="EntitySpecs.cs" />
     <Compile Include="UnitOfWorkBasicSpecs.cs" />
+    <Compile Include="UnitOfWorkNestedSpecs.cs" />
     <Compile Include="UnitOfWorkSpecialSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
