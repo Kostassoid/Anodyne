@@ -21,6 +21,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Common.Measure;
     using ReadModel;
 
     // ReSharper disable InconsistentNaming
@@ -119,7 +120,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
                     database.CollectionExists("TestRoot").Should().BeFalse();
 
-                    database.EnsureCappedCollectionExists<TestRoot>(10);
+                    database.EnsureCappedCollectionExists<TestRoot>(10.Megabytes());
 
                     database.CollectionExists("TestRoot").Should().BeTrue();
 
@@ -150,7 +151,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
                 {
                     var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
 
-                    database.EnsureCappedCollectionExists<TestRoot>(10);
+                    database.EnsureCappedCollectionExists<TestRoot>(10.Megabytes());
 
                     var stats = database.GetCollection<TestRoot>().GetStats();
 

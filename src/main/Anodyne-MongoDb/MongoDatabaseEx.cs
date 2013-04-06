@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.MongoDb
 {
     using System.Linq;
+    using Common.Measure;
     using MongoDB.Driver;
     using System;
     using System.Collections.Generic;
@@ -67,16 +68,15 @@ namespace Kostassoid.Anodyne.MongoDb
             database.GetCollection<TRoot>().EnsureIndex(index, true, true);
         }
 
-        public static void EnsureCappedCollectionExists<T>(this MongoDatabase db, int collectionSizeMb) where T : class
+        public static void EnsureCappedCollectionExists<T>(this MongoDatabase db, DigitalStorageSize size) where T : class
         {
             var collectionName = GetCollectionNameFor(typeof(T));
-            var collectionSize = collectionSizeMb * 1024 * 1024;
 
             if (db.CollectionExists(collectionName))
             {
                 if (!db.GetCollection<T>(collectionName).IsCapped())
                 {
-                    var result = db.RunCommand(new CommandWrapper(new { convertToCapped = collectionName, size = collectionSize }));
+                    var result = db.RunCommand(new CommandWrapper(new { convertToCapped = collectionName, size = size.Bytes }));
                     if (!result.Ok)
                     {
                         throw new Exception(string.Format("Unable to convert collection {0} to capped! Result: {1}", collectionName, result.ErrorMessage));
@@ -87,13 +87,10 @@ namespace Kostassoid.Anodyne.MongoDb
             if (!db.CollectionExists(collectionName))
             {
                 var options = CollectionOptions.SetCapped(true);
-                options.SetMaxSize(collectionSize);
+                options.SetMaxSize(size.Bytes);
                 db.CreateCollection(collectionName, options);
             }
 
         }
-
-
-
     }
 }

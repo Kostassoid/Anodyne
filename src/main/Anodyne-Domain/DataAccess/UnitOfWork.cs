@@ -76,7 +76,14 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             add { Head.WhenCompleted += value; }
             remove { Head.WhenCompleted -= value; }
         }
-        
+
+        internal event Action WhenFailed = () => { };
+        public event Action Failed
+        {
+            add { Head.WhenFailed += value; }
+            remove { Head.WhenFailed -= value; }
+        }
+
         internal event Action WhenCancelled = () => { };
         public event Action Cancelled
         {
@@ -182,7 +189,12 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             EventBus.Publish(new UnitOfWorkCompleting(this));
             var changeSet = DomainDataSession.SaveChanges(_staleDataPolicy);
             if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
+            {
+                EventBus.Publish(new UnitOfWorkFailed(this, changeSet));
+                WhenFailed();
+                //TODO: make exception optional or obsolete?
                 throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
+            }
 
             EventBus.Publish(new UnitOfWorkCompleted(this, changeSet));
             WhenCompleted();

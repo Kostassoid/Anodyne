@@ -55,6 +55,7 @@
     <Compile Include="DataAccess\DataChangeSet.cs" />
     <Compile Include="DataAccess\DomainDataAccessConfigurator.cs" />
     <Compile Include="DataAccess\DomainDataSession.cs" />
+    <Compile Include="DataAccess\Events\UnitOfWorkFailed.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkCompleted.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkCompleting.cs" />
     <Compile Include="DataAccess\Events\UnitOfWorkDisposing.cs" />

@@ -55,6 +55,9 @@
     <Compile Include="Extentions\StringEx.cs" />
     <Compile Include="ImmutableCollection.cs" />
     <Compile Include="ISyntax.cs" />
+    <Compile Include="Measure\Int64Ex.cs" />
+    <Compile Include="Measure\DigitalStorageSize.cs" />
+    <Compile Include="Measure\Int32Ex.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Priority.cs" />
