@@ -17,16 +17,16 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.Operations
 {
     public abstract class BaseDomainOperation : IDomainOperation
     {
-        protected UnitOfWork Owner { get; private set; }
+        protected IUnitOfWork Owner { get; private set; }
 
         protected BaseDomainOperation()
         {
-            if (UnitOfWork.Current.IsNone)
+            if (UnitOfWork.Head.IsNone)
             {
                 throw new InvalidOperationException("Should be within UnitOfWork context!");
             }
 
-            Owner = UnitOfWork.Current.Value;
+            Owner = UnitOfWork.Head.Value;
         }
     }
 }

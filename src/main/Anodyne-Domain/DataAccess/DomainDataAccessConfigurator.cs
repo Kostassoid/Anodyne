@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             var dataPolicy = new DataAccessPolicy();
             policyAction(dataPolicy);
 
-            UnitOfWork.EnforcePolicy(dataPolicy);
+            UnitOfWork.Policy = dataPolicy;
         }
     }
 }

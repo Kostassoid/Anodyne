@@ -42,7 +42,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             [Test]
             public void should_return_collection_with_name_as_type_name()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<TestRoot>();
 
@@ -60,7 +60,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             [Test]
             public void should_return_collection_with_name_as_base_root_name()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<DerivedTestRoot>();
 
@@ -72,7 +72,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             [Test]
             public void should_return_collection_with_name_as_derived_root_name()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<DerivedTestRoot>();
 
@@ -90,12 +90,12 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             public void should_return_valid_object()
             {
                 TestRoot createdRoot;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     createdRoot = TestRoot.Create("test data");
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var foundRoot = uow.Query<TestRoot>().GetOne(createdRoot.Id);
 
@@ -114,7 +114,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 const int mb10 = 10 * 1024 * 1024;
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
 
@@ -141,13 +141,13 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 const int mb10 = 10 * 1024 * 1024;
 
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     TestRoot.Create("boo");
                     TestRoot.Create("hoo");
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
 

@@ -91,12 +91,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_not_throw_and_events_order_should_be_correct()
             {
                 Guid rootId;
-                using (new UnitOfWork(StaleDataPolicy.Ignore))
+                using (UnitOfWork.Start(StaleDataPolicy.Ignore))
                 {
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
 
@@ -115,12 +115,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_not_throw_and_events_order_should_be_correct()
             {
                 Guid rootId;
-                using (new UnitOfWork(StaleDataPolicy.Strict))
+                using (UnitOfWork.Start(StaleDataPolicy.Strict))
                 {
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
 

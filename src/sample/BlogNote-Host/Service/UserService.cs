@@ -18,15 +18,16 @@ namespace Kostassoid.BlogNote.Host.Service
     using System;
     using System.Linq;
     using System.ServiceModel;
+    using Anodyne.Domain.DataAccess.RootOperation;
     using Contracts;
     using Domain;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class UserService : IUserService
     {
-        private void RequireUserExists(Guid user)
+        private static void RequireUserExists(Guid user)
         {
-            using (var uow = new UnitOfWork())
+            using (var uow = UnitOfWork.Start())
             {
                 if (!uow.Query<User>().Exists(user))
                     throw new ArgumentException("Unknown user", "user");
@@ -35,7 +36,7 @@ namespace Kostassoid.BlogNote.Host.Service
 
         public Guid EnsureUserExists(string name, string email)
         {
-            using (var uow = new UnitOfWork())
+            using (var uow = UnitOfWork.Start())
             {
                 var foundUser = uow.AllOf<User>().FirstOrDefault(u => u.Name == name);
                 if (foundUser != null) return foundUser.Id;
@@ -48,7 +49,7 @@ namespace Kostassoid.BlogNote.Host.Service
         {
             RequireUserExists(user);
 
-            using (new UnitOfWork())
+            using (UnitOfWork.Start())
             {
                 return Post.Create(new TextContent(title, body, tags)).Id;
             }
@@ -58,10 +59,9 @@ namespace Kostassoid.BlogNote.Host.Service
         {
             RequireUserExists(user);
 
-            using (new UnitOfWork())
-            {
-                return Post.Create(new UrlContent(title, url, tags)).Id;
-            }
+			return OnRoot<Post>
+				.ConstructedBy(() => Post.Create(new UrlContent(title, url, tags)))
+				.Get(post => post.Id);
         }
     }
 }

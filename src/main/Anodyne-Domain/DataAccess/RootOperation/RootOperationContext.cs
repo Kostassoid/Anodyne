@@ -15,9 +15,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 {
 	internal class RootOperationContext : IRootOperationContext
 	{
-		public UnitOfWork UnitOfWork { get; private set; }
+		public IUnitOfWork UnitOfWork { get; private set; }
 
-		public RootOperationContext(UnitOfWork unitOfWork)
+		public RootOperationContext(IUnitOfWork unitOfWork)
 		{
 			UnitOfWork = unitOfWork;
 		}

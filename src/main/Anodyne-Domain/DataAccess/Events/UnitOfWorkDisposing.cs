@@ -17,9 +17,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
     public class UnitOfWorkDisposing : IDomainEvent
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
+        public IUnitOfWork UnitOfWork { get; protected set; }
 
-        public UnitOfWorkDisposing(UnitOfWork unitOfWork)
+        public UnitOfWorkDisposing(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

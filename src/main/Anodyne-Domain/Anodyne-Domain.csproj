@@ -51,6 +51,8 @@
     <Compile Include="Base\IValueObject.cs" />
     <Compile Include="Base\ValueObject.cs" />
     <Compile Include="DataAccess\AggregateRootChangeSet.cs" />
+    <Compile Include="DataAccess\IUnitOfWork.cs" />
+    <Compile Include="DataAccess\UnitOfWorkInstance.cs" />
     <Compile Include="DataAccess\DataAccessTargetSelectorEx.cs" />
     <Compile Include="DataAccess\DataChangeSet.cs" />
     <Compile Include="DataAccess\DomainDataAccessConfigurator.cs" />
@@ -67,7 +69,6 @@
     <Compile Include="DataAccess\RootOperation\IRootOperationContext.cs" />
     <Compile Include="DataAccess\RootOperation\OnRoot.cs" />
     <Compile Include="DataAccess\Repository.cs" />
-    <Compile Include="DataAccess\IUnitOfWorkEx.cs" />
     <Compile Include="DataAccess\Operations\BaseDomainOperation.cs" />
     <Compile Include="DataAccess\Operations\ContainerOperationResolver.cs" />
     <Compile Include="DataAccess\Operations\IOperationResolver.cs" />

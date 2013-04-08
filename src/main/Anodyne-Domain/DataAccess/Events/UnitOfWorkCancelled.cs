@@ -17,9 +17,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
     public class UnitOfWorkCancelled : IDomainEvent
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
+        public IUnitOfWork UnitOfWork { get; protected set; }
 
-        public UnitOfWorkCancelled(UnitOfWork unitOfWork)
+        public UnitOfWorkCancelled(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

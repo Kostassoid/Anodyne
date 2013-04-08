@@ -15,6 +15,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 {
 	public interface IRootOperationContext
 	{
-		UnitOfWork UnitOfWork { get; }
+		IUnitOfWork UnitOfWork { get; }
 	}
 }

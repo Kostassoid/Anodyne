@@ -17,10 +17,10 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.Events
 {
     public class UnitOfWorkFailed : IDomainEvent
     {
-        public UnitOfWork UnitOfWork { get; protected set; }
+        public IUnitOfWork UnitOfWork { get; protected set; }
         public DataChangeSet ChangeSet { get; protected set; }
 
-        public UnitOfWorkFailed(UnitOfWork unitOfWork, DataChangeSet changeSet)
+        public UnitOfWorkFailed(IUnitOfWork unitOfWork, DataChangeSet changeSet)
         {
             UnitOfWork = unitOfWork;
             ChangeSet = changeSet;

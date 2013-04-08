@@ -100,7 +100,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 					root.Update();
 				});
 
-				using (var uow = new UnitOfWork())
+				using (var uow = UnitOfWork.Start())
 				{
 					var root = uow.Query<TestRoot>().GetOne(rootId);
 					root.Version.Should().Be(2);
@@ -117,7 +117,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 			{
 				Guid rootId;
 
-				using (new UnitOfWork())
+				using (UnitOfWork.Start())
 				{
 					rootId = TestRoot.Create().Id;
 				}
@@ -128,7 +128,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 					root.Update();
 				});
 
-				using (var uow = new UnitOfWork())
+				using (var uow = UnitOfWork.Start())
 				{
 					var root = uow.Query<TestRoot>().GetOne(rootId);
 					root.Version.Should().Be(2);
@@ -151,7 +151,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 					root.Update();
 				});
 
-				using (var uow = new UnitOfWork())
+				using (var uow = UnitOfWork.Start())
 				{
 					var root = uow.Query<TestRoot>().GetOne(rootId);
 					root.Version.Should().Be(2);
@@ -182,6 +182,48 @@ namespace Kostassoid.Anodyne.Domain.Specs
 				Action invalidAction = () => OnRoot<TestRoot>.IdentifiedBy(null).Perform((root, ctx) => { });
 
 				invalidAction.ShouldThrow<ArgumentNullException>();
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_querying_on_root : RootOperationScenario
+		{
+			[Test]
+			public void should_perform_updates_and_return_value()
+			{
+				Guid rootId;
+
+				using (UnitOfWork.Start())
+				{
+					rootId = TestRoot.Create().Id;
+				}
+
+				var result =
+				OnRoot<TestRoot>.IdentifiedBy(rootId).Get(root =>
+				{
+					root.Id.Should().Be(rootId);
+					root.Update();
+					return root.Version;
+				});
+
+				result.Should().Be(2);
+
+				result =
+				OnRoot<TestRoot>.IdentifiedBy(rootId).Get((root, ctx) =>
+				{
+					root.Id.Should().Be(rootId);
+					root.Update();
+					return root.Version;
+				});
+
+				result.Should().Be(3);
+
+				using (var uow = UnitOfWork.Start())
+				{
+					var root = uow.Query<TestRoot>().GetOne(rootId);
+					root.Version.Should().Be(3);
+				}
 			}
 		}
 

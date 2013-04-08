@@ -16,6 +16,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
     using System.Collections.Generic;
     using Anodyne.Specs.Shared;
     using Base;
+    using Common.ExecutionContext;
     using DataAccess;
     using DataAccess.Events;
     using DataAccess.Exceptions;
@@ -99,7 +100,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [TestFixtureSetUp]
             public void SetUp()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     uow.Completed += () => { completedEventFired = true; };
                     uow.Cancelled += () => { cancelledEventFired = true; };
@@ -111,7 +112,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [Test]
             public void should_persist_root()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId);
 
@@ -143,14 +144,14 @@ namespace Kostassoid.Anodyne.Domain.Specs
             {
                 TestRoot root1;
                 TestRoot root2;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     root1 = TestRoot.Create();
                     root2 = TestRoot.Create();
                     root1.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var foundRoot1 = uow.Query<TestRoot>().FindOne(root1.Id);
                     var foundRoot2 = uow.Query<TestRoot>().FindOne(root2.Id);
@@ -160,7 +161,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                     foundRoot1.Value.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var foundRoot1 = uow.Query<TestRoot>().FindOne(root1.Id);
                     var foundRoot2 = uow.Query<TestRoot>().FindOne(root2.Id);
@@ -181,18 +182,18 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_update_root_version()
             {
                 Guid rootId;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId).Value;
                     root.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var updatedRoot = uow.Query<TestRoot>().FindOne(rootId).Value;
                     updatedRoot.Version.Should().Be(2);
@@ -208,7 +209,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_update_root_version()
             {
                 TestRoot originalRoot;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     originalRoot = TestRoot.Create();
                     originalRoot.Update();
@@ -216,7 +217,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 originalRoot.Version.Should().Be(2);
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(originalRoot.Id).Value;
                     root.Update();
@@ -225,7 +226,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                     root.Version.Should().Be(5);
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(originalRoot.Id).Value;
                     root.Version.Should().Be(5);
@@ -242,19 +243,19 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_throw_stale_data_exception()
             {
                 TestRoot root;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     root = TestRoot.Create();
                     root.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     anotherRoot.Update();
                 }
 
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     root.Update();
                 }
@@ -269,25 +270,25 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_overwrite_conflicting_roots()
             {
                 TestRoot root;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     root = TestRoot.Create();
                     root.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     anotherRoot.Update();
                     anotherRoot.Update(); // should be version 4 at this point
                 }
 
-                using (new UnitOfWork(StaleDataPolicy.Ignore))
+                using (UnitOfWork.Start(StaleDataPolicy.Ignore))
                 {
                     root.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     root = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     root.Version.Should().Be(3);
@@ -304,13 +305,13 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_skip_conflicting_roots()
             {
                 TestRoot root;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     root = TestRoot.Create();
                     root.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var anotherRoot = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     anotherRoot.Update();
@@ -318,12 +319,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
                     anotherRoot.Version.Should().Be(4);
                 }
 
-                using (new UnitOfWork(StaleDataPolicy.SilentlySkip))
+                using (UnitOfWork.Start(StaleDataPolicy.SilentlySkip))
                 {
                     root.Update();
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     root = uow.Query<TestRoot>().FindOne(root.Id).Value;
                     root.Version.Should().Be(4);
@@ -340,12 +341,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
             public void should_throw_concurrency_exception()
             {
                 Guid rootId;
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().FindOne(rootId).Value;
                     root.Update();
@@ -362,7 +363,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [Test]
             public void should_throw_invalid_operation_exception()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = TestRoot.Create();
                     root.Update();
@@ -381,7 +382,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [Test]
             public void should_throw_invalid_operation_exception()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = TestRoot.Create();
                     root.Update();
@@ -404,12 +405,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [TestFixtureSetUp]
             public void SetUp()
             {
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     rootId = TestRoot.Create().Id;
                 }
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     uow.Completed += () => { completedEventFired = true; };
                     uow.Cancelled += () => { cancelledEventFired = true; };
@@ -424,7 +425,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
             [Test]
             public void should_ignore_any_changesets()
             {
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().GetOne(rootId);
                     root.Version.Should().Be(1);
@@ -444,7 +445,52 @@ namespace Kostassoid.Anodyne.Domain.Specs
             }
         }
 
-        [TestFixture]
+		[TestFixture]
+		[Category("Unit")]
+		public class when_disposing_simple_unit_of_work : UnitOfWorkScenario
+		{
+			[Test]
+			public void should_free_context_references()
+			{
+				using (var uow = UnitOfWork.Start())
+				{
+					Context.Find("root-unit-of-work").ValueOrDefault.Should().Be(uow);
+					Context.Find("head-unit-of-work").ValueOrDefault.Should().Be(uow);
+				}
+
+				Context.Find("root-unit-of-work").ValueOrDefault.Should().Be(null);
+				Context.Find("head-unit-of-work").ValueOrDefault.Should().Be(null);
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_disposing_nested_unit_of_work : UnitOfWorkScenario
+		{
+			[Test]
+			public void should_free_context_references()
+			{
+				using (var uow = UnitOfWork.Start())
+				{
+					Context.Find("root-unit-of-work").ValueOrDefault.Should().Be(uow);
+					Context.Find("head-unit-of-work").ValueOrDefault.Should().Be(uow);
+
+					using (var nestedUow = UnitOfWork.Start())
+					{
+						Context.Find("root-unit-of-work").ValueOrDefault.Should().Be(uow);
+						Context.Find("head-unit-of-work").ValueOrDefault.Should().Be(nestedUow);
+					}
+
+					Context.Find("root-unit-of-work").ValueOrDefault.Should().Be(uow);
+					Context.Find("head-unit-of-work").ValueOrDefault.Should().Be(uow);
+				}
+
+				Context.Find("root-unit-of-work").ValueOrDefault.Should().Be(null);
+				Context.Find("head-unit-of-work").ValueOrDefault.Should().Be(null);
+			}
+		}
+
+		[TestFixture]
         [Category("Unit")]
         public class when_trying_to_save_many_roots_at_the_same_time : UnitOfWorkScenario
         {
@@ -455,12 +501,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 const int testingThreadsCount = 100;
 
                 var tasks = Enumerable.Range(0, testingThreadsCount)
-                    .Select(_ => Task.Factory.StartNew(() => { using (new UnitOfWork()) { TestRoot.Create();} }))
+                    .Select(_ => Task.Factory.StartNew(() => { using (UnitOfWork.Start()) { TestRoot.Create();} }))
                     .ToArray();
 
                 Task.WaitAll(tasks);
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     uow.Query<TestRoot>().Count().Should().Be(testingThreadsCount);
                 }
@@ -479,20 +525,20 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 Guid id;
 
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     id = TestRoot.Create().Id;
                 }
 
                 Enumerable.Range(0, testingCount).ForEach(_ =>
                 {
-                    using (var uow = new UnitOfWork(StaleDataPolicy.Ignore))
+                    using (var uow = UnitOfWork.Start(StaleDataPolicy.Ignore))
                     {
                         uow.Query<TestRoot>().GetOne(id).Update();
                     }
                 });
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().GetOne(id);
                     root.Version.Should().Be(testingCount + 1);
@@ -512,7 +558,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 Guid id;
 
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     id = TestRoot.Create().Id;
                 }
@@ -520,13 +566,13 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var tasks = Enumerable.Range(0, testingThreadsCount)
                     .Select(_ => Task.Factory.StartNew(() =>
                     {
-                        using (var uow = new UnitOfWork(StaleDataPolicy.Ignore)) { uow.Query<TestRoot>().GetOne(id).Update(); }
+                        using (var uow = UnitOfWork.Start(StaleDataPolicy.Ignore)) { uow.Query<TestRoot>().GetOne(id).Update(); }
                     }))
                     .ToArray();
 
                 Task.WaitAll(tasks);
 
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     var root = uow.Query<TestRoot>().GetOne(id);
                     root.Version.Should().BeLessOrEqualTo(testingThreadsCount + 1);
@@ -548,7 +594,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 Guid id;
 
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     id = TestRoot.Create().Id;
                 }
@@ -557,7 +603,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 {
                     try
                     {
-                        using (var uow = new UnitOfWork(StaleDataPolicy.Strict))
+                        using (var uow = UnitOfWork.Start(StaleDataPolicy.Strict))
                         {
                             uow.Query<TestRoot>().GetOne(id).Update();
                         }
@@ -574,7 +620,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 Task.WaitAll(tasks);
 
                 TestRoot root;
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     root = uow.Query<TestRoot>().GetOne(id);
 
@@ -600,7 +646,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
                 Guid id;
 
-                using (new UnitOfWork())
+                using (UnitOfWork.Start())
                 {
                     id = TestRoot.Create().Id;
                 }
@@ -608,7 +654,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var tasks = Enumerable.Range(0, testingThreadsCount)
                     .Select(_ => Task.Factory.StartNew(() =>
                     {
-                        using (var uow = new UnitOfWork(StaleDataPolicy.SilentlySkip))
+                        using (var uow = UnitOfWork.Start(StaleDataPolicy.SilentlySkip))
                         {
                             uow.Query<TestRoot>().GetOne(id).Update();
                         }
@@ -618,7 +664,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 Task.WaitAll(tasks);
 
                 TestRoot root;
-                using (var uow = new UnitOfWork())
+                using (var uow = UnitOfWork.Start())
                 {
                     root = uow.Query<TestRoot>().GetOne(id);
 

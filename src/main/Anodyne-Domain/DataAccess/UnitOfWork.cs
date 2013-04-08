@@ -14,128 +14,75 @@
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
 	using System;
-	using System.Linq;
 	using Abstractions.DataAccess;
     using Common;
-    using Common.CodeContracts;
-    using Common.ExecutionContext;
+	using Common.ExecutionContext;
     using Common.Reflection;
-    using Base;
-    using Events;
-    using Exceptions;
-    using Operations;
+	using Operations;
     using Policy;
     using Domain.Events;
     using Wiring;
 
     //TODO: refactor this ugly pile of code
-    public class UnitOfWork : IUnitOfWorkEx, IDisposable
+    public static class UnitOfWork
     {
-        private const string HeadContextKey = "head-unit-of-work";
+        private const string RootContextKey = "root-unit-of-work";
+		private const string HeadContextKey = "head-unit-of-work";
 
-        private static IDataSessionFactory _dataSessionFactory;
-        private static IOperationResolver _operationResolver;
-        private static DataAccessPolicy _policy = new DataAccessPolicy();
+        public static IDataSessionFactory DataSessionFactory { get; internal set; }
+        public static IOperationResolver OperationResolver { get; internal set; }
+		public static DataAccessPolicy Policy { get; internal set; }
 
         private static bool _eventHandlersAreSet;
 
-        private readonly string _contextKey = HeadContextKey;
-        private readonly UnitOfWork _parent;
+		public static Option<IUnitOfWork> Root
+		{
+			get { return Context.FindAs<IUnitOfWork>(RootContextKey); }
+			set
+			{
+				if (value.IsSome)
+					Context.Set(RootContextKey, value.ValueOrDefault);
+				else
+					Context.Release(RootContextKey);
+			}
+		}
 
-        public UnitOfWork Head { get; protected set; }
+		public static Option<IUnitOfWork> Head
+		{
+			get { return Context.FindAs<IUnitOfWork>(HeadContextKey); }
+			set
+			{
+				if (value.IsSome)
+					Context.Set(HeadContextKey, value.Value);
+				else
+					Context.Release(HeadContextKey);
+			}
+		}
 
-        public IDomainDataSession DomainDataSession { get; protected set; }
+		public static bool IsConfigured { get { return DataSessionFactory != null && OperationResolver != null; } }
 
-        private readonly StaleDataPolicy _staleDataPolicy = StaleDataPolicy.Strict;
-
-        public static Option<UnitOfWork> Current
+        static UnitOfWork()
         {
-            get { return Context.FindAs<UnitOfWork>(HeadContextKey); }
-            protected set { Context.Set(HeadContextKey, value.ValueOrDefault); }
+            Policy = new DataAccessPolicy();
         }
 
-        public bool IsRoot
-        {
-            get { return _parent == null; }
-        }
-
-        public bool IsCompleted { get; protected set; }
-        public bool IsCancelled { get; protected set; }
-        public bool IsFinished { get { return IsCompleted || IsCancelled; } }
-
-        public bool IsDisposed
-        {
-            get { return Context.Find(_contextKey).IsNone; }
-        }
-
-        public static bool IsConfigured { get { return _dataSessionFactory != null; } }
-
-        internal event Action WhenCompleted = () => { };
-        public event Action Completed
-        {
-            add { Head.WhenCompleted += value; }
-            remove { Head.WhenCompleted -= value; }
-        }
-
-        internal event Action WhenFailed = () => { };
-        public event Action Failed
-        {
-            add { Head.WhenFailed += value; }
-            remove { Head.WhenFailed -= value; }
-        }
-
-        internal event Action WhenCancelled = () => { };
-        public event Action Cancelled
-        {
-            add { Head.WhenCancelled += value; }
-            remove { Head.WhenCancelled -= value; }
-        }
-
-        public static void SetDataSessionFactory(IDataSessionFactory dataSessionFactory)
-        {
-            _dataSessionFactory = dataSessionFactory;
-        }
-
-        public static void SetOperationResolver(IOperationResolver operationResolver)
-        {
-            _operationResolver = operationResolver;
-        }
-
-        public static void EnforcePolicy(DataAccessPolicy policy)
-        {
-            _policy = policy;
-        }
-
-        public UnitOfWork(StaleDataPolicy? staleDataPolicy = null)
+        public static IUnitOfWork Start(StaleDataPolicy? staleDataPolicy = null)
         {
             lock (HeadContextKey) EnsureAggregateEventHandlersAreSet();
 
-            if (Current.IsSome)
-            {
-                _parent = Current.Value;
-                Head = Current.Value.Head;
-                DomainDataSession = _parent.DomainDataSession;
+	        var newUnitOfWork = Head.IsSome
+				? new UnitOfWorkInstance(Head.Value)
+				: new UnitOfWorkInstance(OpenDomainSession(), staleDataPolicy.HasValue ? staleDataPolicy.Value : Policy.StaleDataPolicy);
 
-                _contextKey = String.Format("{0}-{1}", _contextKey, Guid.NewGuid().ToString("N"));
-            }
-            else
-            {
-                DomainDataSession = new DomainDataSession(_dataSessionFactory.Open());
-                if (DomainDataSession == null)
-                    throw new Exception("Unable to create IDataSession (bad configuration?)");
+			Head = newUnitOfWork;
 
-                Head = this;
-            }
+			if (Root.IsNone)
+		        Root = newUnitOfWork;
 
-            _staleDataPolicy = staleDataPolicy.HasValue
-                ? staleDataPolicy.Value
-                : _policy.StaleDataPolicy;
-
-            Context.Set(_contextKey, this);
-            Current = this;
+	        return newUnitOfWork;
         }
 
-        protected static void EnsureAggregateEventHandlersAreSet()
+	    private static void EnsureAggregateEventHandlersAreSet()
         {
             if (_eventHandlersAreSet) return;
             _eventHandlersAreSet = true;
@@ -145,12 +92,12 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
                 .AllBasedOn<IAggregateEvent>(From.AllAssemblies())
                 .With(e =>
                 {
-                    if (_policy.ReadOnly)
+                    if (Policy.ReadOnly)
                         throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
 
-                    if (Current.IsSome && !Current.Value.IsFinished)
+                    if (Head.IsSome && !Head.Value.IsFinished)
                     {
-                        ((UnitOfWork) Current).DomainDataSession.Handle(e);
+                        Head.Value.DomainDataSession.Handle(e);
                     }
                     else
                     {
@@ -159,105 +106,26 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
                 }, Priority.Exact(1000));
         }
 
-        protected void AssertIfFinished()
-        {
-            Assumes.True(!IsFinished, "This UnitOfWork is finished");
-        }
+	    public static IDomainDataSession OpenDomainSession()
+	    {
+			var session = new DomainDataSession(DataSessionFactory.Open());
+			if (session == null)
+				throw new Exception("Unable to create IDataSession (bad configuration?)");
 
-        public void Cancel()
-        {
-            AssertIfFinished();
+		    return session;
+	    }
 
-            IsCancelled = true;
+	    internal static void Close(UnitOfWorkInstance unitOfWork)
+	    {
+			if (unitOfWork != Head.ValueOrDefault)
+				throw new InvalidOperationException("Unable to close intermediate UnitOfWork. Dispose the head first.");
 
-            if (!IsRoot) return;
+		    Head = unitOfWork.Parent.AsOption();
 
-            DomainDataSession.ForgetChanges();
-
-            EventBus.Publish(new UnitOfWorkCancelled(this));
-            WhenCancelled();
-        }
-
-        public void Complete()
-        {
-            AssertIfFinished();
-
-            IsCompleted = true;
-
-            if (!IsRoot) return;
-
-            EventBus.Publish(new UnitOfWorkCompleting(this));
-            var changeSet = DomainDataSession.SaveChanges(_staleDataPolicy);
-            if (changeSet.StaleDataDetected && _staleDataPolicy == StaleDataPolicy.Strict)
-            {
-                EventBus.Publish(new UnitOfWorkFailed(this, changeSet));
-                WhenFailed();
-                //TODO: make exception optional or obsolete?
-                throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
-            }
-
-            EventBus.Publish(new UnitOfWorkCompleted(this, changeSet));
-            WhenCompleted();
-        }
-
-        public virtual void Dispose()
-        {
-            if (IsDisposed) return;
-
-            try
-            {
-                if (!IsFinished)
-                    Complete();
-            }
-            finally
-            {
-                if (IsRoot)
-                {
-                    EventBus.Publish(new UnitOfWorkDisposing(this));
-                    DomainDataSession.Dispose();
-                }
-
-                Context.Release(_contextKey);
-                Current = _parent;
-
-                if (Current.IsSome && IsCancelled)
-                    Current.Value.Cancel();
-            }
-        }
-
-        ~UnitOfWork()
-        {
-            if (!IsDisposed)
-                throw new InvalidOperationException("UnitOfWork must be properly disposed!");
-        }
-
-        public IRepository<TRoot> Query<TRoot>() where TRoot : class, IAggregateRoot
-        {
-            AssertIfFinished();
-
-            return new Repository<TRoot>(DomainDataSession.DataSession);
-        }
-
-        public IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot
-        {
-            AssertIfFinished();
-
-            return Query<TRoot>().All();
-        }
-
-        public TOp Using<TOp>() where TOp : class, IDomainOperation
-        {
-            AssertIfFinished();
-
-            return _operationResolver.Get<TOp>();
-        }
-
-        public void MarkAsDeleted<TRoot>(TRoot entity) where TRoot : class, IAggregateRoot
-        {
-            AssertIfFinished();
-
-            DomainDataSession.MarkAsDeleted(entity);
-        }
-
+			if (Head.IsNone)
+			{
+				Root = Option<IUnitOfWork>.None;
+			}
+	    }
     }
 }

@@ -19,16 +19,16 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 
 	public class RootOperationSyntax<T> : ISyntax where T : class, IAggregateRoot
 	{
-		private readonly Func<UnitOfWork, T> _rootAquireFunc;
+		private readonly Func<IUnitOfWork, T> _rootAquireFunc;
 
-		public RootOperationSyntax(Func<UnitOfWork, T> rootAquireFunc)
+		public RootOperationSyntax(Func<IUnitOfWork, T> rootAquireFunc)
 		{
 			_rootAquireFunc = rootAquireFunc;
 		}
 
 		public void Perform(Action<T, IRootOperationContext> rootAction)
 		{
-			using (var uow = new UnitOfWork())
+			using (var uow = UnitOfWork.Start())
 			{
 				var root = _rootAquireFunc(uow);
 				var context = new RootOperationContext(uow);
@@ -39,10 +39,30 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 
 		public void Perform(Action<T> rootAction)
 		{
-			using (var uow = new UnitOfWork())
+			using (var uow = UnitOfWork.Start())
 			{
 				var root = _rootAquireFunc(uow);
 				rootAction(root);
+			}
+		}
+
+		public TResult Get<TResult>(Func<T, IRootOperationContext, TResult> rootFunc)
+		{
+			using (var uow = UnitOfWork.Start())
+			{
+				var root = _rootAquireFunc(uow);
+				var context = new RootOperationContext(uow);
+
+				return rootFunc(root, context);
+			}
+		}
+
+		public TResult Get<TResult>(Func<T, TResult> rootFunc)
+		{
+			using (var uow = UnitOfWork.Start())
+			{
+				var root = _rootAquireFunc(uow);
+				return rootFunc(root);
 			}
 		}
 	}
