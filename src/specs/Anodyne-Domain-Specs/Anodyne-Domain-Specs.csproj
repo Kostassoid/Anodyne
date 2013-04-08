@@ -61,6 +61,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AggregateRootSpecs.cs" />
+    <Compile Include="RootOperationSpecs.cs" />
     <Compile Include="EntitySpecs.cs" />
     <Compile Include="UnitOfWorkBasicSpecs.cs" />
     <Compile Include="UnitOfWorkNestedSpecs.cs" />

@@ -64,6 +64,8 @@
     <Compile Include="DataAccess\Exceptions\ConcurrencyException.cs" />
     <Compile Include="DataAccess\Exceptions\StaleDataException.cs" />
     <Compile Include="DataAccess\IDomainDataSession.cs" />
+    <Compile Include="DataAccess\RootOperation\IRootOperationContext.cs" />
+    <Compile Include="DataAccess\RootOperation\OnRoot.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\IUnitOfWorkEx.cs" />
     <Compile Include="DataAccess\Operations\BaseDomainOperation.cs" />
@@ -72,6 +74,8 @@
     <Compile Include="DataAccess\Operations\IRepository.cs" />
     <Compile Include="DataAccess\Policy\DataAccessPolicy.cs" />
     <Compile Include="DataAccess\Policy\StaleDataPolicy.cs" />
+    <Compile Include="DataAccess\RootOperation\RootOperationContext.cs" />
+    <Compile Include="DataAccess\RootOperation\RootOperationSyntax.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
     <Compile Include="Events\AggregateEvent.cs" />
     <Compile Include="Events\EventBusEx.cs" />
