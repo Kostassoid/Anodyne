@@ -14,10 +14,9 @@
 namespace Kostassoid.Anodyne.Common
 {
     using System;
-    using Extentions;
     using Reflection;
 
-    public abstract class Option<T>
+    public abstract class Option<T> : IOption
     {
         public static Option<T> None
         {
@@ -31,8 +30,10 @@ namespace Kostassoid.Anodyne.Common
 
         public abstract T Value { get; }
         public abstract T ValueOrDefault { get; }
-        public abstract bool IsSome { get; }
+		public abstract bool IsSome { get; }
         public abstract bool IsNone { get; }
+
+		object IOption.ValueObject { get { return ValueOrDefault; } }
 
         public static implicit operator Option<T>(T value)
         {
@@ -50,7 +51,7 @@ namespace Kostassoid.Anodyne.Common
         }
     }
 
-    public sealed class Some<T> : Option<T>
+	public sealed class Some<T> : Option<T>
     {
         private readonly T _value;
 

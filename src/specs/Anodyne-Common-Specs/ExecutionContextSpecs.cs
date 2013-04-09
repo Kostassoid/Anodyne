@@ -190,6 +190,42 @@ namespace Kostassoid.Anodyne.Common.Specs
                 Task.WaitAll(tasks);
             }
         }
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_setting_null_value
+		{
+			[Test]
+			public void should_release_value()
+			{
+				Action gettingSomeValue = () => Context.Get("test");
+
+				Context.Set("test", "zzz");
+				gettingSomeValue.ShouldNotThrow();
+
+				Context.Set("test", null);
+				gettingSomeValue.ShouldThrow<InvalidOperationException>();
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_setting_some_option_value
+		{
+			[Test]
+			public void should_put_unboxed_value()
+			{
+				var value = "zzz".AsOption();
+
+				Context.Set("test", value);
+
+				var actualValue = Context.Get("test");
+
+				actualValue.Should().BeOfType<String>();
+			}
+		}
+
+
     }
     // ReSharper restore InconsistentNaming
 

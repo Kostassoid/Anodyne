@@ -25,7 +25,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             //TODO: check without failing tests
             //Requires.True(!UnitOfWork.IsConfigured, "Domain data access is already configured.");
 
-            UnitOfWork.DataSessionFactory = targetSelector.DataProvider.SessionFactory;
+			UnitOfWork.Factory = new UnitOfWorkFactory(targetSelector.DataProvider.SessionFactory);
             UnitOfWork.OperationResolver = new ContainerOperationResolver(targetSelector.ProviderSelector.Container);
 
             //duplicated call to avoid lost static context loss in web environment

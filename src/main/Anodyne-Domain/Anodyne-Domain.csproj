@@ -51,8 +51,10 @@
     <Compile Include="Base\IValueObject.cs" />
     <Compile Include="Base\ValueObject.cs" />
     <Compile Include="DataAccess\AggregateRootChangeSet.cs" />
+    <Compile Include="DataAccess\IUnitOfWorkFactory.cs" />
+    <Compile Include="DataAccess\UnitOfWorkFactory.cs" />
     <Compile Include="DataAccess\IUnitOfWork.cs" />
-    <Compile Include="DataAccess\UnitOfWorkInstance.cs" />
+    <Compile Include="DataAccess\UnitOfWorkContext.cs" />
     <Compile Include="DataAccess\DataAccessTargetSelectorEx.cs" />
     <Compile Include="DataAccess\DataChangeSet.cs" />
     <Compile Include="DataAccess\DomainDataAccessConfigurator.cs" />

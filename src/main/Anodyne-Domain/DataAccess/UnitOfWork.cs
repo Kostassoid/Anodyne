@@ -14,8 +14,7 @@
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
 	using System;
-	using Abstractions.DataAccess;
-    using Common;
+	using Common;
 	using Common.ExecutionContext;
     using Common.Reflection;
 	using Operations;
@@ -23,43 +22,30 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     using Domain.Events;
     using Wiring;
 
-    //TODO: refactor this ugly pile of code
     public static class UnitOfWork
     {
         private const string RootContextKey = "root-unit-of-work";
 		private const string HeadContextKey = "head-unit-of-work";
 
-        public static IDataSessionFactory DataSessionFactory { get; internal set; }
-        public static IOperationResolver OperationResolver { get; internal set; }
-		public static DataAccessPolicy Policy { get; internal set; }
+		public static IUnitOfWorkFactory Factory { get; set; }
+		public static IOperationResolver OperationResolver { get; set; }
+		public static DataAccessPolicy Policy { get; set; }
 
         private static bool _eventHandlersAreSet;
 
 		public static Option<IUnitOfWork> Root
 		{
 			get { return Context.FindAs<IUnitOfWork>(RootContextKey); }
-			set
-			{
-				if (value.IsSome)
-					Context.Set(RootContextKey, value.ValueOrDefault);
-				else
-					Context.Release(RootContextKey);
-			}
+			private set { Context.Set(RootContextKey, value); }
 		}
 
 		public static Option<IUnitOfWork> Head
 		{
 			get { return Context.FindAs<IUnitOfWork>(HeadContextKey); }
-			set
-			{
-				if (value.IsSome)
-					Context.Set(HeadContextKey, value.Value);
-				else
-					Context.Release(HeadContextKey);
-			}
+			private set { Context.Set(HeadContextKey, value); }
 		}
 
-		public static bool IsConfigured { get { return DataSessionFactory != null && OperationResolver != null; } }
+		//public static bool IsConfigured { get { return DataSessionFactory != null && OperationResolver != null; } }
 
         static UnitOfWork()
         {
@@ -71,16 +57,29 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             lock (HeadContextKey) EnsureAggregateEventHandlersAreSet();
 
 	        var newUnitOfWork = Head.IsSome
-				? new UnitOfWorkInstance(Head.Value)
-				: new UnitOfWorkInstance(OpenDomainSession(), staleDataPolicy.HasValue ? staleDataPolicy.Value : Policy.StaleDataPolicy);
+				? Factory.Build(Head.Value)
+				: Factory.Build(staleDataPolicy.HasValue ? staleDataPolicy.Value : Policy.StaleDataPolicy);
 
-			Head = newUnitOfWork;
+			Head = newUnitOfWork.AsOption();
 
 			if (Root.IsNone)
-		        Root = newUnitOfWork;
+		        Root = Head;
 
 	        return newUnitOfWork;
         }
+
+		internal static void Finish(UnitOfWorkContext unitOfWork)
+		{
+			if (unitOfWork != Head.ValueOrDefault)
+				throw new InvalidOperationException("Unable to close intermediate UnitOfWork. Dispose the head first.");
+
+			Head = unitOfWork.Parent;
+
+			if (Head.IsNone)
+			{
+				Root = Option<IUnitOfWork>.None;
+			}
+		}
 
 	    private static void EnsureAggregateEventHandlersAreSet()
         {
@@ -97,7 +96,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
                     if (Head.IsSome && !Head.Value.IsFinished)
                     {
-                        Head.Value.DomainDataSession.Handle(e);
+                        Head.Value.Session.Handle(e);
                     }
                     else
                     {
@@ -106,26 +105,5 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
                 }, Priority.Exact(1000));
         }
 
-	    public static IDomainDataSession OpenDomainSession()
-	    {
-			var session = new DomainDataSession(DataSessionFactory.Open());
-			if (session == null)
-				throw new Exception("Unable to create IDataSession (bad configuration?)");
-
-		    return session;
-	    }
-
-	    internal static void Close(UnitOfWorkInstance unitOfWork)
-	    {
-			if (unitOfWork != Head.ValueOrDefault)
-				throw new InvalidOperationException("Unable to close intermediate UnitOfWork. Dispose the head first.");
-
-		    Head = unitOfWork.Parent.AsOption();
-
-			if (Head.IsNone)
-			{
-				Root = Option<IUnitOfWork>.None;
-			}
-	    }
     }
 }

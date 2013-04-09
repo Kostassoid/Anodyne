@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 {
 	using System;
 	using System.Linq;
+	using Common;
 	using Common.CodeContracts;
 	using Base;
 	using Events;
@@ -23,11 +24,11 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     using Policy;
 	using Wiring;
 
-    public class UnitOfWorkInstance : IUnitOfWork
+    internal class UnitOfWorkContext : IUnitOfWork
     {
-		public IDomainDataSession DomainDataSession { get; protected set; }
+		public IDomainDataSession Session { get; protected set; }
 		public StaleDataPolicy StaleDataPolicy { get; protected set; }
-		public IUnitOfWork Parent { get; protected set; }
+		public Option<IUnitOfWork> Parent { get; protected set; }
 
 		public IUnitOfWork Root { get { return UnitOfWork.Root.ValueOrDefault; } }
 		public bool IsRoot
@@ -40,39 +41,40 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 		public bool IsDisposed { get; protected set; }
 		public bool IsFinished { get { return IsCompleted || IsCancelled; } }
 
-		internal UnitOfWorkInstance RootInstance { get { return (UnitOfWorkInstance)UnitOfWork.Root.ValueOrDefault; } }
+		internal UnitOfWorkContext RootContext { get { return (UnitOfWorkContext)UnitOfWork.Root.ValueOrDefault; } }
 		internal event Action WhenCompleted = () => { };
         public event Action Completed
         {
-            add { RootInstance.WhenCompleted += value; }
-			remove { RootInstance.WhenCompleted -= value; }
+            add { RootContext.WhenCompleted += value; }
+			remove { RootContext.WhenCompleted -= value; }
         }
 
         internal event Action WhenFailed = () => { };
         public event Action Failed
         {
-			add { RootInstance.WhenFailed += value; }
-			remove { RootInstance.WhenFailed -= value; }
+			add { RootContext.WhenFailed += value; }
+			remove { RootContext.WhenFailed -= value; }
         }
 
         internal event Action WhenCancelled = () => { };
         public event Action Cancelled
         {
-			add { RootInstance.WhenCancelled += value; }
-			remove { RootInstance.WhenCancelled -= value; }
+			add { RootContext.WhenCancelled += value; }
+			remove { RootContext.WhenCancelled -= value; }
         }
 
-		internal UnitOfWorkInstance(IUnitOfWork parent)
+		internal UnitOfWorkContext(IUnitOfWork parent)
 		{
-			Parent = parent;
+			Parent = parent.AsOption();
 			StaleDataPolicy = parent.StaleDataPolicy;
-			DomainDataSession = parent.DomainDataSession;
+			Session = parent.Session;
 		}
 
-		internal UnitOfWorkInstance(IDomainDataSession session, StaleDataPolicy staleDataPolicy)
-        {
+		internal UnitOfWorkContext(IDomainDataSession session, StaleDataPolicy staleDataPolicy)
+		{
+			Parent = Option<IUnitOfWork>.None;
 			StaleDataPolicy = staleDataPolicy;
-			DomainDataSession = session;
+			Session = session;
         }
 
         protected void AssertIfFinished()
@@ -88,7 +90,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             if (!IsRoot) return;
 
-            DomainDataSession.ForgetChanges();
+            Session.ForgetChanges();
 
             EventBus.Publish(new UnitOfWorkCancelled(this));
             WhenCancelled();
@@ -103,13 +105,19 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             if (!IsRoot) return;
 
             EventBus.Publish(new UnitOfWorkCompleting(this));
-            var changeSet = DomainDataSession.SaveChanges(StaleDataPolicy);
-            if (changeSet.StaleDataDetected && StaleDataPolicy == StaleDataPolicy.Strict)
+            var changeSet = Session.SaveChanges(StaleDataPolicy);
+            if (changeSet.StaleDataDetected)
             {
-                EventBus.Publish(new UnitOfWorkFailed(this, changeSet));
-                WhenFailed();
-                //TODO: make exception optional or obsolete?
-                throw new StaleDataException(changeSet.StaleData, "Some aggregates weren't saved due to stale data (version mismatch)");
+				EventBus.Publish(new UnitOfWorkFailed(this, changeSet));
+				WhenFailed();
+
+	            if (StaleDataPolicy == StaleDataPolicy.Strict)
+	            {
+		            throw new StaleDataException(changeSet.StaleData,
+		                                         "Some aggregates weren't saved due to stale data (version mismatch)");
+	            }
+
+				return;
             }
 
             EventBus.Publish(new UnitOfWorkCompleted(this, changeSet));
@@ -130,21 +138,20 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
                 if (IsRoot)
                 {
                     EventBus.Publish(new UnitOfWorkDisposing(this));
-                    DomainDataSession.Dispose();
+                    Session.Dispose();
                 }
 
-				if (Parent != null && IsCancelled)
-					Parent.Cancel();
+				if (Parent.IsSome && IsCancelled)
+					Parent.Value.Cancel();
 
-				UnitOfWork.Close(this);
+				UnitOfWork.Finish(this);
 
 				IsDisposed = true;
-            }
-
-			GC.SuppressFinalize(this);
+				GC.SuppressFinalize(this);
+			}
         }
 
-        ~UnitOfWorkInstance()
+        ~UnitOfWorkContext()
         {
             if (!IsDisposed)
                 throw new InvalidOperationException("UnitOfWork must be properly disposed!");
@@ -154,7 +161,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             AssertIfFinished();
 
-            return new Repository<TRoot>(DomainDataSession.DataSession);
+            return new Repository<TRoot>(Session.DataSession);
         }
 
         public IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot
@@ -175,7 +182,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             AssertIfFinished();
 
-            DomainDataSession.MarkAsDeleted(entity);
+            Session.MarkAsDeleted(entity);
         }
 
     }

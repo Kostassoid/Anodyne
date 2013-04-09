@@ -28,8 +28,17 @@ namespace Kostassoid.Anodyne.Common.ExecutionContext
 
         public static void Set(string name, object value)
         {
-            _provider.Set(name, value);
-        }
+	        var actualValue = value;
+			if (value is IOption)
+			{
+				actualValue = ((IOption) value).ValueObject;
+			}
+
+			if (actualValue != null)
+				_provider.Set(name, actualValue);
+			else
+				_provider.Release(name);
+		}
 
         public static object Get(string name)
         {

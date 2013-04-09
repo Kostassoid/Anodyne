@@ -17,7 +17,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     using Operations;
     using Abstractions.DataAccess;
     using Common;
-    using Common.Extentions;
     using Base;
     using System;
     using System.Linq;
@@ -38,7 +37,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             if (found == null)
                 throw new AggregateRootNotFoundException(key);
 
-            return found.DeepClone();
+            return found;
         }
 
         public virtual Option<TRoot> FindOne(object key)

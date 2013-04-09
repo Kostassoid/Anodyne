@@ -16,14 +16,15 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 	using System;
 	using System.Linq;
 	using Base;
+	using Common;
 	using Operations;
 	using Policy;
 
 	public interface IUnitOfWork : IDisposable
     {
-		IUnitOfWork Parent { get; }
+		Option<IUnitOfWork> Parent { get; }
 		IUnitOfWork Root { get; }
-        IDomainDataSession DomainDataSession { get; }
+        IDomainDataSession Session { get; }
 		StaleDataPolicy StaleDataPolicy { get; }
 
         bool IsRoot { get; }

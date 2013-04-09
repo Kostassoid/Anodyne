@@ -44,7 +44,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 using (var uow = UnitOfWork.Start())
                 {
-                    var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<TestRoot>();
+                    var collection = (uow.Session.DataSession.NativeSession as MongoDatabase).GetCollection<TestRoot>();
 
                     collection.Should().NotBeNull();
                     collection.Name.Should().Be(typeof(TestRoot).Name);
@@ -74,7 +74,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
             {
                 using (var uow = UnitOfWork.Start())
                 {
-                    var collection = (uow.DomainDataSession.DataSession.NativeSession as MongoDatabase).GetCollection<DerivedTestRoot>();
+                    var collection = (uow.Session.DataSession.NativeSession as MongoDatabase).GetCollection<DerivedTestRoot>();
 
                     collection.Should().NotBeNull();
                     collection.Name.Should().Be(typeof(DerivedTestRoot).Name);
@@ -116,7 +116,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
                 using (var uow = UnitOfWork.Start())
                 {
-                    var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
+                    var database = (MongoDatabase)uow.Session.DataSession.NativeSession;
 
                     database.CollectionExists("TestRoot").Should().BeFalse();
 
@@ -149,7 +149,7 @@ namespace Kostassoid.Anodyne.MongoDb.Specs
 
                 using (var uow = UnitOfWork.Start())
                 {
-                    var database = (MongoDatabase)uow.DomainDataSession.DataSession.NativeSession;
+                    var database = (MongoDatabase)uow.Session.DataSession.NativeSession;
 
                     database.EnsureCappedCollectionExists<TestRoot>(10.Megabytes());
 

@@ -61,7 +61,8 @@ namespace Kostassoid.Anodyne.Common.Specs
                 option.IsNone.Should().BeFalse();
                 option.IsSome.Should().BeTrue();
                 option.Value.Should().Be("zzz");
-            }
+				(option as IOption).ValueObject.Should().Be("zzz");
+			}
         }
 
         [TestFixture]
@@ -76,7 +77,8 @@ namespace Kostassoid.Anodyne.Common.Specs
                 option.IsNone.Should().BeFalse();
                 option.IsSome.Should().BeTrue();
                 option.Value.Should().Be(666);
-            }
+				(option as IOption).ValueObject.Should().Be(Int32.Parse("666"));
+			}
         }
 
         [TestFixture]
