@@ -70,8 +70,13 @@ namespace Kostassoid.Anodyne.Common.Specs
                 SystemTime.TimeController.SetDate(fixedDate);
                 SystemTime.Now.Should().BeCloseTo(fixedDate, 100);
 
+                var actualNow = DateTime.UtcNow;
+
                 Thread.Sleep(500);
-                SystemTime.Now.Should().BeCloseTo(fixedDate.AddMilliseconds(500), 100);
+
+                var elapsed = DateTime.UtcNow - actualNow;
+
+                SystemTime.Now.Should().BeCloseTo(fixedDate.Add(elapsed), 100);
             }
         }
 
