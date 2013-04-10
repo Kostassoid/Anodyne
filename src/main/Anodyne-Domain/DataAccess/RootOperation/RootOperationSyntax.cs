@@ -46,7 +46,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 			}
 		}
 
-		public TResult Get<TResult>(Func<T, IRootOperationContext, TResult> rootFunc)
+		public TResult Request<TResult>(Func<T, IRootOperationContext, TResult> rootFunc)
 		{
 			using (var uow = UnitOfWork.Start())
 			{
@@ -57,7 +57,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 			}
 		}
 
-		public TResult Get<TResult>(Func<T, TResult> rootFunc)
+		public TResult Request<TResult>(Func<T, TResult> rootFunc)
 		{
 			using (var uow = UnitOfWork.Start())
 			{

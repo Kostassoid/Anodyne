@@ -13,6 +13,7 @@
 
 namespace Kostassoid.Anodyne.Domain.Specs
 {
+	using System.Linq;
 	using Anodyne.Specs.Shared;
     using Base;
     using DataAccess;
@@ -38,21 +39,29 @@ namespace Kostassoid.Anodyne.Domain.Specs
         [Serializable]
         public class TestRoot : AggregateRoot<Guid>
         {
+			public string Value { get; private set; }
+
             protected TestRoot()
             {
                 Id = SeqGuid.NewGuid();
             }
 
-            public static TestRoot Create()
-            {
-                var root = new TestRoot();
-                Apply(new TestRootCreated(root));
-                return root;
-            }
+			public static TestRoot Create(string value)
+			{
+				var root = new TestRoot();
+				Apply(new TestRootCreated(root, value));
+				return root;
+			}
 
-            protected void OnCreated(TestRootCreated @event)
+			public static TestRoot Create()
+			{
+				return Create(null);
+			}
+
+			protected void OnCreated(TestRootCreated @event)
             {
                 Id = @event.Target.Id;
+	            Value = @event.Value;
             }
 
             public void Update()
@@ -68,9 +77,12 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         public class TestRootCreated : AggregateEvent<TestRoot>
         {
-            public TestRootCreated(TestRoot aggregate)
+	        public string Value { get; private set; }
+
+	        public TestRootCreated(TestRoot aggregate, string value)
                 : base(aggregate)
             {
+	            Value = value;
             }
         }
 
@@ -200,7 +212,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 				}
 
 				var result =
-				OnRoot<TestRoot>.IdentifiedBy(rootId).Get(root =>
+				OnRoot<TestRoot>.IdentifiedBy(rootId).Request(root =>
 				{
 					root.Id.Should().Be(rootId);
 					root.Update();
@@ -210,7 +222,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 				result.Should().Be(2);
 
 				result =
-				OnRoot<TestRoot>.IdentifiedBy(rootId).Get((root, ctx) =>
+				OnRoot<TestRoot>.IdentifiedBy(rootId).Request((root, ctx) =>
 				{
 					root.Id.Should().Be(rootId);
 					root.Update();
@@ -226,6 +238,42 @@ namespace Kostassoid.Anodyne.Domain.Specs
 				}
 			}
 		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_performing_on_present_acquired_root : RootOperationScenario
+		{
+			[Test]
+			public void should_perform_on_actual_root()
+			{
+				Guid root1Id;
+				Guid root2Id;
+				Guid root3Id;
+
+				using (UnitOfWork.Start())
+				{
+					root1Id = TestRoot.Create("aaa").Id;
+					root2Id = TestRoot.Create("bbb").Id;
+					root3Id = TestRoot.Create("ccc").Id;
+				}
+
+				OnRoot<TestRoot>.AcquiredBy(uow => uow.AllOf<TestRoot>().First(r => r.Value == "bbb"))
+					.Perform(root => root.Update());
+
+				using (var uow = UnitOfWork.Start())
+				{
+					var root1 = uow.Query<TestRoot>().GetOne(root1Id);
+					var root2 = uow.Query<TestRoot>().GetOne(root2Id);
+					var root3 = uow.Query<TestRoot>().GetOne(root3Id);
+
+					root1.Version.Should().Be(1);
+					root2.Version.Should().Be(2);
+					root3.Version.Should().Be(1);
+				}
+			}
+		}
+
+
 
 
     }

@@ -61,7 +61,7 @@ namespace Kostassoid.BlogNote.Host.Service
 
 			return OnRoot<Post>
 				.ConstructedBy(() => Post.Create(new UrlContent(title, url, tags)))
-				.Get(post => post.Id);
+				.Request(post => post.Id);
         }
     }
 }

@@ -103,7 +103,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var option = Option<string>.None;
 
+				#pragma warning disable 168
                 option.Invoking(o => { var x = o.Value; }).ShouldThrow<NotSupportedException>();
+				#pragma warning restore 168
             }
         }
 
@@ -116,7 +118,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 string nullObject = null;
 
+				// ReSharper disable ExpressionIsAlwaysNull
                 var option = nullObject.AsOption();
+				// ReSharper restore ExpressionIsAlwaysNull
 
                 option.Should().BeOfType<None<string>>();
             }
@@ -178,10 +182,12 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 string nullObject = null;
 
+				// ReSharper disable ExpressionIsAlwaysNull
                 Option<string> option = nullObject;
 
                 option.Should().BeOfType<None<string>>();
-            }
+				// ReSharper restore ExpressionIsAlwaysNull
+			}
         }
 
         [TestFixture]
@@ -210,10 +216,14 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 string someObject = null;
 
+				// ReSharper disable ExpressionIsAlwaysNull
                 Option<string> option = someObject;
 
+				#pragma warning disable 168
                 option.Invoking(o => { var x = (string)o; }).ShouldThrow<NotSupportedException>();
-            }
+				#pragma warning restore 168
+				// ReSharper restore ExpressionIsAlwaysNull
+			}
         }
 
         [TestFixture]
@@ -225,7 +235,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 var someObject = "zzz".AsOption();
 
+				#pragma warning disable 168
                 someObject.Invoking(o => { var x = o.AsOption(); }).ShouldThrow<InvalidOperationException>();
+				#pragma warning restore 168
             }
         }
     }
