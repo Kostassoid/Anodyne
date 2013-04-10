@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.Common.ExecutionContext
 
     public class Context
     {
-        private static IContextProvider _provider = new NormalContextProvider();
+        private static IContextProvider _provider = new DefaultContextProvider();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetProvider(IContextProvider provider)

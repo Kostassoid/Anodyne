@@ -257,6 +257,12 @@ namespace Kostassoid.Anodyne.Common.Specs
 
                 Context.FindAs<string>("boo").ValueOrDefault.Should().Be("xxx");
             }
+
+            [TearDown]
+            public void TearDown()
+            {
+                Context.SetProvider(new DefaultContextProvider());
+            }
         }
 
 

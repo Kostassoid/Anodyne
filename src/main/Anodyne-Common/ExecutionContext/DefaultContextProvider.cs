@@ -15,7 +15,7 @@ namespace Kostassoid.Anodyne.Common.ExecutionContext
 {
     using System.Runtime.Remoting.Messaging;
 
-    public class NormalContextProvider : IContextProvider
+    public class DefaultContextProvider : IContextProvider
     {
         public void Set(string name, object value)
         {

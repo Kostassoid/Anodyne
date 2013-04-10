@@ -47,7 +47,7 @@
     <Compile Include="CodeContracts\Requires.cs" />
     <Compile Include="ExecutionContext\Context.cs" />
     <Compile Include="ExecutionContext\IContextProvider.cs" />
-    <Compile Include="ExecutionContext\NormalContextProvider.cs" />
+    <Compile Include="ExecutionContext\DefaultContextProvider.cs" />
     <Compile Include="Extentions\ArrayEx.cs" />
     <Compile Include="Extentions\DateTimeEx.cs" />
     <Compile Include="Extentions\EnumerableEx.cs" />
