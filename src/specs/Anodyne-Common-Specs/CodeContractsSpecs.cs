@@ -97,6 +97,107 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_checking_true_requirement
+        {
+            [Test]
+            public void should_throw_if_false()
+            {
+                Action action = () => Requires.True(true, "value");
+                action.ShouldNotThrow<ArgumentException>();
+
+                action = () => Requires.True(false, "value");
+                action.ShouldThrow<ArgumentException>();
+
+                action = () => Requires.True(false, "value", "oops");
+                action.ShouldThrow<ArgumentException>().WithMessage("oops\r\nParameter name: value");
+
+                action = () => Requires.True(false, "value", "simon says: {0}", "oops");
+                action.ShouldThrow<ArgumentException>().WithMessage("simon says: oops\r\nParameter name: value");
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_checking_not_null_or_empty_requirement_on_non_empty_array
+        {
+            [Test]
+            public void should_not_throw()
+            {
+                var value = new[] { "boo", "foo" };
+                Action action = () => Requires.NotNullOrEmpty(value, "value");
+                action.ShouldNotThrow<ArgumentException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_checking_not_null_or_empty_requirement_on_empty_array
+        {
+            [Test]
+            public void should_throw()
+            {
+                var value = new string[0];
+                Action action = () => Requires.NotNullOrEmpty(value, "value");
+                action.ShouldThrow<ArgumentException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_checking_not_null_or_empty_requirement_on_null_array
+        {
+            [Test]
+            public void should_throw()
+            {
+                string[] value = null;
+                // ReSharper disable ExpressionIsAlwaysNull
+                Action action = () => Requires.NotNullOrEmpty(value, "value");
+                // ReSharper restore ExpressionIsAlwaysNull
+                action.ShouldThrow<ArgumentException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_checking_null_or_without_null_elements_on_non_empty_array_without_nulls
+        {
+            [Test]
+            public void should_not_throw()
+            {
+                var value = new[] { "boo", "foo" };
+                Action action = () => Requires.NullOrWithNoNullElements(value, "value");
+                action.ShouldNotThrow<ArgumentException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_checking_null_or_without_null_elements_on_null_array
+        {
+            [Test]
+            public void should_not_throw()
+            {
+                var value = new string[0];
+                Action action = () => Requires.NullOrWithNoNullElements(value, "value");
+                action.ShouldNotThrow<ArgumentException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_checking_null_or_without_null_elements_on_non_empty_array_with_nulls
+        {
+            [Test]
+            public void should_not_throw()
+            {
+                var value = new[] { "boo", null, "foo" };
+                Action action = () => Requires.NullOrWithNoNullElements(value, "value");
+                action.ShouldThrow<ArgumentException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_checking_true_assumption_on_false_value
         {
             [Test]
@@ -104,6 +205,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             {
                 Action action = () => Assumes.True(false, "oops");
                 action.ShouldThrow<Assumes.InternalErrorException>();
+
+                action = () => Assumes.True(false, "simon says: {0}", "oops");
+                action.ShouldThrow<Assumes.InternalErrorException>().WithMessage("simon says: oops");
             }
         }
 
@@ -127,6 +231,9 @@ namespace Kostassoid.Anodyne.Common.Specs
             public void should_throw_internal_exception()
             {
                 Action action = () => Assumes.Fail("oops");
+                action.ShouldThrow<Assumes.InternalErrorException>().WithMessage("oops");
+
+                action = () => Assumes.Fail();
                 action.ShouldThrow<Assumes.InternalErrorException>();
             }
         }
