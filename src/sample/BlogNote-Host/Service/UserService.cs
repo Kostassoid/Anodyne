@@ -11,14 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using Kostassoid.Anodyne.Domain.DataAccess;
-
 namespace Kostassoid.BlogNote.Host.Service
 {
     using System;
     using System.Linq;
     using System.ServiceModel;
-    using Anodyne.Domain.DataAccess.RootOperation;
+	using Anodyne.Domain.DataAccess.RootOperation;
     using Contracts;
     using Domain;
 
@@ -27,32 +25,26 @@ namespace Kostassoid.BlogNote.Host.Service
     {
         private static void RequireUserExists(Guid user)
         {
-            using (var uow = UnitOfWork.Start())
-            {
-                if (!uow.Query<User>().Exists(user))
-                    throw new ArgumentException("Unknown user", "user");
-            }
+			OnRoot<User>
+				.IdentifiedBy(user)
+				.IfAbsent(() => { throw new ArgumentException("Unknown user", "user"); })
+				.Perform(_ => { });
         }
 
         public Guid EnsureUserExists(string name, string email)
         {
-            using (var uow = UnitOfWork.Start())
-            {
-                var foundUser = uow.AllOf<User>().FirstOrDefault(u => u.Name == name);
-                if (foundUser != null) return foundUser.Id;
-
-                return User.Create(name, email).Id;
-            }
+			return OnRoot<User>
+				.AcquiredBy(q => q.FirstOrDefault(u => u.Name == name))
+				.Request(user => user != null ? user.Id : User.Create(name, email).Id);
         }
 
         public Guid PostText(Guid user, string title, string body, string[] tags)
         {
             RequireUserExists(user);
 
-            using (UnitOfWork.Start())
-            {
-                return Post.Create(new TextContent(title, body, tags)).Id;
-            }
+			return OnRoot<Post>
+				.ConstructedBy(() => Post.Create(new TextContent(title, body, tags)))
+				.Request(post => post.Id);
         }
 
         public Guid PostUrl(Guid user, string title, string url, string[] tags)

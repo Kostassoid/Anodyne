@@ -14,6 +14,7 @@
 namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 {
 	using System;
+	using System.Linq;
 	using Common.CodeContracts;
 	using Base;
 
@@ -23,14 +24,14 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 		{
 			Requires.NotNull(id, "id");
 
-			return new RootOperationSyntax<T>(uow => uow.Query<T>().GetOne(id));
+			return new RootOperationSyntax<T>(uow => uow.Query<T>().FindOne(id).ValueOrDefault);
 		}
 
-		public static RootOperationSyntax<T> AcquiredBy(Func<IUnitOfWork, T> aquireFunc)
+		public static RootOperationSyntax<T> AcquiredBy(Func<IQueryable<T>, T> aquireFunc)
 		{
 			Requires.NotNull(aquireFunc, "aquireFunc");
 
-			return new RootOperationSyntax<T>(aquireFunc);
+			return new RootOperationSyntax<T>(uow => aquireFunc(uow.Query<T>().All()));
 		}
 
 		public static RootOperationSyntax<T> ConstructedBy(Func<T> rootFactoryFunc)

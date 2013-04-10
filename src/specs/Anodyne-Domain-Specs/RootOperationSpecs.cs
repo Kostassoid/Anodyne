@@ -176,11 +176,45 @@ namespace Kostassoid.Anodyne.Domain.Specs
 		public class when_performing_on_non_present_root : RootOperationScenario
 		{
 			[Test]
-			public void should_throw()
+			public void should_not_throw()
 			{
 				Action invalidAction = () => OnRoot<TestRoot>.IdentifiedBy(Guid.NewGuid()).Perform((root, ctx) => { });
 
-				invalidAction.ShouldThrow<AggregateRootNotFoundException>();
+				invalidAction.ShouldNotThrow();
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_performing_on_non_present_root_with_missing_action_set : RootOperationScenario
+		{
+			[Test]
+			public void should_perform_missing_action_only()
+			{
+				var result = "";
+				OnRoot<TestRoot>
+					.IdentifiedBy(Guid.NewGuid())
+					.IfAbsent(() => result += "missed")
+					.Perform(_ => result += "ok");
+
+				result.Should().Be("missed");
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_performing_on_present_root_with_missing_action_set : RootOperationScenario
+		{
+			[Test]
+			public void should_perform_missing_action_only()
+			{
+				var result = "";
+				OnRoot<TestRoot>
+					.ConstructedBy(TestRoot.Create)
+					.IfAbsent(() => result += "missed")
+					.Perform(_ => result += "ok");
+
+				result.Should().Be("ok");
 			}
 		}
 
@@ -257,7 +291,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 					root3Id = TestRoot.Create("ccc").Id;
 				}
 
-				OnRoot<TestRoot>.AcquiredBy(uow => uow.AllOf<TestRoot>().First(r => r.Value == "bbb"))
+				OnRoot<TestRoot>.AcquiredBy(q => q.First(t => t.Value == "bbb"))
 					.Perform(root => root.Update());
 
 				using (var uow = UnitOfWork.Start())
