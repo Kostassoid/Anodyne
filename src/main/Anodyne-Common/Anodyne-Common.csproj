@@ -53,7 +53,6 @@
     <Compile Include="Extentions\EnumerableEx.cs" />
     <Compile Include="Extentions\ObjectEx.cs" />
     <Compile Include="Extentions\StringEx.cs" />
-    <Compile Include="ImmutableCollection.cs" />
     <Compile Include="IOption.cs" />
     <Compile Include="ISyntax.cs" />
     <Compile Include="Measure\Int64Ex.cs" />

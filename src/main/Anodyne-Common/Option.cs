@@ -40,11 +40,6 @@ namespace Kostassoid.Anodyne.Common
             return value.AsOption();
         }
 
-        public static implicit operator bool(Option<T> option)
-        {
-            return option.IsSome;
-        }
-
         public static explicit operator T(Option<T> option)
         {
             return option.Value;

@@ -19,6 +19,7 @@ namespace Kostassoid.Anodyne.Common.Specs
     using System.Threading.Tasks;
     using Anodyne.Specs.Shared.DataGeneration;
     using ExecutionContext;
+    using FakeItEasy;
     using FluentAssertions;
     using NUnit.Framework;
 
@@ -153,6 +154,21 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_getting_existing_value_of_invalid_type
+        {
+            [Test]
+            public void should_throw()
+            {
+                Context.Set("test", 123);
+
+                Action action = () => Context.GetAs<string>("test");
+
+                action.ShouldThrow<InvalidOperationException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_getting_released_value
         {
             [Test]
@@ -208,22 +224,40 @@ namespace Kostassoid.Anodyne.Common.Specs
 			}
 		}
 
-		[TestFixture]
-		[Category("Unit")]
-		public class when_setting_some_option_value
-		{
-			[Test]
-			public void should_put_unboxed_value()
-			{
-				var value = "zzz".AsOption();
+        [TestFixture]
+        [Category("Unit")]
+        public class when_setting_some_option_value
+        {
+            [Test]
+            public void should_put_unboxed_value()
+            {
+                var value = "zzz".AsOption();
 
-				Context.Set("test", value);
+                Context.Set("test", value);
 
-				var actualValue = Context.Get("test");
+                var actualValue = Context.Get("test");
 
-				actualValue.Should().BeOfType<String>();
-			}
-		}
+                actualValue.Should().BeOfType<String>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
+        public class when_setting_custom_provider
+        {
+            [Test]
+            public void should_use_new_provider()
+            {
+                var provider = A.Fake<IContextProvider>();
+                A.CallTo(() => provider.Find("boo")).Returns("xxx");
+
+                Context.FindAs<string>("boo").ValueOrDefault.Should().BeNull();
+
+                Context.SetProvider(provider);
+
+                Context.FindAs<string>("boo").ValueOrDefault.Should().Be("xxx");
+            }
+        }
 
 
     }

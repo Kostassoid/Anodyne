@@ -83,6 +83,19 @@ namespace Kostassoid.Anodyne.Common.Specs
 
         [TestFixture]
         [Category("Unit")]
+        public class when_creating_some_using_null_value
+        {
+            [Test]
+            public void should_throw()
+            {
+                Action action = () => Option<string>.Some(null);
+
+                action.ShouldThrow<ArgumentNullException>();
+            }
+        }
+
+        [TestFixture]
+        [Category("Unit")]
         public class when_trying_to_get_value_of_none
         {
             [Test]
