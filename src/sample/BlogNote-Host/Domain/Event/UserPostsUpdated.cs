@@ -19,8 +19,8 @@ namespace Kostassoid.BlogNote.Host.Domain.Event
     {
         public uint Posts { get; protected set; }
 
-        public UserPostsUpdated(User aggregate, uint posts)
-            : base(aggregate)
+        public UserPostsUpdated(User target, uint posts)
+            : base(target)
         {
             Posts = posts;
         }

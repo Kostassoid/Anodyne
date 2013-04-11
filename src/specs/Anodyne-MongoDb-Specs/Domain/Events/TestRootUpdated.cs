@@ -17,8 +17,8 @@ namespace Kostassoid.Anodyne.MongoDb.Specs.Domain.Events
 {
     public class TestRootUpdated : AggregateEvent<TestRoot>
     {
-        public TestRootUpdated(TestRoot aggregate)
-            : base(aggregate)
+        public TestRootUpdated(TestRoot target)
+            : base(target)
         {
         }
     }

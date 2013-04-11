@@ -19,9 +19,5 @@ namespace Kostassoid.Anodyne.Domain.Base
     [Serializable]
     public abstract class Entity<TKey> : PersistableRoot<TKey>, IEntity
     {
-        object IEntity.IdObject
-        {
-            get { return Id; }
-        }
     }
 }

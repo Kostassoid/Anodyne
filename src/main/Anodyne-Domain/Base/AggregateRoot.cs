@@ -14,22 +14,42 @@
 namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
+    using Abstractions.DataAccess;
+    using Common.Extentions;
+    using DataAccess;
+    using DataAccess.Exceptions;
     using Events;
     using Wiring;
 
     [Serializable]
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
-        object IEntity.IdObject { get { return Id; } }
+        object IPersistableRoot.IdObject { get { return Id; } }
 
-        static AggregateRoot()
+	    static AggregateRoot()
         {
-            AggregateRootHandlersRegistrator.EnsureRegistration();
+            //AggregateRootHandlersRegistrator.EnsureRegistration();
         }
 
-        protected static void Apply(IAggregateEvent @event)
+		void IAggregateRoot.Apply(IAggregateEvent ev)
+		{
+			Apply(ev);
+		}
+
+	    public static void Apply(IAggregateEvent ev)
         {
-            EventBus.Publish(@event);
+			if (ev.TargetVersion != ev.Target.Version)
+				throw new ConcurrencyException(ev);
+
+	        var handler = AggregateEventHandlerResolver.ResolveFor(ev);
+			ev.Target.BumpVersion();
+
+			UnitOfWork.Handle(ev);
+
+			handler(ev.Target, ev);
+
+			if (!ev.IsReplaying)
+				EventBus.Publish(ev);
         }
     }
 }

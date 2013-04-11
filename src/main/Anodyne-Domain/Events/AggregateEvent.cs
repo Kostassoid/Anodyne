@@ -19,37 +19,29 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Common.Tools;
 
     [Serializable]
-    public abstract class AggregateEvent<TRoot> : AggregateRoot<Guid>, IAggregateEvent where TRoot : IAggregateRoot
+    public abstract class AggregateEvent<TRoot> : IAggregateEvent where TRoot : class, IAggregateRoot
     {
-        private readonly TRoot _aggregate;
-        public object AggregateId { get; protected set; }
-
-        public DateTime Happened { get; protected set; }
-
-        // should not be stored!
-        public TRoot Target { get { return _aggregate; } }
-
-        // should not be stored!
-        IAggregateRoot IAggregateEvent.Aggregate { get { return _aggregate; } }
-
-        public long AggregateVersion { get; protected set; }
+		public Guid Id { get; private set; }
+		public DateTime Happened { get; private set; }
+        public long TargetVersion { get; private set; }
 
         private bool _isReplaying;
         public bool IsReplaying { get { return _isReplaying; } }
 
-        protected AggregateEvent(TRoot aggregate, DateTime happened)
+		public IAggregateRoot Target { get; private set; }
+		//public TRoot Target { get { return (TRoot)Target; } }
+
+        protected AggregateEvent(IAggregateRoot target, long targetVersion, DateTime happened)
         {
             Id = SeqGuid.NewGuid();
 
-            _aggregate = aggregate;
+            Target = target;
             Happened = happened;
-
-            AggregateId = ((IEntity) aggregate).IdObject;
-            AggregateVersion = aggregate.BumpVersion();
+	        TargetVersion = targetVersion;
         }
 
-        protected AggregateEvent(TRoot aggregate)
-            : this(aggregate, SystemTime.Now)
+        protected AggregateEvent(TRoot target)
+            : this(target, target.Version, SystemTime.Now)
         {
         }
 

@@ -35,10 +35,13 @@ namespace Kostassoid.Anodyne.Common.Specs
 			}
 
 			public void OnWtf(BaseParam param, int addOn)
-			{ }
+			{
+				Log.Add("wtf");
+			}
 
 			public int GetWtf(BaseParam param)
 			{
+				Log.Add("wtf");
 				return 13;
 			}
         }
@@ -54,7 +57,11 @@ namespace Kostassoid.Anodyne.Common.Specs
 				Log.Add("1");
 			}
 
+			// ReSharper disable UnusedMember.Local
+			// ReSharper disable UnusedParameter.Local
 			private void OnConcrete2(ConcreteParam2 param)
+			// ReSharper restore UnusedParameter.Local
+			// ReSharper restore UnusedMember.Local
 			{
 				Log.Add("2");
 			}

@@ -59,7 +59,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
             protected void OnCreated(TestRootCreated @event)
             {
-                Id = @event.Target.Id;
             }
 
             public void Update()
@@ -75,16 +74,16 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         public class TestRootCreated : AggregateEvent<TestRoot>
         {
-            public TestRootCreated(TestRoot aggregate)
-                : base(aggregate)
+            public TestRootCreated(TestRoot target)
+                : base(target)
             {
             }
         }
 
         public class TestRootUpdated : AggregateEvent<TestRoot>
         {
-            public TestRootUpdated(TestRoot aggregate)
-                : base(aggregate)
+            public TestRootUpdated(TestRoot target)
+                : base(target)
             {
             }
         }
@@ -628,7 +627,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 }
 
                 appliedEvents.Count.Should().Be((int) root.Version);
-                appliedEvents.Select(e => e.AggregateVersion).Distinct().Count().Should().Be((int) root.Version);
+                appliedEvents.Select(e => e.TargetVersion).Distinct().Count().Should().Be((int) root.Version);
             }
         }
 
@@ -672,7 +671,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 }
 
                 appliedEvents.Count.Should().Be((int)root.Version);
-                appliedEvents.Select(e => e.AggregateVersion).Distinct().Count().Should().Be((int)root.Version);
+                appliedEvents.Select(e => e.TargetVersion).Distinct().Count().Should().Be((int)root.Version);
             }
 
         }

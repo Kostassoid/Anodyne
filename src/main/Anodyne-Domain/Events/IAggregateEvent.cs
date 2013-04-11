@@ -13,12 +13,15 @@
 
 namespace Kostassoid.Anodyne.Domain.Events
 {
-    using Base;
+	using System;
+	using Base;
 
     public interface IAggregateEvent : IMutationEvent
     {
-        IAggregateRoot Aggregate { get; }
-        object AggregateId { get; }
-        long AggregateVersion { get; }
+		Guid Id { get; }
+		IAggregateRoot Target { get; }
+        long TargetVersion { get; }
+
+		bool IsReplaying { get; }
     }
 }

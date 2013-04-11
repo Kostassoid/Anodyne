@@ -27,7 +27,7 @@ namespace Kostassoid.Anodyne.Domain.Events
                 .SubscribeTo()
                 .AllBasedOn<IAggregateEvent>(From.AllAssemblies().Where(a => typeof(T).Assembly == a)) //assuming our domain is one assembly with its events
                 .With<T>(EventMatching.Strict, Priority.Critical)
-                .As(e => e.Aggregate as T);
+                .As(e => e.Target as T);
         }
 
         public static Action BindDomainEvents(this EventBusExtentions eventBus, Type aggregateType)
@@ -36,7 +36,7 @@ namespace Kostassoid.Anodyne.Domain.Events
                 .SubscribeTo()
                 .AllBasedOn<IAggregateEvent>(From.AllAssemblies().Where(a => aggregateType.Assembly == a)) //assuming our domain is one assembly with its events
                 .With(aggregateType, EventMatching.Strict, Priority.Critical)
-                .As(e => e.Aggregate as object);
+                .As(e => e.Target as object);
         }
 
     }

@@ -60,7 +60,6 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
 			protected void OnCreated(TestRootCreated @event)
             {
-                Id = @event.Target.Id;
 	            Value = @event.Value;
             }
 
@@ -79,8 +78,8 @@ namespace Kostassoid.Anodyne.Domain.Specs
         {
 	        public string Value { get; private set; }
 
-	        public TestRootCreated(TestRoot aggregate, string value)
-                : base(aggregate)
+	        public TestRootCreated(TestRoot target, string value)
+                : base(target)
             {
 	            Value = value;
             }
@@ -88,8 +87,8 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         public class TestRootUpdated : AggregateEvent<TestRoot>
         {
-            public TestRootUpdated(TestRoot aggregate)
-                : base(aggregate)
+            public TestRootUpdated(TestRoot target)
+                : base(target)
             {
             }
         }

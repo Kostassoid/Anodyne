@@ -45,7 +45,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 			private set { Context.Set(HeadContextKey, value); }
 		}
 
-		//public static bool IsConfigured { get { return DataSessionFactory != null && OperationResolver != null; } }
+		public static bool IsConfigured { get { return Factory != null && OperationResolver != null; } }
 
         static UnitOfWork()
         {
@@ -54,7 +54,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public static IUnitOfWork Start(StaleDataPolicy? staleDataPolicy = null)
         {
-            lock (HeadContextKey) EnsureAggregateEventHandlersAreSet();
+            //lock (HeadContextKey) EnsureAggregateEventHandlersAreSet();
 
 	        var newUnitOfWork = Head.IsSome
 				? Factory.Build(Head.Value)
@@ -89,21 +89,25 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             EventBus
                 .SubscribeTo()
                 .AllBasedOn<IAggregateEvent>(From.AllAssemblies())
-                .With(e =>
-                {
-                    if (Policy.ReadOnly)
-                        throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
-
-                    if (Head.IsSome && !Head.Value.IsFinished)
-                    {
-                        Head.Value.Session.Handle(e);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("There's no active UnitOfWork.");
-                    }
-                }, Priority.Exact(1000));
+                .With(Handle, Priority.Exact(1000));
         }
+
+		public static void Handle(IAggregateEvent ev)
+		{
+			if (!IsConfigured) return;
+
+			if (Policy.ReadOnly)
+				throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
+
+			if (Head.IsSome && !Head.Value.IsFinished)
+			{
+				Head.Value.Session.Handle(ev);
+			}
+			else
+			{
+				throw new InvalidOperationException("There's no active UnitOfWork.");
+			}
+		}
 
     }
 }

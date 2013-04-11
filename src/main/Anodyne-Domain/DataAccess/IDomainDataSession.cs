@@ -24,7 +24,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     {
         IDataSession DataSession { get; }
 
-        void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
+        //void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
 
         DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy);
         void ForgetChanges();

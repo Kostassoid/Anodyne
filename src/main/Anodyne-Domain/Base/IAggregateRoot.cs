@@ -13,9 +13,10 @@
 
 namespace Kostassoid.Anodyne.Domain.Base
 {
-    using Abstractions.DataAccess;
+	using Events;
 
-    public interface IAggregateRoot : IEntity, IPersistableRoot
-    {
-    }
+	public interface IAggregateRoot : IEntity
+	{
+		void Apply(IAggregateEvent ev);
+	}
 }

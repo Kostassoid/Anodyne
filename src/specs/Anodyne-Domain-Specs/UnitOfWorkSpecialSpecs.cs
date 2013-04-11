@@ -69,16 +69,16 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         public class TestRootCreated : AggregateEvent<TestRoot>
         {
-            public TestRootCreated(TestRoot aggregate)
-                : base(aggregate)
+            public TestRootCreated(TestRoot target)
+                : base(target)
             {
             }
         }
 
         public class TestRootUpdated : AggregateEvent<TestRoot>
         {
-            public TestRootUpdated(TestRoot aggregate)
-                : base(aggregate)
+            public TestRootUpdated(TestRoot target)
+                : base(target)
             {
             }
         }

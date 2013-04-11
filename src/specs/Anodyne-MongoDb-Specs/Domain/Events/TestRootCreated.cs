@@ -19,8 +19,8 @@ namespace Kostassoid.Anodyne.MongoDb.Specs.Domain.Events
     {
         public string Data { get; private set; }
 
-        public TestRootCreated(TestRoot aggregate, string data)
-            : base(aggregate)
+        public TestRootCreated(TestRoot target, string data)
+            : base(target)
         {
             Data = data;
         }

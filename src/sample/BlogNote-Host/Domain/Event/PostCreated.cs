@@ -19,8 +19,8 @@ namespace Kostassoid.BlogNote.Host.Domain.Event
     {
         public BasePostContent Content { get; protected set; }
 
-        public PostCreated(Post aggregate, BasePostContent content)
-            : base(aggregate)
+        public PostCreated(Post target, BasePostContent content)
+            : base(target)
         {
             Content = content;
         }

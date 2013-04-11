@@ -31,27 +31,27 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             _dataSession = dataSession;
         }
 
-        protected AggregateRootChangeSet GetChangeSetFor(IAggregateRoot aggregate)
+        protected void RegisterEvent(IAggregateEvent ev)
         {
             AggregateRootChangeSet changeSet;
-            if (!ChangeSets.TryGetValue(((IEntity) aggregate).IdObject, out changeSet))
+            if (!ChangeSets.TryGetValue(ev.Target.IdObject, out changeSet))
             {
-                changeSet = new AggregateRootChangeSet(aggregate);
-                ChangeSets.Add(((IEntity) aggregate).IdObject, changeSet);
+                changeSet = new AggregateRootChangeSet(ev.Target);
+                ChangeSets.Add(ev.Target.IdObject, changeSet);
             }
-
-            return changeSet;
+			changeSet.Register(ev);
         }
 
         public void Handle(IAggregateEvent @event)
         {
-            GetChangeSetFor(@event.Aggregate).Register(@event);
+            RegisterEvent(@event);//.Register(@event);
         }
 
-        public void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot
+/*        public void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot
         {
             GetChangeSetFor(aggregate).MarkAsDeleted();
         }
+*/
 
         protected bool ApplyChangeSet(AggregateRootChangeSet changeSet, bool ignoreConflicts = false)
         {
@@ -60,7 +60,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 	        var targetVersion = ignoreConflicts ? (long?) null : changeSet.TargetVersion;
 
 			if (changeSet.IsDeleted)
-				return _dataSession.RemoveOne(type, ((IEntity)changeSet.Aggregate).IdObject, targetVersion);
+				return _dataSession.RemoveOne(type, changeSet.Aggregate.IdObject, targetVersion);
 
 			return _dataSession.SaveOne(changeSet.Aggregate, targetVersion);
         }
@@ -74,7 +74,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             {
                 if (ApplyChangeSet(changeSet, staleDataPolicy == StaleDataPolicy.Ignore))
                 {
-                    appliedEvents.AddRange(changeSet.Events);
+                    appliedEvents.AddRange(changeSet.GetStreamOfEvents());
                 }
                 else
                 {

@@ -178,12 +178,14 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             return UnitOfWork.OperationResolver.Get<TOp>();
         }
 
+/*
         public void MarkAsDeleted<TRoot>(TRoot entity) where TRoot : class, IAggregateRoot
         {
             AssertIfFinished();
 
             Session.MarkAsDeleted(entity);
         }
+*/
 
     }
 }

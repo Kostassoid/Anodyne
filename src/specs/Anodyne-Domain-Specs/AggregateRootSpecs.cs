@@ -52,14 +52,14 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         public class Change1Event : AggregateEvent<TestRoot>
         {
-            public Change1Event(TestRoot aggregate) : base(aggregate)
+            public Change1Event(TestRoot target) : base(target)
             {
             }
         }
 
         public class Change2Event : AggregateEvent<TestRoot>
         {
-            public Change2Event(TestRoot aggregate) : base(aggregate)
+            public Change2Event(TestRoot target) : base(target)
             {
             }
         }
@@ -76,10 +76,10 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var root1 = new TestRoot();
                 var root2 = new TestRoot();
 
-                EventBus.Publish(new Change1Event(root1));
-                EventBus.Publish(new Change2Event(root2));
-                EventBus.Publish(new Change2Event(root1));
-                EventBus.Publish(new Change2Event(root1));
+                (root1 as IAggregateRoot).Apply(new Change1Event(root1));
+				(root1 as IAggregateRoot).Apply(new Change2Event(root2));
+				(root1 as IAggregateRoot).Apply(new Change2Event(root1));
+				(root1 as IAggregateRoot).Apply(new Change2Event(root1));
 
                 root1.Fired1.Should().Be(1);
                 root1.Fired2.Should().Be(2);

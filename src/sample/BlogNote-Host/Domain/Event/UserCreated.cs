@@ -20,8 +20,8 @@ namespace Kostassoid.BlogNote.Host.Domain.Event
         public string Name { get; protected set; }
         public string Email { get; protected set; }
 
-        public UserCreated(User aggregate, string name, string email)
-            : base(aggregate)
+        public UserCreated(User target, string name, string email)
+            : base(target)
         {
             Name = name;
             Email = email;

@@ -18,7 +18,9 @@ using Kostassoid.Anodyne.Domain.Events;
 
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
-    public class AggregateRootChangeSet
+	using System.Linq;
+
+	public class AggregateRootChangeSet
     {
         public IAggregateRoot Aggregate { get; protected set; }
         public long TargetVersion { get; protected set; }
@@ -26,7 +28,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         public bool IsDeleted { get; protected set; }
         public bool IsNew { get { return TargetVersion == 0; } }
 
-        public IList<IAggregateEvent> Events { get; protected set; }
+        private IList<IAggregateEvent> Events { get; set; }
 
         public AggregateRootChangeSet(IAggregateRoot aggregate)
         {
@@ -37,17 +39,22 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public void Register(IAggregateEvent @event)
         {
-            if (Aggregate != @event.Aggregate || CurrentVersion != @event.AggregateVersion)
-                throw new ConcurrencyException(Aggregate);
+            if (Aggregate != @event.Target || CurrentVersion != @event.TargetVersion)
+                throw new ConcurrencyException(@event);
 
             Events.Add(@event);
-            CurrentVersion = @event.Aggregate.Version;
+	        CurrentVersion = @event.TargetVersion + 1;
         }
 
         public void MarkAsDeleted()
         {
             IsDeleted = true;
         }
+
+		public IEnumerable<IAggregateEvent> GetStreamOfEvents()
+		{
+			return Events.OrderBy(e => e.TargetVersion);
+		}
          
     }
 }

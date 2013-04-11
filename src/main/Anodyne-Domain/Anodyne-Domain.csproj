@@ -81,6 +81,7 @@
     <Compile Include="DataAccess\RootOperation\RootOperationSyntax.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
     <Compile Include="Events\AggregateEvent.cs" />
+    <Compile Include="Events\AggregateEventHandlerResolver.cs" />
     <Compile Include="Events\EventBusEx.cs" />
     <Compile Include="Events\IAggregateEvent.cs" />
     <Compile Include="Events\IDomainEvent.cs" />

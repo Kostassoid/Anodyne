@@ -47,8 +47,6 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         protected void OnCreated(PostCreated @event)
         {
-            Id = @event.Target.Id;
-
             Content = @event.Content;
 
             Created = SystemTime.Now;

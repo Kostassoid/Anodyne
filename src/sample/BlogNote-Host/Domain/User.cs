@@ -50,8 +50,6 @@ namespace Kostassoid.BlogNote.Host.Domain
 
         protected void OnCreated(UserCreated @event)
         {
-            Id = @event.Target.Id;
-
             Name = @event.Name;
             Email = @event.Email;
 

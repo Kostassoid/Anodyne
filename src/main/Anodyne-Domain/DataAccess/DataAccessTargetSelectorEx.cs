@@ -29,7 +29,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             UnitOfWork.OperationResolver = new ContainerOperationResolver(targetSelector.ProviderSelector.Container);
 
             //duplicated call to avoid lost static context loss in web environment
-            AggregateRootHandlersRegistrator.EnsureRegistration();
+            //AggregateRootHandlersRegistrator.EnsureRegistration();
 
             if (cc != null)
                 cc(new DomainDataAccessConfigurator());

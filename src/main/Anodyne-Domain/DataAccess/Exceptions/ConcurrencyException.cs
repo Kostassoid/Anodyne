@@ -11,21 +11,21 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using System;
-using Kostassoid.Anodyne.Domain.Base;
-
 namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
 {
-    [Serializable]
+	using System;
+	using Domain.Events;
+
+	[Serializable]
     public class ConcurrencyException : Exception
     {
-        public IAggregateRoot Aggregate { get; protected set; }
+        public IAggregateEvent Event { get; protected set; }
 
-        public ConcurrencyException(IAggregateRoot aggregate)
-            :base(string.Format("Two different versions of aggregate root {0} of type '{1}' was detected in one DataSession",
-                        ((IEntity) aggregate).IdObject, aggregate.GetType().Name))
+        public ConcurrencyException(IAggregateEvent ev)
+            :base(string.Format("Unable to apply event {0} ({1}) on {2} ({3}). Expected version {4} but was {5}.",
+			ev.GetType().Name, ev.Id, ev.Target.GetType().Name, ev.Target.IdObject, ev.TargetVersion, ev.Target.Version))
         {
-            Aggregate = aggregate;
+            Event = ev;
         }
     }
 }
