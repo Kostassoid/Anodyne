@@ -21,13 +21,15 @@ namespace Kostassoid.Anodyne.Common.Extentions
     {
         public static IEnumerable<T> AsEnumerable<T>(this T obj)
         {
+			// ReSharper disable CompareNonConstrainedGenericWithNull
             if (obj != null)
+			// ReSharper restore CompareNonConstrainedGenericWithNull
                 yield return obj;
         }
 
         public static IEnumerable<T> AsEnumerable<T>(this object obj)
         {
-            if (obj != null && obj is T)
+            if (obj is T)
                 yield return (T)obj;
         }
 

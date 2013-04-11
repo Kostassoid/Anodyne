@@ -18,7 +18,6 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Reflection;
     using Common.CodeContracts;
     using Internal;
@@ -67,16 +66,16 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
 
         private static IEnumerable<Action<TEvent>> ResolveHandlers<TEvent>(Type eventType, SubscriptionSpecification<TEvent> specification) where TEvent : class, IEvent
         {
-            var methods = specification.TargetType
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi => IsTargetCompatibleWithSource(mi, eventType, specification.EventMatching))
-                .ToList();
+	        var methods = specification
+				.TargetType
+				.FindMethodHandlers(eventType, IsPolymorphicMatching(specification.EventMatching))
+				.ToList();
 
             if (methods.Count == 0) yield break;
 
             foreach (var method in methods)
             {
-                var handlerDelegate = CreateHandlerDelegate(method, eventType);
+	            var handlerDelegate = TypeEx.BuildMethodHandler(method, eventType);
 
                 Action<TEvent> handler = ev =>
                 {
@@ -90,39 +89,14 @@ namespace Kostassoid.Anodyne.Wiring.Subscription
             }
         }
 
-        delegate void HandlerMethodDelegate(object instance, IEvent @event);
-
-        private static HandlerMethodDelegate CreateHandlerDelegate(MethodInfo methodInfo, Type eventType)
+        private static bool IsPolymorphicMatching(EventMatching eventMatching)
         {
-            var instance = Expression.Parameter(typeof(object), "instance");
-            var ev = Expression.Parameter(typeof(IEvent), "event");
-
-            var lambda = Expression.Lambda<HandlerMethodDelegate>(
-                Expression.Call(
-                    Expression.Convert(instance, methodInfo.DeclaringType),
-                    methodInfo,
-                    Expression.Convert(ev, eventType)
-                    ),
-                instance,
-                ev
-                );
-
-            return lambda.Compile();
-        }
-
-        private static bool IsTargetCompatibleWithSource(MethodInfo methodInfo, Type eventType, EventMatching eventMatching)
-        {
-            if (methodInfo.ReturnType != typeof(void)) return false;
-
-            var parameters = methodInfo.GetParameters();
-            if (parameters.Length != 1) return false;
-
             switch (eventMatching)
             {
                 case EventMatching.Strict:
-                    return parameters[0].ParameterType == eventType;
+                    return false;
                 case EventMatching.All:
-                    return parameters[0].ParameterType.IsAssignableFrom(eventType);
+                    return true;
                 default:
                     throw new NotSupportedException(string.Format("EventMatching.{0} is not supported", eventMatching));
             }

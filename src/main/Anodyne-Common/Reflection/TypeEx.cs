@@ -14,9 +14,15 @@
 namespace Kostassoid.Anodyne.Common.Reflection
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
 
-    public static class TypeEx
+	public static class TypeEx
     {
+		public delegate void HandlerDelegate(object instance, object param);
+
         public static bool IsSubclassOfRawGeneric(this Type type, Type generic)
         {
             while (type != null & type != typeof(object))
@@ -37,5 +43,46 @@ namespace Kostassoid.Anodyne.Common.Reflection
 
             return type.IsGenericType && type.GetGenericTypeDefinition() == generic;
         }
-    }
+
+		public static IEnumerable<MethodInfo> FindMethodHandlers(this Type instanceType, Type paramType, bool isPolymorphic)
+		{
+			return instanceType
+				.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+				.Where(mi => IsTargetCompatibleWithSource(mi, paramType, isPolymorphic))
+				.ToList();
+		}
+
+		private static bool IsTargetCompatibleWithSource(MethodInfo methodInfo, Type paramType, bool isPolymorphic)
+		{
+			if (methodInfo.ReturnType != typeof(void)) return false;
+
+			var parameters = methodInfo.GetParameters();
+			if (parameters.Length != 1) return false;
+
+			if (isPolymorphic)
+			{
+				return parameters[0].ParameterType.IsAssignableFrom(paramType);
+			}
+
+			return parameters[0].ParameterType == paramType;
+		}
+
+		public static HandlerDelegate BuildMethodHandler(MethodInfo methodInfo, Type paramType)
+		{
+			var instance = Expression.Parameter(typeof(object), "instance");
+			var param = Expression.Parameter(typeof(object), "param");
+
+			var lambda = Expression.Lambda<HandlerDelegate>(
+				Expression.Call(
+					Expression.Convert(instance, methodInfo.DeclaringType),
+					methodInfo,
+					Expression.Convert(param, paramType)
+					),
+				instance,
+				param
+				);
+
+			return lambda.Compile();
+		}
+	}
 }
