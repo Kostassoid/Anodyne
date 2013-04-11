@@ -16,7 +16,8 @@ namespace Kostassoid.BlogNote.Host.Service
     using System;
     using System.Linq;
     using System.ServiceModel;
-	using Anodyne.Domain.DataAccess.RootOperation;
+    using Anodyne.Common.Extentions;
+    using Anodyne.Domain.DataAccess.RootOperation;
     using Contracts;
     using Domain;
 
@@ -27,15 +28,18 @@ namespace Kostassoid.BlogNote.Host.Service
         {
 			OnRoot<User>
 				.IdentifiedBy(user)
-				.IfAbsent(() => { throw new ArgumentException("Unknown user", "user"); })
-				.Perform(_ => { });
+				.Perform(u =>
+					{
+						if (u.IsNull())
+							throw new ArgumentException("Can't find user with id {0}.".FormatWith(user), "user");
+					});
         }
 
         public Guid EnsureUserExists(string name, string email)
         {
 			return OnRoot<User>
 				.AcquiredBy(q => q.FirstOrDefault(u => u.Name == name))
-				.Request(user => user != null ? user.Id : User.Create(name, email).Id);
+				.Request(user => user.IsNotNull() ? user.Id : User.Create(name, email).Id);
         }
 
         public Guid PostText(Guid user, string title, string body, string[] tags)

@@ -20,14 +20,14 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 	public class RootOperationSyntax<T> : ISyntax where T : class, IAggregateRoot
 	{
 		private readonly Func<IUnitOfWork, T> _rootAquireFunc;
-		private Action _missedAction = () => { };
+//		private Action _missedAction = () => { };
 
 		public RootOperationSyntax(Func<IUnitOfWork, T> rootAquireFunc)
 		{
 			_rootAquireFunc = rootAquireFunc;
 		}
 
-		private bool ValidateRoot(T root)
+/*		private bool ValidateRoot(T root)
 		{
 			if (root == null)
 			{
@@ -36,14 +36,14 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 			}
 
 			return true;
-		}
+		}*/
 
 		public void Perform(Action<T, IRootOperationContext> rootAction)
 		{
 			using (var uow = UnitOfWork.Start())
 			{
 				var root = _rootAquireFunc(uow);
-				if (!ValidateRoot(root)) return;
+				//if (!ValidateRoot(root)) return;
 
 				var context = new RootOperationContext(uow);
 				rootAction(root, context);
@@ -55,7 +55,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 			using (var uow = UnitOfWork.Start())
 			{
 				var root = _rootAquireFunc(uow);
-				if (!ValidateRoot(root)) return;
+//				if (!ValidateRoot(root)) return;
 
 				rootAction(root);
 			}
@@ -66,7 +66,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 			using (var uow = UnitOfWork.Start())
 			{
 				var root = _rootAquireFunc(uow);
-				if (!ValidateRoot(root)) return default(TResult);
+//				if (!ValidateRoot(root)) return default(TResult);
 
 				var context = new RootOperationContext(uow);
 				return rootFunc(root, context);
@@ -78,16 +78,16 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.RootOperation
 			using (var uow = UnitOfWork.Start())
 			{
 				var root = _rootAquireFunc(uow);
-				if (!ValidateRoot(root)) return default(TResult);
+//				if (!ValidateRoot(root)) return default(TResult);
 
 				return rootFunc(root);
 			}
 		}
 
-		public RootOperationSyntax<T> IfAbsent(Action missedAction)
+/*		public RootOperationSyntax<T> IfAbsent(Action missedAction)
 		{
 			_missedAction = missedAction;
 			return this;
-		}
+		}*/
 	}
 }

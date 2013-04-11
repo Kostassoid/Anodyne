@@ -25,7 +25,7 @@ namespace Kostassoid.Anodyne.Common.Specs
     public class ExtentionsSpecs
     {
         class Something { }
-        class SomethingElse { }
+	    class SomethingElse { }
 
         interface ISomeTypeAccessor
         {
@@ -167,20 +167,35 @@ namespace Kostassoid.Anodyne.Common.Specs
             }
         }
 
-        [TestFixture]
-        [Category("Unit")]
-        public class when_converting_simple_value_to_enumerable
-        {
-            [Test]
-            public void should_return_one_element()
-            {
-                const int some = 13;
+		[TestFixture]
+		[Category("Unit")]
+		public class when_converting_simple_value_to_enumerable
+		{
+			[Test]
+			public void should_return_one_element()
+			{
+				const int some = 13;
 
-                some.AsEnumerable().Should().HaveCount(1);
-            }
-        }
+				some.AsEnumerable().Should().HaveCount(1);
+			}
+		}
 
-        [TestFixture]
+		[TestFixture]
+		[Category("Unit")]
+		public class when_converting_null_value_to_enumerable
+		{
+			[Test]
+			public void should_return_empty_enumerable()
+			{
+				Something some = null;
+
+				// ReSharper disable ExpressionIsAlwaysNull
+				some.AsEnumerable().Should().HaveCount(0);
+				// ReSharper restore ExpressionIsAlwaysNull
+			}
+		}
+
+		[TestFixture]
         [Category("Unit")]
         public class when_using_for_each_over_enumerable
         {
@@ -241,11 +256,87 @@ namespace Kostassoid.Anodyne.Common.Specs
             }
         }
 
+		[TestFixture]
+		[Category("Unit")]
+		public class when_checking_if_object_is_null
+		{
+			[Test]
+			public void should_return_referencial_comparison_result()
+			{
+				var some = new Something();
+				some.IsNull().Should().BeFalse();
+				some.IsNotNull().Should().BeTrue();
 
+				some = null;
+				// ReSharper disable ExpressionIsAlwaysNull
+				some.IsNull().Should().BeTrue();
+				some.IsNotNull().Should().BeFalse();
+				// ReSharper restore ExpressionIsAlwaysNull
+			}
+		}
 
+		[TestFixture]
+		[Category("Unit")]
+		public class when_checking_if_value_type_is_null
+		{
+			[Test]
+			public void should_always_consider_as_not_null()
+			{
+				var some = 13;
+				some.IsNull().Should().BeFalse();
+				some.IsNotNull().Should().BeTrue();
 
+				some = default(int);
+				some.IsNull().Should().BeFalse();
+				some.IsNotNull().Should().BeTrue();
+			}
+		}
 
+		[TestFixture]
+		[Category("Unit")]
+		public class when_stripping_datetime_mills
+		{
+			[Test]
+			public void should_return_datetime_without_mills()
+			{
+				var fullDate = new DateTime(2013, 1, 2, 3, 4, 5, 600);
+				var strippedDate = new DateTime(2013, 1, 2, 3, 4, 5);
+
+				fullDate.StripMilliseconds().Should().Be(strippedDate);
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_soft_comparing_dates
+		{
+			[Test]
+			public void should_compare_according_to_set_precision()
+			{
+				var date1 = new DateTime(2013, 1, 2, 3, 4, 5);
+				var date2 = new DateTime(2013, 1, 2, 3, 4, 6);
+				var date3 = new DateTime(2013, 1, 2, 3, 4, 6, 999);
+
+				date1.SoftEquals(date2).Should().BeFalse();
+				date2.SoftEquals(date3).Should().BeTrue();
+
+				date1.SoftEquals(date2, 1500).Should().BeTrue();
+				date1.SoftEquals(date3, 1500).Should().BeFalse();
+			}
+		}
+
+		[TestFixture]
+		[Category("Unit")]
+		public class when_formatting_string_using_extension_method
+		{
+			[Test]
+			public void should_format_using_provided_params()
+			{
+				const string format = "str {0} int {1}";
+
+				format.FormatWith("boo", 13).Should().Be("str boo int 13");
+			}
+		}
     }
     // ReSharper restore InconsistentNaming
-
 }

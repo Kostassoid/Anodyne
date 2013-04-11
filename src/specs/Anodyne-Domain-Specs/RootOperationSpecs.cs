@@ -184,7 +184,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 			}
 		}
 
-		[TestFixture]
+/*		[TestFixture]
 		[Category("Unit")]
 		public class when_performing_on_non_present_root_with_missing_action_set : RootOperationScenario
 		{
@@ -216,7 +216,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
 				result.Should().Be("ok");
 			}
-		}
+		}*/
 
 		[TestFixture]
 		[Category("Unit")]

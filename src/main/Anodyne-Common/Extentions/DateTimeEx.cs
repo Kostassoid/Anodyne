@@ -26,7 +26,7 @@ namespace Kostassoid.Anodyne.Common.Extentions
 
         public static DateTime StripMilliseconds(this DateTime dateTime)
         {
-            return dateTime.AddMilliseconds(-dateTime.Millisecond).AddTicks(-dateTime.Ticks);
+            return dateTime.AddMilliseconds(-dateTime.Millisecond);
         }
     }
 }
