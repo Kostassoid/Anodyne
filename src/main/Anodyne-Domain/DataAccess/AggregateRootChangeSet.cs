@@ -33,22 +33,18 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         public AggregateRootChangeSet(IAggregateRoot aggregate)
         {
             Aggregate = aggregate;
-            CurrentVersion = TargetVersion = aggregate.Version - 1; // Aggregate version is already incremented at this moment
+            //TODO: looks fragile
+            CurrentVersion = TargetVersion = aggregate.Version; // Aggregate version is already incremented at this moment
             Events = new List<IAggregateEvent>();
         }
 
         public void Register(IAggregateEvent @event)
         {
             if (Aggregate != @event.Target || CurrentVersion != @event.TargetVersion)
-                throw new ConcurrencyException(@event);
+                throw new ConcurrencyException(@event, CurrentVersion);
 
             Events.Add(@event);
 	        CurrentVersion = @event.TargetVersion + 1;
-        }
-
-        public void MarkAsDeleted()
-        {
-            IsDeleted = true;
         }
 
 		public IEnumerable<IAggregateEvent> GetStreamOfEvents()

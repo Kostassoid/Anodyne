@@ -45,7 +45,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             return _dataSession.FindOne<TRoot>(key);
         }
 
-
         public virtual IQueryable<TRoot> All()
         {
             return _dataSession.Query<TRoot>();

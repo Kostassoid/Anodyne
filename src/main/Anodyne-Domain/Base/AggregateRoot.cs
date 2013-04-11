@@ -34,7 +34,7 @@ namespace Kostassoid.Anodyne.Domain.Base
 	    public static void Apply(IAggregateEvent ev)
         {
 			if (ev.TargetVersion != ev.Target.Version)
-				throw new ConcurrencyException(ev);
+                throw new ConcurrencyException(ev, ev.Target.Version);
 
             //TODO: decouple?
             UnitOfWork.Handle(ev);
