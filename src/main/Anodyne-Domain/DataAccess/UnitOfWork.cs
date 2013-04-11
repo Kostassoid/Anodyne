@@ -16,11 +16,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 	using System;
 	using Common;
 	using Common.ExecutionContext;
-    using Common.Reflection;
 	using Operations;
     using Policy;
     using Domain.Events;
-    using Wiring;
 
     public static class UnitOfWork
     {
@@ -30,8 +28,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 		public static IUnitOfWorkFactory Factory { get; set; }
 		public static IOperationResolver OperationResolver { get; set; }
 		public static DataAccessPolicy Policy { get; set; }
-
-        private static bool _eventHandlersAreSet;
 
 		public static Option<IUnitOfWork> Root
 		{
@@ -54,8 +50,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public static IUnitOfWork Start(StaleDataPolicy? staleDataPolicy = null)
         {
-            //lock (HeadContextKey) EnsureAggregateEventHandlersAreSet();
-
 	        var newUnitOfWork = Head.IsSome
 				? Factory.Build(Head.Value)
 				: Factory.Build(staleDataPolicy.HasValue ? staleDataPolicy.Value : Policy.StaleDataPolicy);
@@ -81,20 +75,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 			}
 		}
 
-	    private static void EnsureAggregateEventHandlersAreSet()
-        {
-            if (_eventHandlersAreSet) return;
-            _eventHandlersAreSet = true;
-
-            EventBus
-                .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>(From.AllAssemblies())
-                .With(Handle, Priority.Exact(1000));
-        }
-
 		public static void Handle(IAggregateEvent ev)
 		{
-			if (!IsConfigured) return;
+			if (!IsConfigured || ev.IsReplaying) return;
 
 			if (Policy.ReadOnly)
 				throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");

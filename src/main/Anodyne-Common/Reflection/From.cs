@@ -37,11 +37,19 @@ namespace Kostassoid.Anodyne.Common.Reflection
             }
         }
 
-        public static IEnumerable<Assembly> AllAssemblies() //todo: rename to AllAppDomainAssemblies ?
+        /// <summary>
+        /// Returns an enumerable list of <see cref="Assembly"/> loaded within current <see cref="AppDomain"/>.
+        /// </summary>
+        public static IEnumerable<Assembly> AllAssemblies()
         {
             return AppDomain.CurrentDomain.GetAssemblies();
         }
-       
+
+        /// <summary>
+        /// Returns an enumerable list of <see cref="FileInfo"/> within specified path.
+        /// <param name="path">A path to root folder to look in.</param>
+        /// <param name="recursively">Specifies that enumeration should include files from each folder within the root path recursively.</param>
+        /// </summary>
         public static IEnumerable<FileInfo> AllFilesIn(string path, bool recursively = false)
         {
             return new DirectoryInfo(path)

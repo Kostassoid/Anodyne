@@ -44,14 +44,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public void Handle(IAggregateEvent @event)
         {
-            RegisterEvent(@event);//.Register(@event);
+            RegisterEvent(@event);
         }
-
-/*        public void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot
-        {
-            GetChangeSetFor(aggregate).MarkAsDeleted();
-        }
-*/
 
         protected bool ApplyChangeSet(AggregateRootChangeSet changeSet, bool ignoreConflicts = false)
         {

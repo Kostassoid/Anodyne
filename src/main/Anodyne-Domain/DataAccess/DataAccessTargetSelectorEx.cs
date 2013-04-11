@@ -28,9 +28,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 			UnitOfWork.Factory = new UnitOfWorkFactory(targetSelector.DataProvider.SessionFactory);
             UnitOfWork.OperationResolver = new ContainerOperationResolver(targetSelector.ProviderSelector.Container);
 
-            //duplicated call to avoid lost static context loss in web environment
-            //AggregateRootHandlersRegistrator.EnsureRegistration();
-
             if (cc != null)
                 cc(new DomainDataAccessConfigurator());
         }

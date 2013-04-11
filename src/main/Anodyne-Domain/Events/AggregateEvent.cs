@@ -29,7 +29,6 @@ namespace Kostassoid.Anodyne.Domain.Events
         public bool IsReplaying { get { return _isReplaying; } }
 
 		public IAggregateRoot Target { get; private set; }
-		//public TRoot Target { get { return (TRoot)Target; } }
 
         protected AggregateEvent(IAggregateRoot target, long targetVersion, DateTime happened)
         {

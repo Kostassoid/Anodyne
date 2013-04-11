@@ -43,6 +43,5 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 	    IRepository<TRoot> Query<TRoot>() where TRoot : class, IAggregateRoot;
 	    IQueryable<TRoot> AllOf<TRoot>() where TRoot : class, IAggregateRoot;
 	    TOp Using<TOp>() where TOp : class, IDomainOperation;
-	    //void MarkAsDeleted<TRoot>(TRoot entity) where TRoot : class, IAggregateRoot;
     }
 }

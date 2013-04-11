@@ -26,11 +26,6 @@ namespace Kostassoid.Anodyne.Domain.Base
     {
         object IPersistableRoot.IdObject { get { return Id; } }
 
-	    static AggregateRoot()
-        {
-            //AggregateRootHandlersRegistrator.EnsureRegistration();
-        }
-
 		void IAggregateRoot.Apply(IAggregateEvent ev)
 		{
 			Apply(ev);
@@ -41,11 +36,11 @@ namespace Kostassoid.Anodyne.Domain.Base
 			if (ev.TargetVersion != ev.Target.Version)
 				throw new ConcurrencyException(ev);
 
+            //TODO: decouple?
+            UnitOfWork.Handle(ev);
+            ev.Target.BumpVersion();
+
 	        var handler = AggregateEventHandlerResolver.ResolveFor(ev);
-			ev.Target.BumpVersion();
-
-			UnitOfWork.Handle(ev);
-
 			handler(ev.Target, ev);
 
 			if (!ev.IsReplaying)

@@ -14,7 +14,6 @@
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
     using System;
-    using Base;
     using Policy;
     using Domain.Events;
     using Wiring;
@@ -23,8 +22,6 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     public interface IDomainDataSession : IDisposable, IHandlerOf<IAggregateEvent>
     {
         IDataSession DataSession { get; }
-
-        //void MarkAsDeleted<TRoot>(TRoot aggregate) where TRoot : class, IAggregateRoot;
 
         DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy);
         void ForgetChanges();

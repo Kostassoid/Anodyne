@@ -44,7 +44,6 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Base\AggregateRoot.cs" />
-    <Compile Include="Base\AggregateRootHandlersRegistrator.cs" />
     <Compile Include="Base\Entity.cs" />
     <Compile Include="Base\IAggregateRoot.cs" />
     <Compile Include="Base\IEntity.cs" />
@@ -82,7 +81,6 @@
     <Compile Include="DataAccess\UnitOfWork.cs" />
     <Compile Include="Events\AggregateEvent.cs" />
     <Compile Include="Events\AggregateEventHandlerResolver.cs" />
-    <Compile Include="Events\EventBusEx.cs" />
     <Compile Include="Events\IAggregateEvent.cs" />
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\IMutationEvent.cs" />
