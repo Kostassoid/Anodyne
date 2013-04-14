@@ -22,7 +22,8 @@ namespace Kostassoid.Anodyne.Domain.DataAccess.Exceptions
         public IAggregateEvent Event { get; protected set; }
 
         public ConcurrencyException(IAggregateEvent ev, long currentVersion)
-            :base(string.Format("Unable to apply event {0} ({1}) on {2} ({3}). Expected version {4} but was {5}.",
+            : base(string.Format("Unable to apply event {0} ({1}) on {2} ({3}). Expected version {4} but was {5}. "
+            + "Are you trying to publish event from within aggregate event handler?",
             ev.GetType().Name, ev.Id, ev.Target.GetType().Name, ev.Target.IdObject, ev.TargetVersion, currentVersion))
         {
             Event = ev;

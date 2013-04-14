@@ -1,4 +1,4 @@
-﻿// Copyright 2011-2013 Anodyne.
+// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,21 +13,21 @@
 
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
-    using System;
+	using System;
+	using Common;
+	using Operations;
     using Policy;
 
-    public class DomainDataAccessConfigurator
+    public interface IUnitOfWorkManager : IDisposable
     {
-        /// <summary>
-        /// Define default data action policy when working with domain entities through UnitOfWork.
-        /// </summary>
-        /// <param name="policyAction">Data access policy configurator.</param>
-        public void UseDataAccessPolicy(Action<DataAccessPolicy> policyAction)
-        {
-            var dataPolicy = new DataAccessPolicy();
-            policyAction(dataPolicy);
+		IUnitOfWorkFactory Factory { get; }
+		IOperationResolver OperationResolver { get; }
+		DataAccessPolicy Policy { get; set; }
 
-            UnitOfWork.GlobalPolicy = dataPolicy;
-        }
+        Option<IUnitOfWork> Root { get; }
+		Option<IUnitOfWork> Head { get; }
+
+        IUnitOfWork Start(StaleDataPolicy? staleDataPolicy = null);
+        void Finish(IUnitOfWork unitOfWork);
     }
 }

@@ -21,7 +21,6 @@ namespace Kostassoid.Anodyne.Domain.Events
 		Guid Id { get; }
 		IAggregateRoot Target { get; }
         long TargetVersion { get; }
-
-		bool IsReplaying { get; }
+        int SchemaVersion { get; }
     }
 }

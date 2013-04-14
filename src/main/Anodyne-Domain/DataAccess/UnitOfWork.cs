@@ -13,84 +13,65 @@
 
 namespace Kostassoid.Anodyne.Domain.DataAccess
 {
-	using System;
-	using Common;
-	using Common.ExecutionContext;
-	using Operations;
+    using Common;
     using Policy;
-    using Domain.Events;
 
     public static class UnitOfWork
     {
-        private const string RootContextKey = "root-unit-of-work";
-		private const string HeadContextKey = "head-unit-of-work";
+        private static DataAccessPolicy _globalPolicy = new DataAccessPolicy();
+        public static DataAccessPolicy GlobalPolicy
+        {
+            get { return _globalPolicy; }
+            set
+            {
+                _globalPolicy = value;
+                if (Manager != null)
+                    Manager.Policy = _globalPolicy;
+            }
+        }
 
-		public static IUnitOfWorkFactory Factory { get; set; }
-		public static IOperationResolver OperationResolver { get; set; }
-		public static DataAccessPolicy Policy { get; set; }
+        public static IUnitOfWorkManager Manager { get; private set; }
 
-		public static Option<IUnitOfWork> Root
-		{
-			get { return Context.FindAs<IUnitOfWork>(RootContextKey); }
-			private set { Context.Set(RootContextKey, value); }
-		}
+        public static Option<IUnitOfWork> Root
+        {
+            get { return Manager.Root; }
+        }
 
-		public static Option<IUnitOfWork> Head
-		{
-			get { return Context.FindAs<IUnitOfWork>(HeadContextKey); }
-			private set { Context.Set(HeadContextKey, value); }
-		}
+        public static Option<IUnitOfWork> Head
+        {
+            get { return Manager.Head; }
+        }
 
-		public static bool IsConfigured { get { return Factory != null && OperationResolver != null; } }
+        public static bool IsConfigured
+        {
+            get { return Manager != null; }
+        }
 
         static UnitOfWork()
         {
-            Policy = new DataAccessPolicy();
+            GlobalPolicy = new DataAccessPolicy();
         }
 
         public static IUnitOfWork Start(StaleDataPolicy? staleDataPolicy = null)
         {
-	        var newUnitOfWork = Head.IsSome
-				? Factory.Build(Head.Value)
-				: Factory.Build(staleDataPolicy.HasValue ? staleDataPolicy.Value : Policy.StaleDataPolicy);
-
-			Head = newUnitOfWork.AsOption();
-
-			if (Root.IsNone)
-		        Root = Head;
-
-	        return newUnitOfWork;
+            return Manager.Start(staleDataPolicy);
         }
 
-		internal static void Finish(UnitOfWorkContext unitOfWork)
-		{
-			if (unitOfWork != Head.ValueOrDefault)
-				throw new InvalidOperationException("Unable to close intermediate UnitOfWork. Dispose the head first.");
+        public static void Initialize(IUnitOfWorkManager manager)
+        {
+            Reset();
 
-			Head = unitOfWork.Parent;
+            Manager = manager;
+            Manager.Policy = _globalPolicy;
+        }
 
-			if (Head.IsNone)
-			{
-				Root = Option<IUnitOfWork>.None;
-			}
-		}
-
-		public static void Handle(IAggregateEvent ev)
-		{
-			if (!IsConfigured || ev.IsReplaying) return;
-
-			if (Policy.ReadOnly)
-				throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
-
-			if (Head.IsSome && !Head.Value.IsFinished)
-			{
-				Head.Value.Session.Handle(ev);
-			}
-			else
-			{
-				throw new InvalidOperationException("There's no active UnitOfWork.");
-			}
-		}
-
+        public static void Reset()
+        {
+            if (Manager != null)
+            {
+                Manager.Dispose();
+                Manager = null;
+            }
+        }
     }
 }

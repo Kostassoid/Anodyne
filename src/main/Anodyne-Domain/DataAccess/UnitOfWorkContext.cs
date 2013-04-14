@@ -24,13 +24,16 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
     using Policy;
 	using Wiring;
 
-    internal class UnitOfWorkContext : IUnitOfWork
+    internal class UnitOfWorkContext : IUnitOfWork, IUnitOfWorkEx
     {
+        private IUnitOfWorkManager _manager;
+        IUnitOfWorkManager IUnitOfWorkEx.Manager { set { _manager = value; } }
+
 		public IDomainDataSession Session { get; protected set; }
 		public StaleDataPolicy StaleDataPolicy { get; protected set; }
 		public Option<IUnitOfWork> Parent { get; protected set; }
 
-		public IUnitOfWork Root { get { return UnitOfWork.Root.ValueOrDefault; } }
+		public IUnitOfWork Root { get { return _manager.Root.ValueOrDefault; } }
 		public bool IsRoot
         {
             get { return this == Root; }
@@ -41,7 +44,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 		public bool IsDisposed { get; protected set; }
 		public bool IsFinished { get { return IsCompleted || IsCancelled; } }
 
-		internal UnitOfWorkContext RootContext { get { return (UnitOfWorkContext)UnitOfWork.Root.ValueOrDefault; } }
+		internal UnitOfWorkContext RootContext { get { return (UnitOfWorkContext)_manager.Root.ValueOrDefault; } }
 		internal event Action WhenCompleted = () => { };
         public event Action Completed
         {
@@ -144,7 +147,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 				if (Parent.IsSome && IsCancelled)
 					Parent.Value.Cancel();
 
-				UnitOfWork.Finish(this);
+				_manager.Finish(this);
 
 				IsDisposed = true;
 				GC.SuppressFinalize(this);
@@ -175,7 +178,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         {
             AssertIfFinished();
 
-            return UnitOfWork.OperationResolver.Get<TOp>();
+            return _manager.OperationResolver.Get<TOp>();
         }
     }
 }

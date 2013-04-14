@@ -50,6 +50,9 @@
     <Compile Include="Base\IValueObject.cs" />
     <Compile Include="Base\ValueObject.cs" />
     <Compile Include="DataAccess\AggregateRootChangeSet.cs" />
+    <Compile Include="DataAccess\IUnitOfWorkEx.cs" />
+    <Compile Include="DataAccess\IUnitOfWorkManager.cs" />
+    <Compile Include="DataAccess\UnitOfWorkManager.cs" />
     <Compile Include="DataAccess\IUnitOfWorkFactory.cs" />
     <Compile Include="DataAccess\UnitOfWorkFactory.cs" />
     <Compile Include="DataAccess\IUnitOfWork.cs" />

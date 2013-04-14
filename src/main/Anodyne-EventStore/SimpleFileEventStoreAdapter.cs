@@ -16,27 +16,38 @@ namespace Kostassoid.Anodyne.EventStore
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
+    using Common.Extentions;
     using Domain.Events;
-    using ServiceStack.Text;
+    using Newtonsoft.Json;
 
     public class SimpleFileEventStoreAdapter : IEventStoreAdapter
     {
         private readonly string _filepath;
+        private readonly JsonSerializer _serializer;
 
         public SimpleFileEventStoreAdapter(string filepath)
         {
             _filepath = filepath;
+            _serializer = new JsonSerializer();
         }
 
         public void Store(IEnumerable<IAggregateEvent> events)
         {
-            lock(_filepath)
-                File.AppendAllLines(_filepath, events.Select(Serialize));
+            lock (_filepath)
+            {
+                using (var writer = File.AppendText(_filepath))
+                {
+                    events.ForEach(e => Serialize(writer, e));
+                    writer.Flush();
+                    //File.AppendAllLines(writer, events.Select(Serialize));
+                }
+            }
         }
 
-        private static string Serialize(IAggregateEvent ev)
+        private void Serialize(TextWriter writer, IAggregateEvent ev)
         {
-            return JsonSerializer.SerializeToString(ev);
+            _serializer.Serialize(writer, new EventEnvelope(ev));
         }
 
         public IEnumerable<IAggregateEvent> LoadFor<TRoot>(object id)

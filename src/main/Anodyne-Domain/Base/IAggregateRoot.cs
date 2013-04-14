@@ -17,6 +17,6 @@ namespace Kostassoid.Anodyne.Domain.Base
 
 	public interface IAggregateRoot : IEntity
 	{
-		void Apply(IAggregateEvent ev);
+        void Apply(IAggregateEvent ev, bool isReplaying = false);
 	}
 }

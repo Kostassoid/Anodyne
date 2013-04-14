@@ -16,6 +16,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
     using Anodyne.Specs.Shared;
     using Base;
     using DataAccess;
+    using DataAccess.Exceptions;
     using DataAccess.Policy;
     using Events;
     using System;
@@ -51,7 +52,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
             protected void OnCreated(TestRootCreated @event)
             {
-                Update();
+                Update(); // prohibited
             }
 
             public void Update()
@@ -85,52 +86,18 @@ namespace Kostassoid.Anodyne.Domain.Specs
 
         [TestFixture]
         [Category("Unit")]
-        public class when_calling_nested_apply_with_ignore_policy : UnitOfWorkScenario
+        public class when_calling_nested_apply : UnitOfWorkScenario
         {
             [Test]
-            public void should_not_throw_and_events_order_should_be_correct()
+            public void should_throw_concurrency_exception()
             {
-                Guid rootId;
                 using (UnitOfWork.Start(StaleDataPolicy.Ignore))
                 {
-                    rootId = TestRoot.Create().Id;
-                }
-
-                using (var uow = UnitOfWork.Start())
-                {
-                    var root = uow.Query<TestRoot>().FindOne(rootId);
-
-                    root.IsSome.Should().BeTrue();
-                    root.Value.Id.Should().Be(rootId);
-                    root.Value.Version.Should().Be(2);
+                    Action action = () => TestRoot.Create();
+                    action.ShouldThrow<ConcurrencyException>();
                 }
             }
         }
-
-        [TestFixture]
-        [Category("Unit")]
-        public class when_calling_nested_apply_with_strict_policy : UnitOfWorkScenario
-        {
-            [Test]
-            public void should_not_throw_and_events_order_should_be_correct()
-            {
-                Guid rootId;
-                using (UnitOfWork.Start(StaleDataPolicy.Strict))
-                {
-                    rootId = TestRoot.Create().Id;
-                }
-
-                using (var uow = UnitOfWork.Start())
-                {
-                    var root = uow.Query<TestRoot>().FindOne(rootId);
-
-                    root.IsSome.Should().BeTrue();
-                    root.Value.Id.Should().Be(rootId);
-                    root.Value.Version.Should().Be(2);
-                }
-            }
-        }
-
     }
     // ReSharper restore InconsistentNaming
 

@@ -15,18 +15,23 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 {
     using System;
     using Abstractions.DataAccess;
-    using Base;
+    using Abstractions.Dependency.Registration;
+    using Common.CodeContracts;
     using Operations;
 
     public static class DataAccessTargetSelectorEx
     {
         public static void AsDomainStorage(this DataAccessTargetSelector targetSelector, Action<DomainDataAccessConfigurator> cc = null)
         {
-            //TODO: check without failing tests
-            //Requires.True(!UnitOfWork.IsConfigured, "Domain data access is already configured.");
+            var container = targetSelector.ProviderSelector.Container;
+            Requires.True(!container.Has<IUnitOfWorkManager>(), "Domain data access is already configured.");
 
-			UnitOfWork.Factory = new UnitOfWorkFactory(targetSelector.DataProvider.SessionFactory);
-            UnitOfWork.OperationResolver = new ContainerOperationResolver(targetSelector.ProviderSelector.Container);
+            container.Put(Binding.Use(new UnitOfWorkManager(
+                    new UnitOfWorkFactory(targetSelector.DataProvider.SessionFactory),
+                    new ContainerOperationResolver(targetSelector.ProviderSelector.Container)
+                )).As<IUnitOfWorkManager>());
+
+            UnitOfWork.Initialize(container.Get<IUnitOfWorkManager>());
 
             if (cc != null)
                 cc(new DomainDataAccessConfigurator());

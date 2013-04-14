@@ -24,15 +24,14 @@ namespace Kostassoid.Anodyne.Domain.Events
 		public Guid Id { get; private set; }
 		public DateTime Happened { get; private set; }
         public long TargetVersion { get; private set; }
-
-        private bool _isReplaying;
-        public bool IsReplaying { get { return _isReplaying; } }
+        public int SchemaVersion { get; private set; }
 
 		public IAggregateRoot Target { get; private set; }
 
         protected AggregateEvent(IAggregateRoot target, long targetVersion, DateTime happened)
         {
             Id = SeqGuid.NewGuid();
+            SchemaVersion = 1;
 
             Target = target;
             Happened = happened;
@@ -42,11 +41,6 @@ namespace Kostassoid.Anodyne.Domain.Events
         protected AggregateEvent(TRoot target)
             : this(target, target.Version, SystemTime.Now)
         {
-        }
-
-        public void MarkAsReplaying()
-        {
-            _isReplaying = true;
         }
 
     }

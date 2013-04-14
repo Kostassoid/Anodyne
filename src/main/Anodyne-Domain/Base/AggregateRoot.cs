@@ -15,8 +15,6 @@ namespace Kostassoid.Anodyne.Domain.Base
 {
     using System;
     using Abstractions.DataAccess;
-    using Common.Extentions;
-    using DataAccess;
     using DataAccess.Exceptions;
     using Events;
     using Wiring;
@@ -26,25 +24,23 @@ namespace Kostassoid.Anodyne.Domain.Base
     {
         object IPersistableRoot.IdObject { get { return Id; } }
 
-		void IAggregateRoot.Apply(IAggregateEvent ev)
+		void IAggregateRoot.Apply(IAggregateEvent ev, bool isReplaying)
 		{
-			Apply(ev);
+			Apply(ev, isReplaying);
 		}
 
-	    public static void Apply(IAggregateEvent ev)
+        public static void Apply(IAggregateEvent ev, bool isReplaying = false)
         {
 			if (ev.TargetVersion != ev.Target.Version)
                 throw new ConcurrencyException(ev, ev.Target.Version);
 
-            //TODO: decouple?
-            UnitOfWork.Handle(ev);
-            ev.Target.BumpVersion();
-
 	        var handler = AggregateEventHandlerResolver.ResolveFor(ev);
 			handler(ev.Target, ev);
 
-			if (!ev.IsReplaying)
+			if (!isReplaying)
 				EventBus.Publish(ev);
+
+            ev.Target.BumpVersion();
         }
     }
 }

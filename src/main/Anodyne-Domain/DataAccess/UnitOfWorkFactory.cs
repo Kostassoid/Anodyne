@@ -31,7 +31,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 			return new UnitOfWorkContext(OpenDomainSession(), staleDataPolicy);
 		}
 
-		public IUnitOfWork Build(IUnitOfWork parent)
+        public IUnitOfWork Build(IUnitOfWork parent)
 		{
 			return new UnitOfWorkContext(parent);
 		}

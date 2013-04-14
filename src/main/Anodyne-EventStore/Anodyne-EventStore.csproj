@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\..\packages\ServiceStack.Text.3.9.43\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -48,11 +51,16 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="EventEnvelope.cs" />
     <Compile Include="EventStoreObserver.cs" />
     <Compile Include="IEventStoreAdapter.cs" />
     <Compile Include="SimpleFileEventStoreAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Anodyne-Abstractions\Anodyne-Abstractions.csproj">
+      <Project>{B67FA75E-6807-4639-9A11-9155DE5520D8}</Project>
+      <Name>Anodyne-Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Anodyne-Common\Anodyne-Common.csproj">
       <Project>{2d6ac91a-29e5-4700-8e16-58d87ab98563}</Project>
       <Name>Anodyne-Common</Name>
