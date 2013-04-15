@@ -26,21 +26,27 @@ namespace Kostassoid.Anodyne.Domain.Base
 
 		void IAggregateRoot.Apply(IAggregateEvent ev, bool isReplaying)
 		{
-			Apply(ev, isReplaying);
+			Apply(this, ev, isReplaying);
 		}
 
-        public static void Apply(IAggregateEvent ev, bool isReplaying = false)
+        public static void Apply(IUncommitedEvent ev, bool isReplaying = false)
         {
-			if (ev.TargetVersion != ev.Target.Version)
-                throw new ConcurrencyException(ev, ev.Target.Version);
-
-	        var handler = AggregateEventHandlerResolver.ResolveFor(ev);
-			handler(ev.Target, ev);
-
-			if (!isReplaying)
-				EventBus.Publish(ev);
-
-            ev.Target.BumpVersion();
+            Apply(ev.Target, ev, isReplaying);
         }
+
+        public static void Apply(IAggregateRoot root, IAggregateEvent ev, bool isReplaying = false)
+        {
+            if (ev.TargetVersion != root.Version)
+                throw new ConcurrencyException(root, ev, root.Version);
+
+            var handler = AggregateEventHandlerResolver.ResolveFor(root.GetType(), ev.GetType());
+            handler(root, ev);
+
+            if (!isReplaying)
+                EventBus.Publish(ev);
+
+            root.BumpVersion();
+        }
+
     }
 }

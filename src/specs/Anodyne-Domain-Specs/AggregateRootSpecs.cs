@@ -77,7 +77,7 @@ namespace Kostassoid.Anodyne.Domain.Specs
                 var root2 = new TestRoot();
 
                 (root1 as IAggregateRoot).Apply(new Change1Event(root1));
-				(root1 as IAggregateRoot).Apply(new Change2Event(root2));
+				(root2 as IAggregateRoot).Apply(new Change2Event(root2));
 				(root1 as IAggregateRoot).Apply(new Change2Event(root1));
 				(root1 as IAggregateRoot).Apply(new Change2Event(root1));
 

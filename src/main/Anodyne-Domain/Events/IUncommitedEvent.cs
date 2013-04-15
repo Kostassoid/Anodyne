@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Anodyne.
+﻿// Copyright 2011-2013 Anodyne.
 //   
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -11,19 +11,12 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.Domain.DataAccess
+namespace Kostassoid.Anodyne.Domain.Events
 {
-    using System;
-    using Policy;
-    using Domain.Events;
-    using Wiring;
-    using Abstractions.DataAccess;
+    using Base;
 
-    public interface IDomainDataSession : IDisposable, IHandlerOf<IUncommitedEvent>
+    public interface IUncommitedEvent : IAggregateEvent
     {
-        IDataSession DataSession { get; }
-
-        DataChangeSet SaveChanges(StaleDataPolicy staleDataPolicy);
-        void ForgetChanges();
+        IAggregateRoot Target { get; set; }
     }
 }

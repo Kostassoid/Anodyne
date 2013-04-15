@@ -28,11 +28,13 @@ namespace Kostassoid.Anodyne.EventStore.Adapters
 
         public EventEnvelope(IAggregateEvent @event)
         {
+            var ev = (IUncommitedEvent)@event;
+
             Raw = @event;
 
             Id = @event.Id;
-            TargetType = @event.Target.GetType().Name;
-            TargetId = @event.Target.IdObject;
+            TargetType = ev.Target.GetType().Name;
+            TargetId = ev.Target.IdObject;
             TargetVersion = @event.TargetVersion;
             EventType = @event.GetType().Name;
         }

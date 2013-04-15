@@ -45,7 +45,7 @@ namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
             _eventTypes = AllTypes.BasedOn<IAggregateEvent>(From.AllAssemblies()).ToList();
         }
 
-        public string Serialize(IAggregateEvent ev)
+        public string Serialize(IUncommitedEvent ev)
         {
             var stringWriter = new StringWriter();
 

@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.EventStore.Adapters
 
     public interface IEventStoreAdapter
     {
-        void Store(IEnumerable<IAggregateEvent> events);
+        void Store(IEnumerable<IUncommitedEvent> events);
         IEnumerable<IAggregateEvent> LoadFor<TRoot>(object id);
     }
 }

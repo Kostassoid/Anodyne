@@ -14,9 +14,11 @@
 namespace Kostassoid.Anodyne.EventStore
 {
     using System;
+    using System.Linq;
     using Adapters;
     using Domain.DataAccess;
     using Domain.DataAccess.Events;
+    using Domain.Events;
     using Wiring;
 
     public class EventStoreObserver
@@ -37,7 +39,7 @@ namespace Kostassoid.Anodyne.EventStore
 
         private void Handle(DataChangeSet changeSet)
         {
-            _adapter.Store(changeSet.AppliedEvents);
+            _adapter.Store(changeSet.AppliedEvents.Cast<IUncommitedEvent>());
         }
 
         public void Stop()

@@ -31,7 +31,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
             _dataSession = dataSession;
         }
 
-        protected void RegisterEvent(IAggregateEvent ev)
+        protected void RegisterEvent(IUncommitedEvent ev)
         {
             AggregateRootChangeSet changeSet;
             if (!ChangeSets.TryGetValue(ev.Target, out changeSet))
@@ -42,7 +42,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 			changeSet.Register(ev);
         }
 
-        public void Handle(IAggregateEvent @event)
+        public void Handle(IUncommitedEvent @event)
         {
             RegisterEvent(@event);
         }

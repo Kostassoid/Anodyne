@@ -29,7 +29,7 @@ namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
             _serializer = new JsonNetEventSerializer();
         }
 
-        public void Store(IEnumerable<IAggregateEvent> events)
+        public void Store(IEnumerable<IUncommitedEvent> events)
         {
             lock (_filepath)
             {

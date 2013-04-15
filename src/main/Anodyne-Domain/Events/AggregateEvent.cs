@@ -19,23 +19,24 @@ namespace Kostassoid.Anodyne.Domain.Events
     using Common.Tools;
 
     [Serializable]
-    public abstract class AggregateEvent<TRoot> : IAggregateEvent where TRoot : class, IAggregateRoot
+    public abstract class AggregateEvent<TRoot> : IAggregateEvent, IUncommitedEvent where TRoot : class, IAggregateRoot
     {
 		public Guid Id { get; private set; }
 		public DateTime Happened { get; private set; }
         public long TargetVersion { get; private set; }
         public int SchemaVersion { get; private set; }
 
-		public IAggregateRoot Target { get; private set; }
+        IAggregateRoot IUncommitedEvent.Target { get; set; }
 
         protected AggregateEvent(IAggregateRoot target, long targetVersion, DateTime happened)
         {
             Id = SeqGuid.NewGuid();
             SchemaVersion = 1;
 
-            Target = target;
             Happened = happened;
 	        TargetVersion = targetVersion;
+
+            ((IUncommitedEvent)this).Target = target;
         }
 
         protected AggregateEvent(TRoot target)

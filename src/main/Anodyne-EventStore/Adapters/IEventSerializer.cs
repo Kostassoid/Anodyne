@@ -18,7 +18,7 @@ namespace Kostassoid.Anodyne.EventStore.Adapters
 
     public interface IEventSerializer
     {
-        string Serialize(IAggregateEvent ev);
+        string Serialize(IUncommitedEvent ev);
         IAggregateEvent TryDeserialize(string serializedEvent, Type targetType, object targetId);
     }
 }

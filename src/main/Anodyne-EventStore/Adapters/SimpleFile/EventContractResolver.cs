@@ -20,10 +20,20 @@ namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
 
     class EventContractResolver : DefaultContractResolver
     {
+        public EventContractResolver()
+        {
+            DefaultMembersSearchFlags |= BindingFlags.NonPublic;
+        }
+
+        public EventContractResolver(bool shareCache) : base(shareCache)
+        {
+            DefaultMembersSearchFlags |= BindingFlags.NonPublic;
+        }
+
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
-            if (member.Name == "Target"
+            if ((member.Name == "Target" || member.Name.EndsWith(".Target"))
                 && member.MemberType == MemberTypes.Property
                 && typeof(IAggregateRoot).IsAssignableFrom(((PropertyInfo)member).PropertyType))
             {

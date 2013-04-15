@@ -15,6 +15,7 @@ namespace Kostassoid.Anodyne.Domain.Events
 {
     using System;
     using System.Linq;
+    using Base;
     using Common.Extentions;
     using Common.Reflection;
     using Common.Tools;
@@ -38,9 +39,9 @@ namespace Kostassoid.Anodyne.Domain.Events
 				    return TypeEx.BuildMethodHandler(suitableMethods.First(), eventType);
 			    });
 
-		public static TypeEx.HandlerDelegate ResolveFor(IAggregateEvent ev)
+		public static TypeEx.HandlerDelegate ResolveFor(Type rootType, Type eventType)
 		{
-			return HandlerResolver(ev.Target.GetType(), ev.GetType());
+            return HandlerResolver(rootType, eventType);
 		}
 
     }

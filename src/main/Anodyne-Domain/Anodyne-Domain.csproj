@@ -87,6 +87,7 @@
     <Compile Include="Events\IAggregateEvent.cs" />
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\IMutationEvent.cs" />
+    <Compile Include="Events\IUncommitedEvent.cs" />
     <Compile Include="IDomainCommand.cs" />
     <Compile Include="IDomainOperation.cs" />
     <Compile Include="IDomainQuery.cs" />

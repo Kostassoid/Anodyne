@@ -40,8 +40,9 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
         public void Register(IAggregateEvent @event)
         {
-            if (Aggregate != @event.Target || CurrentVersion != @event.TargetVersion)
-                throw new ConcurrencyException(@event, CurrentVersion);
+            var ev = (IUncommitedEvent) @event;
+            if (Aggregate != ev.Target || CurrentVersion != ev.TargetVersion)
+                throw new ConcurrencyException(ev.Target, ev, CurrentVersion);
 
             Events.Add(@event);
 	        CurrentVersion = @event.TargetVersion + 1;

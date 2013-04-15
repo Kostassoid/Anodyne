@@ -61,7 +61,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 
             _unsubscribeAction = EventBus
                 .SubscribeTo()
-                .AllBasedOn<IAggregateEvent>(From.AllAssemblies())
+                .AllBasedOn<IUncommitedEvent>(From.AllAssemblies())
                 .With(Handle, Priority.Exact(1000));
         }
 
@@ -103,7 +103,7 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
 			}
 		}
 
-		public void Handle(IAggregateEvent ev)
+		public void Handle(IUncommitedEvent ev)
 		{
 			if (Policy.ReadOnly)
 				throw new InvalidOperationException("You can't mutate AggregateRoots in ReadOnly mode.");
