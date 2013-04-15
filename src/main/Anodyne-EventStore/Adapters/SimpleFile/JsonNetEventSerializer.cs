@@ -18,53 +18,46 @@ namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters;
+    using Common.Extentions;
     using Common.Reflection;
+    using Domain.Base;
     using Domain.Events;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     public class JsonNetEventSerializer : IEventSerializer
     {
         private readonly JsonSerializer _serializer;
 
         private readonly IList<Type> _eventTypes;
+        private readonly IList<Type> _valueObjectTypes;
 
         public JsonNetEventSerializer()
         {
+            _eventTypes = AllTypes.BasedOn<IAggregateEvent>(From.AllAssemblies()).ToList();
+            _valueObjectTypes = AllTypes.BasedOn<IValueObject>(From.AllAssemblies()).ToList();
+
             _serializer = new JsonSerializer
                               {
                                   ContractResolver = new EventContractResolver(),
-                                  TypeNameHandling = TypeNameHandling.Objects,
+                                  TypeNameHandling = TypeNameHandling.All,
                                   TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
                                   ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                                   DefaultValueHandling = DefaultValueHandling.Populate,
+                                  Binder = new SimpleTypeNameSerializationBinder(
+                                      _eventTypes
+                                      .Union(_valueObjectTypes)
+                                      .Union(typeof(StoredEvent).AsEnumerable()))
                               };
 
             _serializer.Converters.Add(new EventCreationConverter());
-
-            _eventTypes = AllTypes.BasedOn<IAggregateEvent>(From.AllAssemblies()).ToList();
         }
 
         public string Serialize(IUncommitedEvent ev)
         {
             var stringWriter = new StringWriter();
-
             using (var writer = new JsonTextWriter(stringWriter))
             {
-                writer.WriteStartObject();
-                writer.WritePropertyName("Id");
-                writer.WriteValue(ev.Id);
-                writer.WritePropertyName("EventType");
-                writer.WriteValue(ev.GetType().Name);
-                writer.WritePropertyName("TargetType");
-                writer.WriteValue(ev.Target.GetType().Name);
-                writer.WritePropertyName("TargetId");
-                writer.WriteValue(ev.Target.IdObject);
-                writer.WritePropertyName("TargetVersion");
-                writer.WriteValue(ev.TargetVersion);
-                writer.WritePropertyName("Raw");
-                _serializer.Serialize(writer, ev);
-                writer.WriteEndObject();
+                _serializer.Serialize(writer, new StoredEvent(ev));
             }
 
             return stringWriter.ToString();
@@ -72,17 +65,16 @@ namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
 
         public IAggregateEvent TryDeserialize(string serializedEvent, Type targetType, object targetId)
         {
-            var envelope = JObject.Parse(serializedEvent);
+            var stringReader = new StringReader(serializedEvent);
+            using (var reader = new JsonTextReader(stringReader))
+            {
+                var storedEvent = _serializer.Deserialize<StoredEvent>(reader);
 
-            if (envelope["TargetType"].Value<string>() != targetType.Name ||
-                envelope["TargetId"].Value<string>() != targetId.ToString())
-                return null;
+                if (storedEvent.TargetType != targetType.Name || storedEvent.TargetId.ToString() != targetId.ToString())
+                    return null;
 
-            var eventType = _eventTypes.First(t => t.Name == envelope["EventType"].Value<string>());
-
-            var ev = envelope["Raw"].ToObject(eventType, _serializer);
-
-            return (IAggregateEvent) ev;
+                return (IAggregateEvent)storedEvent.Raw;
+            }
         }
     }
 }

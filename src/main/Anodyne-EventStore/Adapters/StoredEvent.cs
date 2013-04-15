@@ -17,26 +17,27 @@ namespace Kostassoid.Anodyne.EventStore.Adapters
     using Domain.Events;
 
     [Serializable]
-    public class EventEnvelope
+    public class StoredEvent
     {
         public Guid Id { get; private set; }
         public string TargetType { get; private set; }
         public object TargetId { get; private set; }
         public long TargetVersion { get; private set; }
         public string EventType { get; private set; }
-        public IAggregateEvent Raw { get; private set; }
+        public object Raw { get; private set; }
 
-        public EventEnvelope(IAggregateEvent @event)
+        protected StoredEvent()
+        {}
+
+        public StoredEvent(IUncommitedEvent ev)
         {
-            var ev = (IUncommitedEvent)@event;
+            Raw = ev;
 
-            Raw = @event;
-
-            Id = @event.Id;
+            Id = ev.Id;
             TargetType = ev.Target.GetType().Name;
             TargetId = ev.Target.IdObject;
-            TargetVersion = @event.TargetVersion;
-            EventType = @event.GetType().Name;
+            TargetVersion = ev.TargetVersion;
+            EventType = ev.GetType().Name;
         }
     }
 }
