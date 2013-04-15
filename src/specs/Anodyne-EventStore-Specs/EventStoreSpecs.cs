@@ -13,6 +13,10 @@
 
 namespace Kostassoid.Anodyne.EventStore.Specs
 {
+    using System.IO;
+    using System.Linq;
+    using Adapters;
+    using Adapters.SimpleFile;
     using Anodyne.Specs.Shared;
     using Domain.Base;
     using Domain.DataAccess;
@@ -36,6 +40,8 @@ namespace Kostassoid.Anodyne.EventStore.Specs
         [Serializable]
         public class TestRoot : AggregateRoot<Guid>
         {
+            public string Value { get; private set; }
+
             protected TestRoot()
             {
                 Id = SeqGuid.NewGuid();
@@ -50,16 +56,17 @@ namespace Kostassoid.Anodyne.EventStore.Specs
 
             protected void OnCreated(TestRootCreated @event)
             {
+                Value = "created";
             }
 
             public void Update()
             {
-                Apply(new TestRootUpdated(this));
+                Apply(new TestRootUpdated(this, Value + "-boo"));
             }
 
             protected void OnUpdated(TestRootUpdated @event)
             {
-
+                Value = @event.Payload;
             }
         }
 
@@ -73,9 +80,12 @@ namespace Kostassoid.Anodyne.EventStore.Specs
 
         public class TestRootUpdated : AggregateEvent<TestRoot>
         {
-            public TestRootUpdated(TestRoot target)
+            public string Payload { get; private set; }
+
+            public TestRootUpdated(TestRoot target, string payload)
                 : base(target)
             {
+                Payload = payload;
             }
         }
 
@@ -84,12 +94,34 @@ namespace Kostassoid.Anodyne.EventStore.Specs
         [Ignore("Playground mode")]
         public class when_capturing_events : EventStoreScenario
         {
-            readonly private EventStoreObserver _eventStore = new EventStoreObserver(new SimpleFileEventStoreAdapter("test.log"));
+            private readonly IEventStoreAdapter _adapter = new SimpleFileEventStoreAdapter("test.log");
+            private readonly EventStoreObserver _eventStore;
+
+            private Guid _root1Id;
+            private Guid _root2Id;
+
+            public when_capturing_events()
+            {
+                _eventStore = new EventStoreObserver(_adapter);
+            }
 
             [Test]
             public void should_store_all_applied_events()
             {
-                _eventStore.Start();
+                var root1Events = _adapter.LoadFor<TestRoot>(_root1Id).ToList();
+                root1Events.Count().Should().Be(3);
+                root1Events.Skip(0).First().Should().BeOfType<TestRootCreated>();
+                root1Events.Skip(0).First().TargetVersion.Should().Be(0);
+                root1Events.Skip(1).First().Should().BeOfType<TestRootUpdated>();
+                root1Events.Skip(1).First().TargetVersion.Should().Be(1);
+                root1Events.Skip(2).First().Should().BeOfType<TestRootUpdated>();
+                root1Events.Skip(2).First().TargetVersion.Should().Be(2);
+            }
+
+            [SetUp]
+            public void SetUp()
+            {
+                File.Delete("test.log");
 
                 TestRoot root1;
                 TestRoot root2;
@@ -109,10 +141,19 @@ namespace Kostassoid.Anodyne.EventStore.Specs
                     foundRoot2.Value.Update();
                     foundRoot1.Value.Update();
                 }
+
+                _root1Id = root1.Id;
+                _root2Id = root2.Id;
             }
 
-            [TearDown]
-            void TearDown()
+            [TestFixtureSetUp]
+            public void FixtureSetUp()
+            {
+                _eventStore.Start();
+            }
+
+            [TestFixtureTearDown]
+            public void FixtureTearDown()
             {
                 _eventStore.Stop();
             }

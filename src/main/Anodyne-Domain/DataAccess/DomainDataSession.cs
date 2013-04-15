@@ -34,10 +34,10 @@ namespace Kostassoid.Anodyne.Domain.DataAccess
         protected void RegisterEvent(IAggregateEvent ev)
         {
             AggregateRootChangeSet changeSet;
-            if (!ChangeSets.TryGetValue(ev.Target.IdObject, out changeSet))
+            if (!ChangeSets.TryGetValue(ev.Target, out changeSet))
             {
                 changeSet = new AggregateRootChangeSet(ev.Target);
-                ChangeSets.Add(ev.Target.IdObject, changeSet);
+                ChangeSets.Add(ev.Target, changeSet);
             }
 			changeSet.Register(ev);
         }

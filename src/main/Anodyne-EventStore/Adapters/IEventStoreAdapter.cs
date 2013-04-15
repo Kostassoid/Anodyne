@@ -11,7 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.EventStore
+namespace Kostassoid.Anodyne.EventStore.Adapters
 {
     using System.Collections.Generic;
     using Domain.Events;

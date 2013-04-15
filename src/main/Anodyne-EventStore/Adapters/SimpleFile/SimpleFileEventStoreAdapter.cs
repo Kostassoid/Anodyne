@@ -11,48 +11,47 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.EventStore
+namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Text;
-    using Common.Extentions;
     using Domain.Events;
-    using Newtonsoft.Json;
 
     public class SimpleFileEventStoreAdapter : IEventStoreAdapter
     {
         private readonly string _filepath;
-        private readonly JsonSerializer _serializer;
+        private readonly IEventSerializer _serializer;
 
         public SimpleFileEventStoreAdapter(string filepath)
         {
             _filepath = filepath;
-            _serializer = new JsonSerializer();
+            _serializer = new JsonNetEventSerializer();
         }
 
         public void Store(IEnumerable<IAggregateEvent> events)
         {
             lock (_filepath)
             {
-                using (var writer = File.AppendText(_filepath))
-                {
-                    events.ForEach(e => Serialize(writer, e));
-                    writer.Flush();
-                    //File.AppendAllLines(writer, events.Select(Serialize));
-                }
+                File.AppendAllLines(_filepath, events.Select(_serializer.Serialize));
             }
-        }
-
-        private void Serialize(TextWriter writer, IAggregateEvent ev)
-        {
-            _serializer.Serialize(writer, new EventEnvelope(ev));
         }
 
         public IEnumerable<IAggregateEvent> LoadFor<TRoot>(object id)
         {
-            throw new System.NotImplementedException();
+            lock (_filepath)
+            {
+                using (var reader = File.OpenText(_filepath))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var serialized = reader.ReadLine();
+                        var ev = _serializer.TryDeserialize(serialized, typeof(TRoot), id);
+                        if (ev != null)
+                            yield return ev;
+                    }
+                }
+            }
         }
     }
 }

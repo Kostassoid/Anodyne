@@ -51,10 +51,15 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="EventEnvelope.cs" />
+    <Compile Include="Adapters\EventEnvelope.cs" />
+    <Compile Include="Adapters\SimpleFile\EventCreationConverter.cs" />
     <Compile Include="EventStoreObserver.cs" />
-    <Compile Include="IEventStoreAdapter.cs" />
-    <Compile Include="SimpleFileEventStoreAdapter.cs" />
+    <Compile Include="Adapters\IEventStoreAdapter.cs" />
+    <Compile Include="Adapters\SimpleFile\EventContractResolver.cs" />
+    <Compile Include="Adapters\IEventSerializer.cs" />
+    <Compile Include="Adapters\SimpleFile\JsonNetEventSerializer.cs" />
+    <Compile Include="Adapters\SimpleFile\SimpleFileEventStoreAdapter.cs" />
+    <Compile Include="Versioning\IEventTransformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anodyne-Abstractions\Anodyne-Abstractions.csproj">

@@ -39,9 +39,8 @@ namespace Kostassoid.Anodyne.Domain.Events
         }
 
         protected AggregateEvent(TRoot target)
-            : this(target, target.Version, SystemTime.Now)
+            : this(target, target != null ? target.Version : -1, SystemTime.Now)
         {
         }
-
     }
 }
