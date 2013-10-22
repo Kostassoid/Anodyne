@@ -11,7 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-namespace Kostassoid.Anodyne.EventStore.Adapters
+namespace Kostassoid.Anodyne.EventStore.Adapters.SimpleFile
 {
     using System;
     using Domain.Events;
@@ -23,7 +23,6 @@ namespace Kostassoid.Anodyne.EventStore.Adapters
         public string TargetType { get; private set; }
         public object TargetId { get; private set; }
         public long TargetVersion { get; private set; }
-        public string EventType { get; private set; }
         public object Raw { get; private set; }
 
         protected StoredEvent()
@@ -37,7 +36,6 @@ namespace Kostassoid.Anodyne.EventStore.Adapters
             TargetType = ev.Target.GetType().Name;
             TargetId = ev.Target.IdObject;
             TargetVersion = ev.TargetVersion;
-            EventType = ev.GetType().Name;
         }
     }
 }

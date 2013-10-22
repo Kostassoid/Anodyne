@@ -94,7 +94,8 @@ namespace Kostassoid.Anodyne.EventStore.Specs
         [Ignore("Playground mode")]
         public class when_capturing_events : EventStoreScenario
         {
-            private readonly IEventStoreAdapter _adapter = new SimpleFileEventStoreAdapter("test.log");
+            private const string _filePath = "EventStore.log";
+            private readonly IEventStoreAdapter _adapter = new SimpleFileEventStoreAdapter(_filePath);
             private readonly EventStoreObserver _eventStore;
 
             private Guid _root1Id;
@@ -121,7 +122,7 @@ namespace Kostassoid.Anodyne.EventStore.Specs
             [SetUp]
             public void SetUp()
             {
-                File.Delete("test.log");
+                File.Delete(_filePath);
 
                 TestRoot root1;
                 TestRoot root2;

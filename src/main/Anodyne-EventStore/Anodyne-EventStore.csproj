@@ -51,7 +51,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Adapters\StoredEvent.cs" />
+    <Compile Include="Adapters\SimpleFile\StoredEvent.cs" />
     <Compile Include="Adapters\SimpleFile\EventCreationConverter.cs" />
     <Compile Include="Adapters\SimpleFile\SimpleTypeNameSerializationBinder.cs" />
     <Compile Include="EventStoreObserver.cs" />
